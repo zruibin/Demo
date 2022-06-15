@@ -192,11 +192,13 @@ message("all_list: ${all_list}")
 
 set(HEADERS
     src/app.h
+    src/window.h
 )
 
 set(SOURCES
     src/main.cc
     src/app.cc
+    src/window.cc
 )
 
 source_group(TREE "${CMAKE_SOURCE_DIR}" FILES ${HEADERS} ${SOURCES})

@@ -31,3 +31,8 @@
 * [QT6基本控件入门--Apple的学习笔记](https://www.jianshu.com/p/37048a1cc34e)
 * [QT6小项目进阶准备--Apple的学习笔记](https://www.jianshu.com/p/1009df36bfce)
 
+
+### QT布局
+	
+* https://blog.csdn.net/zhangchuan7758/article/details/122428071
+* https://blog.csdn.net/llk15884975173/article/details/120323353

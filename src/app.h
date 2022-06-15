@@ -8,30 +8,15 @@
 #ifndef APP_H
 #define APP_H
 
-#include <QMainWindow>
+namespace UI {
 
-class QWidget;
-class QAction;
-class QMenu;
-
-class MainWindow : public QMainWindow
-{
-
-Q_OBJECT
+class AppLication final {
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() = default;
-
-protected:
-    QWidget *pCenterWidget_;
-    QAction *openAction_; //定义一个动作
-    QMenu *fileMenu_; //定义一个菜单
-
-private slots:
-    void ClickButton();
-
+    void run(int argc, char *argv[]);
 };
 
+
+}
 
 #endif /* !APP_H */
