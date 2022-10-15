@@ -209,8 +209,6 @@ def wxWidgetsMacBuiding():
     scheme = "static" # dynamic or static, error for dynamic
     configuration = "Release" # release or debug
     outputDir = os.path.join(WX_ROOT, buildDir, "output_"+scheme)
-    if not os.path.exists(outputDir):
-        os.makedirs(outputDir)
     product = os.path.join(outputDir, "Build", "Products", configuration)
     cmdStr = "xcodebuild -project %s -scheme %s -configuration %s -derivedDataPath %s" % (project, scheme, configuration, outputDir)
     log("build Command: "+cmdStr)
