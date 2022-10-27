@@ -105,6 +105,8 @@ set(QtModule
     Core5Compat
     LinguistTools  #翻译模块不用链接
 #    Network
+    Multimedia
+    MultimediaWidgets
 )
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QtModule} REQUIRED)
@@ -115,6 +117,8 @@ set(QtModuleLibs
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Core5Compat
 #    Qt${QT_VERSION_MAJOR}::Network
+    Qt${QT_VERSION_MAJOR}::Multimedia
+    Qt${QT_VERSION_MAJOR}::MultimediaWidgets
 )
 
 
@@ -158,7 +162,7 @@ set(USE_DEPENDS_MODEL TRUE)
 # libs
 #include("${libs_dir}/nlohmann/CMakeLists.txt")
 # modules
-#include("${src_dir}/log/CMakeLists.txt")
+include("${src_dir}/multimedia/CMakeLists.txt")
 
 
 if(USE_DEPENDS_MODEL)
@@ -169,7 +173,8 @@ set(libs_list
 set(modules_list 
 )
 
-set(DEPENDS_LIBS 
+set(DEPENDS_LIBS
+    ${multimedia_all_file}
 )
 
 else()
@@ -177,7 +182,8 @@ else()
 set(libs_list 
 )
 
-set(modules_list 
+set(modules_list
+    multimedia
 )
 
 set(DEPENDS_LIBS 
@@ -204,53 +210,44 @@ set(SOURCES
 source_group(TREE "${CMAKE_SOURCE_DIR}" FILES ${HEADERS} ${SOURCES})
 
 
-set(OUTPUT_DIR "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}/Lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR}/Lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}/Bin)
-message(STATUS "OUTPUT_DIR: ${OUTPUT_DIR}")
-message(STATUS "ARCHIVE_OUTPUT_DIRECTORY: ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
-message(STATUS "LIBRARY_OUTPUT_DIRECTORY: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
-message(STATUS "RUNTIME_OUTPUT_DIRECTORY: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+if(WIN32)
+    message(WARNING "Now is windows")
+elseif(APPLE)
+    message(WARNING "Now is Apple systens.")
+    #set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    message(STATUS "osx architectures was ${CMAKE_OSX_ARCHITECTURES}")
+elseif(UNIX)
+    message(WARNING "Now is UNIX-like OS's. Including aPPLE os x  and CygWin")
+endif()
 
 set(TARGET ${PROJECT_NAME})
+
 
 #set(TARGET_STATIC_LIB "${PROJECT_NAME}_static")
 #add_library(${TARGET_STATIC_LIB} STATIC ${DEPENDS_LIBS} ${HEADERS} ${SOURCES} ${all_list})
 #set(TARGET_SHARED_LIB "${PROJECT_NAME}_shared")
 #add_library(${TARGET_SHARED_LIB} SHARED ${DEPENDS_LIBS} ${HEADERS} ${SOURCES} ${all_list})
 
-add_executable(${TARGET} ${DEPENDS_LIBS} ${HEADERS} ${SOURCES})
+qt_add_executable(${TARGET} MANUAL_FINALIZATION ${DEPENDS_LIBS} ${HEADERS} ${SOURCES})
+
+set_target_properties(${TARGET} PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
+
+if(APPLE AND NOT IOS)
+    set_target_properties(${TARGET} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/plist/macos/Info.plist.in"
+    )
+elseif(IOS)
+    set_target_properties(${TARGET} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/plist/ios/Info.plist.in"
+    )
+endif()
 
 target_compile_options(${TARGET} PRIVATE ${flags})
 target_link_libraries(${TARGET} PRIVATE ${all_list} ${deps_list} ${QtModuleLibs})
 
+qt_finalize_executable(${TARGET})
 
-
-#-------------------------------------------------------------------------------
-message(STATUS "origin installed directory: ${CMAKE_INSTALL_PREFIX}")
-if(${CMAKE_INSTALL_PREFIX} MATCHES "/usr/local")
-    set(install_directory "${PROJECT_SOURCE_DIR}/install")
-    file(MAKE_DIRECTORY ${install_directory})
-    set(CMAKE_INSTALL_PREFIX ${install_directory})
-    message(STATUS "Create installed directory: ${CMAKE_INSTALL_PREFIX}")
-endif()
-message(STATUS "Project will be installed to ${CMAKE_INSTALL_PREFIX}")
-
-install(
-    TARGETS ${TARGET} ${TARGET_STATIC_LIB} ${TARGET_SHARED_LIB}
-    RUNTIME DESTINATION bin 
-    LIBRARY DESTINATION lib
-)
-set(output_head_files
-    "${src_dir}/app.h"
-)
-install(FILES ${output_head_files} DESTINATION include)
-
-#-------------------------------------------------------------------------------
-add_custom_target(run
-    COMMAND ./${TARGET}
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    COMMENT "Intermediate Run target: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
-)
 

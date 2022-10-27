@@ -16,6 +16,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include "multimedia/devices.h"
+
 namespace UI {
 
 MainWindow::MainWindow(QWidget *parent)
@@ -57,6 +59,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::ClickButton() {
     std::cout << "PushButton Click." << std::endl;
+
+    DevicesMain();
+    
 }
 
 /*

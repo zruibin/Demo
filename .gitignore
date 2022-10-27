@@ -25,6 +25,8 @@ deps/
 deps.cmake
 builddeps.log
 
+CMakeLists.txt.user
+
 #svn文件夹忽略
 .svn/
 
