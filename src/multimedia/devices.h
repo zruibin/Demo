@@ -126,7 +126,7 @@ int DevicesMain()
     const auto audioOutputDevices = QMediaDevices::audioOutputs();
     const auto videoInputDevices = QMediaDevices::videoInputs();
 
-    out << "Audio devices detected: " << Qt::endl;
+    out << "\nAudio devices detected: " << Qt::endl;
     out << Qt::endl << "Input" << Qt::endl;
     for (auto &deviceInfo : audioInputDevices)
         printAudioDeviceInfo(out, deviceInfo);

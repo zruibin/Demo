@@ -9,10 +9,12 @@
 #define WINDOW_H
 
 #include <QMainWindow>
+#include "multimedia/video_capture.h"
 
 class QWidget;
 class QAction;
 class QMenu;
+class QPushButton;
 
 namespace UI {
 
@@ -30,7 +32,11 @@ protected:
     QMenu *fileMenu_; //定义一个菜单
 
 private slots:
-    void ClickButton();
+    void ClickDevicesButton();
+
+private:
+    VideoCaputer videoCapture_;
+    QPushButton *captureButton_;
 };
 
 }

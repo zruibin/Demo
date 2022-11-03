@@ -8,7 +8,7 @@
 
 ### 1 安装Cmake, Qt，编译器 
 #### 1.1 cmake：建议安装最新版本的cmake工具
-#### 1.2 Qt：建议安装qt5.6及以上版本，qt6也可以
+#### 1.2 Qt：qt6.2及以上
 
 # 问题
 
@@ -33,11 +33,14 @@
 
 * [QT Multimedia](https://github.com/qt/qtmultimedia.git)
 
+### Qt GUI从简单到复杂
+
+ * https://gitee.com/zruibin/qt_gui_simple2complex
+
 ### QT布局
 	
 * https://blog.csdn.net/zhangchuan7758/article/details/122428071
 * https://blog.csdn.net/llk15884975173/article/details/120323353
-
 
 
 
