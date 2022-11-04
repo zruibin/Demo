@@ -40,7 +40,8 @@ void VideoWidget::paintGL() {
 
     QVideoFrameFormat::PixelFormat pixelFormat = videoFrame_->pixelFormat();
     if (pixelFormat != QVideoFrameFormat::Format_NV12) {
-        qDebug()<< "VideoWidget::paintGL->frame was not NV12";
+        qDebug()<< "VideoWidget::paintGL->frame was "
+                << QVideoFrameFormat::pixelFormatToString(pixelFormat);
         return ;
     }
 

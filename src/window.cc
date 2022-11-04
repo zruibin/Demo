@@ -16,7 +16,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-
 #include "multimedia/devices.h"
 #include "multimedia/video_capture.h"
 
@@ -117,6 +116,7 @@ MainWindow::MainWindow(QWidget *parent)
     imageView_.reset(new QLabel);
     imageView_->setGeometry(QRect(400, 100, 300, 200));
     imageView_->clearMask();
+    imageView_->setStyleSheet("QLabel{background-color:rgb(0,0,0);}");
     imageView_->setParent(pCenterWidget_);
 }
 
