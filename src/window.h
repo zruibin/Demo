@@ -9,12 +9,17 @@
 #define WINDOW_H
 
 #include <QMainWindow>
+#include <QScopedPointer>
+#include <QLabel>
+
 #include "multimedia/video_capture.h"
+#include "multimedia/video_widget.h"
 
 class QWidget;
 class QAction;
 class QMenu;
 class QPushButton;
+
 
 namespace UI {
 
@@ -37,6 +42,8 @@ private slots:
 private:
     VideoCaputer videoCapture_;
     QPushButton *captureButton_;
+    QScopedPointer<VideoWidget> videoWidget_;
+    QScopedPointer<QLabel> imageView_;
 };
 
 }

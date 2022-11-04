@@ -8,6 +8,7 @@
 #ifndef VIDEO_CAPTURE_H
 #define VIDEO_CAPTURE_H
 
+#include <functional>
 #include <QCamera>
 #include <QMediaCaptureSession>
 #include <QMediaDevices>
@@ -18,6 +19,7 @@
 class VideoCaputer : public QObject {
     Q_OBJECT
 public:
+    using FrameCallBack = std::function<void(const QVideoFrame &frame)>;
     VideoCaputer() = default;
     virtual ~VideoCaputer();
 
@@ -26,6 +28,7 @@ public:
     void Stop();
     bool IsRunning() const { return running_; };
     bool IsInit() const { return initialize_; };
+    void SetFrameCallBack(FrameCallBack frameCallBack) { frameCallBack_ = frameCallBack; };
 
 private slots:
     void OnFrameChanged(const QVideoFrame &frame);
@@ -37,6 +40,7 @@ private:
     int frameNum_ = 0;
     bool running_ = false;
     bool initialize_ = false;
+    FrameCallBack frameCallBack_;
 };
 
 

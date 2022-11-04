@@ -16,8 +16,10 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+
 #include "multimedia/devices.h"
 #include "multimedia/video_capture.h"
+
 
 namespace UI {
 
@@ -68,6 +70,50 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
     captureButton_->setParent(pCenterWidget_);
+
+    videoCapture_.SetFrameCallBack([this](const QVideoFrame &frame){
+        if (videoWidget_ != nullptr) {
+            videoWidget_->PlayFrame(frame);
+        }
+        if (imageView_ != nullptr) {
+            imageView_->setPixmap(QPixmap::fromImage(frame.toImage()));
+        }
+
+        QVideoFrame videoFrame = frame;
+        /**
+         * 我的电脑上返回的格式是Format_NV12：18，每个像素1.5字节，一帧1382400字节，
+         * 如果你需要用别的YUV或者RGB格式，则需要自己设置QVideoSink或者QCamera格式
+         */
+        QVideoFrameFormat::PixelFormat pixelFormat = videoFrame.pixelFormat();
+        int width = videoFrame.width();
+        int height = videoFrame.height();
+        int planeCount = videoFrame.planeCount();
+        uchar *pdata = nullptr;
+        int len = 0;
+
+        videoFrame.map(QVideoFrame::ReadOnly);
+
+        for (int i = 0; i < planeCount; i++) {
+            pdata = videoFrame.bits(i);
+            len = videoFrame.mappedBytes(i);
+        }
+        static int frameNum = 0;
+        ++frameNum;
+//        qDebug("%d, %d, %d, %d, %d, %p, %d", frameNum,
+//               pixelFormat, width, height, planeCount, pdata, len);
+
+        videoFrame.unmap();
+    });
+
+    videoWidget_.reset(new VideoWidget);
+    videoWidget_->setGeometry(QRect(30, 100, 300, 200));
+    videoWidget_->clearMask();
+    videoWidget_->setParent(pCenterWidget_);
+
+    imageView_.reset(new QLabel);
+    imageView_->setGeometry(QRect(400, 100, 300, 200));
+    imageView_->clearMask();
+    imageView_->setParent(pCenterWidget_);
 }
 
 void MainWindow::ClickDevicesButton() {

@@ -12,11 +12,6 @@ message(STATUS "Build type was ${CMAKE_BUILD_TYPE}")
 # 生成compile_commands.json,用于在VSCode等编辑器/IDE中给C/C++代码做函数定义跳转支持
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if(APPLE)
-    set(CMAKE_SYSTEM_PROCESSOR arm64)
-    set(CMAKE_OSX_ARCHITECTURES arm64)
-endif()
-
 
 # 检查c++编译器标志，设置c++11支持变量
 include(CheckCXXCompilerFlag)
@@ -107,6 +102,8 @@ set(QtModule
 #    Network
     Multimedia
     MultimediaWidgets
+    OpenGL
+    OpenGLWidgets
 )
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QtModule} REQUIRED)
@@ -119,6 +116,8 @@ set(QtModuleLibs
 #    Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Multimedia
     Qt${QT_VERSION_MAJOR}::MultimediaWidgets
+    Qt${QT_VERSION_MAJOR}::OpenGL
+    Qt${QT_VERSION_MAJOR}::OpenGLWidgets
 )
 
 
@@ -214,7 +213,9 @@ if(WIN32)
     message(WARNING "Now is windows")
 elseif(APPLE)
     message(WARNING "Now is Apple systens.")
-    #set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    # set(CMAKE_SYSTEM_PROCESSOR arm64)
+#    set(CMAKE_OSX_ARCHITECTURES "x86_64")
+     set(CMAKE_OSX_ARCHITECTURES arm64)
     message(STATUS "osx architectures was ${CMAKE_OSX_ARCHITECTURES}")
 elseif(UNIX)
     message(WARNING "Now is UNIX-like OS's. Including aPPLE os x  and CygWin")
