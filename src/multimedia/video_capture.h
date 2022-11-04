@@ -29,6 +29,7 @@ public:
     bool IsRunning() const { return running_; };
     bool IsInit() const { return initialize_; };
     void SetFrameCallBack(FrameCallBack frameCallBack) { frameCallBack_ = frameCallBack; };
+    void SetMirrored(bool mirrored) { mirrored_ = mirrored; };
 
 private slots:
     void OnFrameChanged(const QVideoFrame &frame);
@@ -41,6 +42,7 @@ private:
     bool running_ = false;
     bool initialize_ = false;
     FrameCallBack frameCallBack_;
+    bool mirrored_ = false;
 };
 
 

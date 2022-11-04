@@ -20,6 +20,26 @@ void VideoCaputer::Init() {
     QCameraDevice camerDevice = QMediaDevices::defaultVideoInput();
     camera_.reset(new QCamera(camerDevice));
 
+    if (camera_->cameraFormat().isNull()) {
+            auto formats = camerDevice.videoFormats();
+            if (!formats.isEmpty()) {
+                // Choose a decent camera format: Maximum resolution at at least 30 FPS
+                // we use 29 FPS to compare against as some cameras report 29.97 FPS...
+                QCameraFormat bestFormat;
+                for (const auto &fmt : formats) {
+                    if (bestFormat.maxFrameRate() < 29
+                        && fmt.maxFrameRate() > bestFormat.maxFrameRate())
+                        bestFormat = fmt;
+                    else if (bestFormat.maxFrameRate() == fmt.maxFrameRate()
+                             && bestFormat.resolution().width() * bestFormat.resolution().height()
+                                     < fmt.resolution().width() * fmt.resolution().height())
+                        bestFormat = fmt;
+                }
+
+                camera_->setCameraFormat(bestFormat);
+            }
+        }
+
     connect(camera_.get(), &QCamera::errorOccurred, this, [this](){
         qDebug()<< "camera error occurred"<<this->camera_->errorString();
     });
@@ -45,7 +65,10 @@ void VideoCaputer::Stop() {
 
 void VideoCaputer::OnFrameChanged(const QVideoFrame &frame) {
     if (frameCallBack_) {
-        frameCallBack_(frame);
+        QVideoFrame newFrame(frame);
+//        newFrame.setRotationAngle(QVideoFrame::Rotation270);
+        newFrame.setMirrored(mirrored_);
+        frameCallBack_(newFrame);
     }
 }
 

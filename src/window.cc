@@ -71,12 +71,16 @@ MainWindow::MainWindow(QWidget *parent)
     });
     captureButton_->setParent(pCenterWidget_);
 
+    videoCapture_.SetMirrored(true);
     videoCapture_.SetFrameCallBack([this](const QVideoFrame &frame){
         if (videoWidget_ != nullptr) {
             videoWidget_->PlayFrame(frame);
         }
         if (imageView_ != nullptr) {
-            imageView_->setPixmap(QPixmap::fromImage(frame.toImage()));
+            QImage scaledImage = frame.toImage().scaled(imageView_->size(),
+                                                        Qt::KeepAspectRatio,
+                                                        Qt::SmoothTransformation);
+            imageView_->setPixmap(QPixmap::fromImage(scaledImage));
         }
 
         QVideoFrame videoFrame = frame;
