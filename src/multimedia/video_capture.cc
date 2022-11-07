@@ -39,8 +39,10 @@ void VideoCaputer::Init() {
                         << " minFrameRate:" << fmt.minFrameRate()
                         << " maxFrameRate:" << fmt.maxFrameRate()
                         << "resolution:"<<fmt.resolution().width()<<"x"<<fmt.resolution().height();
-
-                if (fmt.pixelFormat() == QVideoFrameFormat::Format_NV12) {
+                if (fmt.pixelFormat() == QVideoFrameFormat::Format_NV12
+                    && fmt.resolution().width() > fmt.resolution().height()
+                    && bestFormat.resolution().width() < fmt.resolution().width()
+                    && bestFormat.resolution().height() < fmt.resolution().height()) {
                     bestFormat = fmt;
                 }
             }
