@@ -10,7 +10,7 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QApplication>
-#include "foundation/notification_center.h"
+#include "foundation/foundation.h"
 
 namespace UI {
 
@@ -36,10 +36,24 @@ LeftController::LeftController(QWidget* parent) : QWidget(parent) {
     animation_.reset(new QPropertyAnimation);
     animation_->setTargetObject(button);    //设置使用动画的控件
     animation_->setEasingCurve(QEasingCurve::Linear);//设置动画效果
+
+    using namespace Foundation;
+    NotificationCenter::DefaultCenter()->AddObserver(this, "alert", [](NotificationRef noti){
+        qDebug() << "LeftController::Observer->Alert";
+    });
+    NotificationCenter::DefaultCenter()->AddObserver(this, "alert2", [](NotificationRef noti){
+        qDebug() << "LeftController::Observer->Alert2";
+    });
 }
 
 void LeftController::OnOpacityAnimationBtnClicked() {
     qDebug() << "LeftController::OnOpacityAnimationBtnClicked.";
+
+    using namespace Foundation;
+    NotificationCenter::DefaultCenter()->PostNotification("alert");
+    NotificationCenter::DefaultCenter()->PostNotification("alert2");
+    NotificationCenter::DefaultCenter()->RemoveObserver(this);
+
     //windowOpacity：不透明度（注意该效果只对顶级窗口有效哦）
 //    animation_->setTargetObject(this);     //重设动画使用对象
     animation_->setPropertyName("windowOpacity");  //指定动画属性名

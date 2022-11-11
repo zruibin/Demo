@@ -14,41 +14,46 @@
 
 namespace Foundation {
 
-struct NSNotification final {
+using Observer = QObject;
+
+struct Notification final {
     std::string name;
-    QObject object;
+    Observer object;
     //userInfo
 };
 
+using NotificationRef = std::shared_ptr<Notification>;
+
 class NotificationCenter final {
+    
+public:
+    ~NotificationCenter() = default;
 
 public:
-    using NSNotificationRef = std::shared_ptr<NSNotification>;
-    using SelectorHandler = std::function<void(NSNotificationRef)>;
+    using Selector = std::function<void(NotificationRef)>;
     using String = std::string;
-    using SelectorHandlerList = std::vector<SelectorHandler>;
-    using Map = std::unordered_map<String, SelectorHandlerList>;
-    using MapRef = std::shared_ptr<std::unordered_map<String, Map>>;
-
-    static NotificationCenter defaultCenter() {
-        return instance_;
-    }
-
-    void AddObserver(const QObject* observer,
+    using SelectorMapRef = std::shared_ptr<std::unordered_map<String, Selector>>;
+    using MapRef = std::shared_ptr<std::unordered_map<String, SelectorMapRef>>;
+    
+public:
+    static std::shared_ptr<NotificationCenter> DefaultCenter();
+    
+    void AddObserver(const Observer* observer,
                      const String& aName,
-                     SelectorHandler selectorHandler);
+                     Selector selector);
     void PostNotification(const String& aName,
-                          NSNotificationRef object);
+                          NotificationRef object);
     void PostNotification(const String& aName);
-    void RemoveObserver(const QObject* observer,
+    void RemoveObserver(const Observer* observer,
                         const String& aName);
+    void RemoveObserver(const Observer* observer);
 
 private:
-    NotificationCenter() = default;
+    NotificationCenter();
     NotificationCenter(NotificationCenter&) = default;
+    static std::shared_ptr<NotificationCenter> _DefaultCenter();
 
 private:
-    static NotificationCenter instance_;
     MapRef notificationMap_;
 };
 

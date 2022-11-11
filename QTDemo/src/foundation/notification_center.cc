@@ -7,53 +7,78 @@
  */
 
 #include "notification_center.h"
-
+#include <sstream>
+#include <mutex>
 
 namespace Foundation {
 
-void NotificationCenter::AddObserver(const QObject* observer,
+inline NotificationCenter::String
+GetObserverHashCode(const Observer* observer) {
+    std::ostringstream oss;
+    oss << observer;
+    return oss.str();
+}
+
+
+std::shared_ptr<NotificationCenter> NotificationCenter::DefaultCenter() {
+    return _DefaultCenter();
+}
+
+std::shared_ptr<NotificationCenter> NotificationCenter::_DefaultCenter() {
+    static std::shared_ptr<NotificationCenter> instance_;
+    static std::once_flag flag;
+    std::call_once(flag, [&](){
+//            instance_ = std::make_shared<NotificationCenter>();
+        instance_ = std::shared_ptr<NotificationCenter>(new NotificationCenter);
+    });
+    return instance_;
+}
+
+
+NotificationCenter::NotificationCenter() {
+    notificationMap_ = std::make_shared<std::unordered_map<String, SelectorMapRef>>();
+}
+
+void NotificationCenter::AddObserver(const Observer* observer,
                                      const String& aName,
-                                     SelectorHandler selectorHandler) {
+                                     Selector selector) {
     if (observer == nullptr) return;
     if (aName.empty()) return;
-    if (selectorHandler == nullptr) return;
+    if (selector == nullptr) return;
 
-    String observerHashCodeKey = observer->objectName().toStdString();
-
-    Map observerMap;
-    SelectorHandlerList selectorHandlerList;
+    String observerHashCodeKey = GetObserverHashCode(observer);
+    SelectorMapRef observerMap;
 
     auto it = notificationMap_->find(aName);
     if (it != notificationMap_->end()) {
         observerMap = it->second;
-        selectorHandlerList = observerMap.find(observerHashCodeKey)->second;
+        auto selectorIt = observerMap->find(observerHashCodeKey);
+        if (selectorIt == observerMap->end()) {
+            observerMap->emplace(observerHashCodeKey, selector);
+        }
+    } else {
+        observerMap = std::make_shared<std::unordered_map<String, Selector>>();
+        observerMap->emplace(observerHashCodeKey, selector);
+        notificationMap_->emplace(aName, observerMap);
     }
-
-    selectorHandlerList.push_back(selectorHandler);
-    observerMap.emplace(observerHashCodeKey, selectorHandlerList);
-    notificationMap_->emplace(aName, observerMap);
 }
 
 void NotificationCenter::PostNotification(const String& aName,
-                                          NSNotificationRef object) {
+                                          NotificationRef object) {
     if (aName.empty()) return;
 
     auto it = notificationMap_->find(aName);
     if (it == notificationMap_->end()) {
         return;
     }
-    Map observerMap = it->second;
-    for(auto observerMapIt = observerMap.begin(); observerMapIt != observerMap.end(); ++observerMapIt) {
+    SelectorMapRef observerMap = it->second;
+    for(auto observerMapIt = observerMap->begin(); observerMapIt != observerMap->end(); ++observerMapIt) {
         String observerHashCodeKey = observerMapIt->first;
         if (observerHashCodeKey.empty()) continue;
 
-        SelectorHandlerList selectorHandlers = observerMapIt->second;
-        for (auto vectorIt = selectorHandlers.begin(); vectorIt != selectorHandlers.end(); ++vectorIt) {
-            SelectorHandler selectorHandler = *vectorIt;
-            if (selectorHandler != nullptr) {
-                selectorHandler(object);
-            }
-
+        Selector selectors = observerMapIt->second;
+        if (selectors != nullptr) {
+            selectors(object);
         }
     }
 }
@@ -62,7 +87,7 @@ void NotificationCenter::PostNotification(const String& aName) {
     PostNotification(aName, nullptr);
 }
 
-void NotificationCenter::RemoveObserver(const QObject* observer,
+void NotificationCenter::RemoveObserver(const Observer* observer,
                                         const String& aName) {
     if (observer == nullptr) return;
     if (aName.empty()) return;
@@ -71,13 +96,24 @@ void NotificationCenter::RemoveObserver(const QObject* observer,
     if (it == notificationMap_->end()) {
         return;
     }
-    Map observerMap = it->second;
-    String observerHashCodeKey = observer->objectName().toStdString(); //???
-    auto observerIt = observerMap.find(observerHashCodeKey);
-    if (observerIt != observerMap.end()) {
-        observerMap.erase(observerHashCodeKey);
+    SelectorMapRef observerMap = it->second;
+    String observerHashCodeKey = GetObserverHashCode(observer);
+    auto observerIt = observerMap->find(observerHashCodeKey);
+    if (observerIt != observerMap->end()) {
+        observerMap->erase(observerHashCodeKey);
     }
 }
 
+void NotificationCenter::RemoveObserver(const Observer* observer) {
+    if (observer == nullptr) return;
+    for (auto it = notificationMap_->begin(); it != notificationMap_->end(); ++it) {
+        SelectorMapRef observerMap = it->second;
+        String observerHashCodeKey = GetObserverHashCode(observer);
+        auto observerIt = observerMap->find(observerHashCodeKey);
+        if (observerIt != observerMap->end()) {
+            observerMap->erase(observerHashCodeKey);
+        }
+    }
+}
 
 }

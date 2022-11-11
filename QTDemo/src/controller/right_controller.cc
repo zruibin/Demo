@@ -9,7 +9,7 @@
 #include "controller/right_controller.h"
 #include <QDebug>
 #include <QPushButton>
-#include "foundation/notification_center.h"
+#include "foundation/foundation.h"
 
 namespace UI {
 
@@ -30,6 +30,15 @@ RightController::RightController(QWidget* parent) : QWidget(parent) {
     layout_->setContentsMargins(0, 0, 0, 0);
     layout_->addWidget(button);
     this->setLayout(layout_.get());
+
+    using namespace Foundation;
+    NotificationCenter::DefaultCenter()->AddObserver(this, "alert", [button](NotificationRef noti){
+        qDebug() << "RightController::Observer->Alert";
+        button->hide();
+    });
+    NotificationCenter::DefaultCenter()->AddObserver(this, "alert2", [](NotificationRef noti){
+        qDebug() << "RightController::Observer->Alert2";
+    });
 }
 
 }
