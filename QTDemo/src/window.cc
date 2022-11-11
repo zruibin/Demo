@@ -22,7 +22,7 @@
 
 namespace UI {
 
-MainWindow::MainWindow(QWidget *parent)
+Window::Window(QWidget *parent)
     : QMainWindow(parent) {
     this->setWindowTitle(tr("QTDemo Window"));
     // this->setWindowFlags(Qt::WindowTitleHint | 
@@ -120,7 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
     imageView_->setParent(pCenterWidget_);
 }
 
-void MainWindow::ClickDevicesButton() {
+void Window::ClickDevicesButton() {
     std::cout << "PushButton Click." << std::endl;
     DevicesMain();
 }

@@ -38,11 +38,13 @@
  * https://gitee.com/zruibin/qt_gui_simple2complex
 
 ### QT布局
-	
+
 * https://blog.csdn.net/zhangchuan7758/article/details/122428071
 * https://blog.csdn.net/llk15884975173/article/details/120323353
 
+### 动画
 
+* http://t.zoukankan.com/itrena-p-5938274.html
 
 
 

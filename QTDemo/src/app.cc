@@ -11,6 +11,7 @@
 #include <QApplication>
 #include <QTextCodec>
 #include "window.h"
+#include "controller/appdelegate.h"
 
 namespace UI {
 
@@ -26,8 +27,11 @@ void AppLication::run(int argc, char *argv[]) {
     app.setApplicationVersion("V1.0.0.0");
     // app.setApplicationDisplayName(("author: ruibin.chow@qq.com"));
 
-    MainWindow w;
-    w.show();
+//    Window w;
+//    w.show();
+
+    AppDelegate appDelegate;
+    appDelegate.show();
     
     app.exec();
 }

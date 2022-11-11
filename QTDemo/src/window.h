@@ -23,13 +23,13 @@ class QPushButton;
 
 namespace UI {
 
-class MainWindow : public QMainWindow {
+class Window : public QMainWindow {
 
 Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() = default;
+    Window(QWidget *parent = nullptr);
+    ~Window() = default;
 
 protected:
     QWidget *pCenterWidget_;

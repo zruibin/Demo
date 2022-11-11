@@ -1,5 +1,5 @@
 
-message("Log Manager Module.")
+message("multimedia Module.")
 
 set(multimedia_name multimedia)
 

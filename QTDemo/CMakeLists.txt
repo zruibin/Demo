@@ -162,6 +162,8 @@ set(USE_DEPENDS_MODEL TRUE)
 #include("${libs_dir}/nlohmann/CMakeLists.txt")
 # modules
 include("${src_dir}/multimedia/CMakeLists.txt")
+include("${src_dir}/controller/CMakeLists.txt")
+include("${src_dir}/foundation/CMakeLists.txt")
 
 
 if(USE_DEPENDS_MODEL)
@@ -174,6 +176,8 @@ set(modules_list
 
 set(DEPENDS_LIBS
     ${multimedia_all_file}
+    ${controller_all_file}
+    ${foundation_all_file}
 )
 
 else()
@@ -183,6 +187,8 @@ set(libs_list
 
 set(modules_list
     multimedia
+    controller
+    foundation
 )
 
 set(DEPENDS_LIBS 
