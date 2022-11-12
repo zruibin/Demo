@@ -10,15 +10,14 @@
 
 #include <string>
 #include <unordered_map>
-#include <QObject>
 
 namespace Foundation {
 
-using Observer = QObject;
+using Observer = void;
 
 struct Notification final {
     std::string name;
-    Observer object;
+    Observer* object;
     //userInfo
 };
 

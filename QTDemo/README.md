@@ -39,6 +39,7 @@
 
 ### QT布局
 
+* http://c.biancheng.net/view/9422.html
 * https://blog.csdn.net/zhangchuan7758/article/details/122428071
 * https://blog.csdn.net/llk15884975173/article/details/120323353
 

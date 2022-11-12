@@ -9,7 +9,7 @@
 #include "controller/left_controller.h"
 #include <QDebug>
 #include <QPushButton>
-#include <QApplication>
+#include <QResizeEvent>
 #include "foundation/foundation.h"
 
 namespace UI {
@@ -21,22 +21,33 @@ LeftController::LeftController(QWidget* parent) : QWidget(parent) {
     QPushButton* button = new QPushButton;
     button->setText("Left");
     button->setStyleSheet("QPushButton{font-size:13px;color:red;}");
-    button->setGeometry(QRect(0, 0, 100, 40));
+//    button->setGeometry(QRect(0, 0, 100, 80));
+    button->setMinimumHeight(40);
     button->clearMask();
     connect(button, SIGNAL(clicked()), this, SLOT(OnOpacityAnimationBtnClicked()));
-    button->setBackgroundRole(QPalette::Base);
+    button->setBackgroundRole(QPalette::Button);
 
-
-    layout_.reset(new QHBoxLayout());
+    layout_.reset(new QVBoxLayout());
+//    layout_->addStretch(0);
     layout_->setSpacing(0);
     layout_->setContentsMargins(0, 0, 0, 0);
+    layout_->setDirection(QBoxLayout::TopToBottom);
+    layout_->setAlignment(Qt::AlignTop);
     layout_->addWidget(button);
     this->setLayout(layout_.get());
 
     animation_.reset(new QPropertyAnimation);
     animation_->setTargetObject(button);    //设置使用动画的控件
     animation_->setEasingCurve(QEasingCurve::Linear);//设置动画效果
+    
+    QPushButton* button2 = new QPushButton;
+    button2->setText("Left2");
+    button2->setStyleSheet("QPushButton{font-size:13px;color:red;}");
+    button2->setMinimumHeight(30);
+    button2->setBackgroundRole(QPalette::Button);
+    layout_->addWidget(button2);
 
+    
     using namespace Foundation;
     NotificationCenter::DefaultCenter()->AddObserver(this, "alert", [](NotificationRef noti){
         qDebug() << "LeftController::Observer->Alert";
@@ -66,6 +77,11 @@ void LeftController::OnOpacityAnimationBtnClicked() {
 
     animation_->setLoopCount(-1);  //当值为-1时，动画一直运行，直到窗口关闭
     animation_->start();   //启动动画
+}
+
+void LeftController::resizeEvent(QResizeEvent *event) {
+    qDebug() << "resizeEvent, size:" << event->size()
+                << " oldSize:" << event->oldSize();
 }
 
 }

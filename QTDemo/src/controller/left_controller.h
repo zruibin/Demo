@@ -10,7 +10,7 @@
 
 #include <QWidget>
 #include <QScopedPointer>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QPropertyAnimation>
 
 namespace UI {
@@ -24,8 +24,9 @@ public:
     ~LeftController() = default;
 protected slots:
     void OnOpacityAnimationBtnClicked();
+    void resizeEvent(QResizeEvent *event) override;
 private:
-    QScopedPointer<QHBoxLayout> layout_;
+    QScopedPointer<QVBoxLayout> layout_;
     QScopedPointer<QPropertyAnimation> animation_;
 };
 

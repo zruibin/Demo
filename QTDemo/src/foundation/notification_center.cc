@@ -72,11 +72,11 @@ void NotificationCenter::PostNotification(const String& aName,
         return;
     }
     SelectorMapRef observerMap = it->second;
-    for(auto observerMapIt = observerMap->begin(); observerMapIt != observerMap->end(); ++observerMapIt) {
-        String observerHashCodeKey = observerMapIt->first;
+    for (auto& [k, v] : *observerMap) {
+        String observerHashCodeKey = k;
         if (observerHashCodeKey.empty()) continue;
 
-        Selector selectors = observerMapIt->second;
+        Selector selectors = v;
         if (selectors != nullptr) {
             selectors(object);
         }
@@ -106,8 +106,8 @@ void NotificationCenter::RemoveObserver(const Observer* observer,
 
 void NotificationCenter::RemoveObserver(const Observer* observer) {
     if (observer == nullptr) return;
-    for (auto it = notificationMap_->begin(); it != notificationMap_->end(); ++it) {
-        SelectorMapRef observerMap = it->second;
+    for (auto& kv : *notificationMap_) {
+        SelectorMapRef observerMap = kv.second;
         String observerHashCodeKey = GetObserverHashCode(observer);
         auto observerIt = observerMap->find(observerHashCodeKey);
         if (observerIt != observerMap->end()) {
