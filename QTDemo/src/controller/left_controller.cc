@@ -55,6 +55,15 @@ LeftController::LeftController(QWidget* parent) : QWidget(parent) {
     NotificationCenter::DefaultCenter()->AddObserver(this, "alert2", [](NotificationRef noti){
         qDebug() << "LeftController::Observer->Alert2";
     });
+    NotificationCenter::DefaultCenter()->AddNotification("alert", [](NotificationRef noti){
+        qDebug() << "Notification->Alert->1";
+    });
+    NotificationCenter::DefaultCenter()->AddNotification("alert", [](NotificationRef noti){
+        qDebug() << "Notification->Alert->2";
+    });
+    NotificationCenter::DefaultCenter()->AddNotification("alert2", [](NotificationRef noti){
+        qDebug() << "Notification->Alert2->1";
+    });
 }
 
 void LeftController::OnOpacityAnimationBtnClicked() {
@@ -64,6 +73,7 @@ void LeftController::OnOpacityAnimationBtnClicked() {
     NotificationCenter::DefaultCenter()->PostNotification("alert");
     NotificationCenter::DefaultCenter()->PostNotification("alert2");
     NotificationCenter::DefaultCenter()->RemoveObserver(this);
+    NotificationCenter::DefaultCenter()->RemoveNotification("alert");
 
     //windowOpacity：不透明度（注意该效果只对顶级窗口有效哦）
 //    animation_->setTargetObject(this);     //重设动画使用对象

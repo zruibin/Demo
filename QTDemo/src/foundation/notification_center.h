@@ -10,6 +10,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace Foundation {
 
@@ -33,6 +34,8 @@ public:
     using String = std::string;
     using SelectorMapRef = std::shared_ptr<std::unordered_map<String, Selector>>;
     using MapRef = std::shared_ptr<std::unordered_map<String, SelectorMapRef>>;
+    using VectorRef = std::shared_ptr<std::vector<Selector>>;
+    using VectorMapRef = std::shared_ptr<std::unordered_map<String, VectorRef>>;
     
 public:
     static std::shared_ptr<NotificationCenter> DefaultCenter();
@@ -46,6 +49,10 @@ public:
     void RemoveObserver(const Observer* observer,
                         const String& aName);
     void RemoveObserver(const Observer* observer);
+    
+    void AddNotification(const String& aName,
+                         Selector selector);
+    void RemoveNotification(const String& aName);
 
 private:
     NotificationCenter();
@@ -54,6 +61,7 @@ private:
 
 private:
     MapRef notificationMap_;
+    VectorMapRef vectorMap_;
 };
 
 }

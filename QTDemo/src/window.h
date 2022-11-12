@@ -10,6 +10,7 @@
 
 #include <QMainWindow>
 #include <QScopedPointer>
+#include <QSharedPointer>
 #include <QLabel>
 
 #include "multimedia/video_capture.h"
@@ -36,12 +37,16 @@ protected:
     QAction *openAction_; //定义一个动作
     QMenu *fileMenu_; //定义一个菜单
 
+protected slots:
+    void resizeEvent(QResizeEvent *event) override;
+
 private slots:
     void ClickDevicesButton();
 
 private:
     VideoCaputer videoCapture_;
-    QPushButton *captureButton_;
+    QSharedPointer<QPushButton> captureButton_;
+    QSharedPointer<QPushButton> deviceButton_;
     QScopedPointer<VideoWidget> videoWidget_;
     QScopedPointer<QLabel> imageView_;
 };

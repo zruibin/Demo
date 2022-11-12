@@ -15,20 +15,24 @@
 #include <QAction>
 #include <QPushButton>
 #include <QVBoxLayout>
-
+#include <QResizeEvent>
 #include "multimedia/devices.h"
 #include "multimedia/video_capture.h"
 
 
 namespace UI {
 
-Window::Window(QWidget *parent)
-    : QMainWindow(parent) {
+Window::Window(QWidget *parent) : QMainWindow(parent) {
+    qDebug() << "Window, frame:" << this->rect()
+                << " size:" << this->frameSize();
     this->setWindowTitle(tr("QTDemo Window"));
     // this->setWindowFlags(Qt::WindowTitleHint | 
     //                     Qt::CustomizeWindowHint | 
     //                     Qt::MSWindowsFixedSizeDialogHint);
     this->setFixedSize(800, 560);
+    this->setWindowOpacity(0.98);
+    this->setMouseTracking(true);
+    this->setMaximumSize(QSize(16777215, 16777215));
 
     openAction_ = new QAction(tr("Open"),this); //初始化动作
     fileMenu_ = new QMenu; //创建一个菜单
@@ -38,25 +42,25 @@ Window::Window(QWidget *parent)
     pCenterWidget_ = new QWidget;
     this->setCentralWidget(pCenterWidget_);//把这个空窗口设置为QMainWindow的中心窗口
 
-    QPushButton *button = new QPushButton;
-    button->setText("DevicesMain");
-    button->setStyleSheet("QPushButton{ font-family:'Microsoft YaHei';font-size:13px;color:red;}");
+    deviceButton_ = QSharedPointer<QPushButton>(new QPushButton);
+    deviceButton_->setText("DevicesMain");
+    deviceButton_->setStyleSheet("QPushButton{ font-family:'Microsoft YaHei';font-size:13px;color:red;}");
     // button->move(10, 20);
     // button->setFixedSize(100,40);
-    button->setGeometry(QRect(10, 20, 100, 40));
-    button->clearMask();
-    button->setBackgroundRole(QPalette::Base);
-    connect(button, SIGNAL(clicked()), this, SLOT(ClickDevicesButton()));
-    button->setParent(pCenterWidget_);
+    deviceButton_->setGeometry(QRect((this->width()-100)/2, 20, 100, 40));
+    deviceButton_->clearMask();
+    deviceButton_->setBackgroundRole(QPalette::Base);
+    connect(deviceButton_.get(), SIGNAL(clicked()), this, SLOT(ClickDevicesButton()));
+    deviceButton_->setParent(pCenterWidget_);
 
 
-    captureButton_ = new QPushButton;
+    captureButton_ = QSharedPointer<QPushButton>(new QPushButton);
     captureButton_->setText("开始相机采集");
     captureButton_->setStyleSheet("QPushButton{font-size:13px;color:#000;}");
     captureButton_->setGeometry(QRect(10, 60, 100, 40));
     captureButton_->clearMask();
     captureButton_->setBackgroundRole(QPalette::Base);
-    connect(captureButton_, &QPushButton::clicked, this, [this](){
+    connect(captureButton_.get(), &QPushButton::clicked, this, [this](){
         if (!videoCapture_.IsInit()) {
             videoCapture_.Init();
         }
@@ -123,6 +127,14 @@ Window::Window(QWidget *parent)
 void Window::ClickDevicesButton() {
     std::cout << "PushButton Click." << std::endl;
     DevicesMain();
+}
+
+void Window::resizeEvent(QResizeEvent *event) {
+    qDebug() << "Window resizeEvent, size:" << event->size()
+                << " oldSize:" << event->oldSize();
+    qDebug() << "Window resizeEvent, frame:" << this->rect()
+                << " size:" << this->frameSize();
+    deviceButton_->move((this->width()-100)/2, 20);
 }
 
 }
