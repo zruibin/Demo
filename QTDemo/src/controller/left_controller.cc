@@ -17,36 +17,49 @@ namespace UI {
 LeftController::LeftController(QWidget* parent) : QWidget(parent) {
     qDebug() << "LeftController::LeftController.";
 //    this->setStyleSheet("background-color:rgb(0,0,0);");
-
-    QPushButton* button = new QPushButton;
-    button->setText("Left");
-    button->setStyleSheet("QPushButton{font-size:13px;color:red;}");
-//    button->setGeometry(QRect(0, 0, 100, 80));
-    button->setMinimumHeight(40);
-    button->clearMask();
-    connect(button, SIGNAL(clicked()), this, SLOT(OnOpacityAnimationBtnClicked()));
-    button->setBackgroundRole(QPalette::Button);
-
-    layout_.reset(new QVBoxLayout());
-//    layout_->addStretch(0);
-    layout_->setSpacing(0);
-    layout_->setContentsMargins(0, 0, 0, 0);
-    layout_->setDirection(QBoxLayout::TopToBottom);
-    layout_->setAlignment(Qt::AlignTop);
-    layout_->addWidget(button);
-    this->setLayout(layout_.get());
+//    this->setFixedSize(160, 500);
+//    this->setMaximumSize(QSize(16777215, 16777215));
+//    this->setMinimumSize(QSize(10, 10));
+    QColor color(100, 238, 100);;
+    QPalette pal(color);
+    this->setAutoFillBackground(true);
+    this->setPalette(pal);
+    
+    QString style = "QPushButton{font-size:13px;color:red;background-color:#FFF;}";
+    style.append("QPushButton:hover{background-color:rgb(50, 170, 200)}");
+    style.append("QPushButton:pressed{background-color:rgb(0, 255, 0)}");
+    testButton1_.reset(new QPushButton(this));
+    testButton1_->setText("Left");
+    testButton1_->setStyleSheet(style);
+    testButton1_->setAutoFillBackground(true);
+    testButton1_->setGeometry(QRect(0, 0, 100, 20));
+    testButton1_->clearMask();
+    connect(testButton1_.get(), SIGNAL(clicked()), this, SLOT(OnOpacityAnimationBtnClicked()));
+    testButton1_->setBackgroundRole(QPalette::Button);
+    testButton1_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     animation_.reset(new QPropertyAnimation);
-    animation_->setTargetObject(button);    //设置使用动画的控件
+    animation_->setTargetObject(testButton1_.get());    //设置使用动画的控件
     animation_->setEasingCurve(QEasingCurve::Linear);//设置动画效果
     
-    QPushButton* button2 = new QPushButton;
-    button2->setText("Left2");
-    button2->setStyleSheet("QPushButton{font-size:13px;color:red;}");
-    button2->setMinimumHeight(30);
-    button2->setBackgroundRole(QPalette::Button);
-    layout_->addWidget(button2);
+    testButton2_.reset(new QPushButton(this));
+    testButton2_->setText("Left2");
+    testButton2_->setGeometry(QRect(0, testButton1_->y()+testButton1_->height(), 100, 30));
+    testButton2_->setStyleSheet("font-size:13px;color:red;background-color:#eee");
+    testButton2_->setAutoFillBackground(true);
+    testButton2_->setBackgroundRole(QPalette::Button);
+    testButton2_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
+    qDebug() << "y:" << testButton1_->y();
+    qDebug() << "height:" <<testButton1_->height();
+//    layout_.reset(new QVBoxLayout());
+//    layout_->setSpacing(0);
+//    layout_->setContentsMargins(0, 0, 0, 0);
+//    layout_->setDirection(QBoxLayout::TopToBottom);
+//    layout_->setAlignment(Qt::AlignTop);
+//    layout_->addWidget(testButton1_.get());
+//    layout_->addWidget(testButton2_.get());
+//    this->setLayout(layout_.get());
     
     using namespace Foundation;
     NotificationCenter::DefaultCenter()->AddObserver(this, "alert", [](NotificationRef noti){
@@ -92,6 +105,8 @@ void LeftController::OnOpacityAnimationBtnClicked() {
 void LeftController::resizeEvent(QResizeEvent *event) {
     qDebug() << "resizeEvent, size:" << event->size()
                 << " oldSize:" << event->oldSize();
+    testButton1_->move((this->width()-100)/2, 0);
+    testButton2_->move((this->width()-100)/2, this->height()-testButton2_->height());
 }
 
 }

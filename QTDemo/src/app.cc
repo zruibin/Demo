@@ -27,11 +27,11 @@ void AppLication::run(int argc, char *argv[]) {
     app.setApplicationVersion("V1.0.0.0");
     // app.setApplicationDisplayName(("author: ruibin.chow@qq.com"));
 
-    Window w;
-    w.show();
+//    Window w;
+//    w.show();
 
-//    AppDelegate appDelegate;
-//    appDelegate.show();
+    AppDelegate appDelegate;
+    appDelegate.show();
     
     app.exec();
 }

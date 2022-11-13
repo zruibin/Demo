@@ -29,8 +29,13 @@ AppDelegate::AppDelegate(QWidget *parent) : QMainWindow(parent) {
     pSplitter_->setHandleWidth(1);
     pSplitter_->addWidget(leftController.get());
     pSplitter_->addWidget(rightController.get());
-    pSplitter_->setStretchFactor(0, 2);
-    pSplitter_->setStretchFactor(1, 8);
+    pSplitter_->setChildrenCollapsible(false);
+    QList<int> sizes;
+    sizes << 20000 << 80000;
+    pSplitter_->setSizes(sizes);
+    
+    leftController->setMaximumWidth(200);
+    leftController->setMinimumWidth(80);
 
     centerWidget_.reset(new QWidget);
     layout_.reset(new QHBoxLayout());

@@ -11,6 +11,7 @@
 #include <QWidget>
 #include <QScopedPointer>
 #include <QVBoxLayout>
+#include <QPushButton>
 #include <QPropertyAnimation>
 
 namespace UI {
@@ -27,6 +28,8 @@ protected slots:
     void resizeEvent(QResizeEvent *event) override;
 private:
     QScopedPointer<QVBoxLayout> layout_;
+    QScopedPointer<QPushButton> testButton1_;
+    QScopedPointer<QPushButton> testButton2_;
     QScopedPointer<QPropertyAnimation> animation_;
 };
 
