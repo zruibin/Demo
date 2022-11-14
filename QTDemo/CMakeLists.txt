@@ -212,6 +212,10 @@ set(SOURCES
     src/window.cc
 )
 
+
+file (GLOB_RECURSE ASSETS "assets/*")
+sourceGroup("" ${ASSETS})
+
 source_group(TREE "${CMAKE_SOURCE_DIR}" FILES ${HEADERS} ${SOURCES})
 
 
@@ -235,7 +239,7 @@ set(TARGET ${PROJECT_NAME})
 #set(TARGET_SHARED_LIB "${PROJECT_NAME}_shared")
 #add_library(${TARGET_SHARED_LIB} SHARED ${DEPENDS_LIBS} ${HEADERS} ${SOURCES} ${all_list})
 
-qt_add_executable(${TARGET} MANUAL_FINALIZATION ${DEPENDS_LIBS} ${HEADERS} ${SOURCES})
+qt_add_executable(${TARGET} MANUAL_FINALIZATION ${DEPENDS_LIBS} ${HEADERS} ${SOURCES} ${ASSETS})
 
 set_target_properties(${TARGET} PROPERTIES
     WIN32_EXECUTABLE TRUE
@@ -249,8 +253,16 @@ if(APPLE AND NOT IOS)
 elseif(IOS)
     set_target_properties(${TARGET} PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/plist/ios/Info.plist.in"
+        MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME}
+        #MACOSX_BUNDLE_SHORT_VERSION_STRING ${VERSION}
     )
 endif()
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/assets"
+    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/../Resources/assets"
+)
 
 target_compile_options(${TARGET} PRIVATE ${flags})
 target_link_libraries(${TARGET} PRIVATE ${all_list} ${deps_list} ${QtModuleLibs})

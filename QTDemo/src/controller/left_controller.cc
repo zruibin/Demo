@@ -10,7 +10,10 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QResizeEvent>
+#include <QFile>
+#include <QFont>
 #include "foundation/foundation.h"
+#include "foundation/assets.h"
 
 namespace UI {
 
@@ -25,11 +28,20 @@ LeftController::LeftController(QWidget* parent) : QWidget(parent) {
     this->setAutoFillBackground(true);
     this->setPalette(pal);
     
-    QString style = "QPushButton{font-size:13px;color:red;background-color:#FFF;}";
-    style.append("QPushButton:hover{background-color:rgb(50, 170, 200)}");
-    style.append("QPushButton:pressed{background-color:rgb(0, 255, 0)}");
+    using namespace Foundation;
+    std::string stylePath = Assets::CssDirPath("style.css");
+    qDebug() << "stylePath: " << stylePath.c_str();
+    QFile file(QString(stylePath.c_str()));
+    QString style;
+    if (file.open(QFile::ReadOnly)) {
+        style = QLatin1String(file.readAll());
+        qDebug() << "style: " << style.toStdString().c_str();
+    }
+    QFont font;
+    
     testButton1_.reset(new QPushButton(this));
     testButton1_->setText("Left");
+    testButton1_->setObjectName("Left1");
     testButton1_->setStyleSheet(style);
     testButton1_->setAutoFillBackground(true);
     testButton1_->setGeometry(QRect(0, 0, 100, 20));
@@ -45,7 +57,9 @@ LeftController::LeftController(QWidget* parent) : QWidget(parent) {
     testButton2_.reset(new QPushButton(this));
     testButton2_->setText("Left2");
     testButton2_->setGeometry(QRect(0, testButton1_->y()+testButton1_->height(), 100, 30));
-    testButton2_->setStyleSheet("font-size:13px;color:red;background-color:#eee");
+    testButton2_->setObjectName("Left2");
+    testButton2_->setStyleSheet(style);
+    testButton2_->setFont(QFont(Assets::FontFamily("themissinglink.ttf").c_str()));
     testButton2_->setAutoFillBackground(true);
     testButton2_->setBackgroundRole(QPalette::Button);
     testButton2_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
