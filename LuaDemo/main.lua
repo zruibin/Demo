@@ -7,15 +7,16 @@
 --
 
 
-package.path = "./libs/?/?.lua;"..package.path
-print(package.path);
+-- package.path = "./libs/?/?.lua;"..package.path
+-- print(package.path);
 
 
+require("libs/logger/logger")
 
 
 local function markdownMain()
-	print("Markdown Main.")
-	local markdown = require "markdown"
+	Logger.v("Markdown Main.")
+	local markdown = require("libs/markdown/markdown")
 	local source = [[
 # This is an h1
 ## This is an h2
@@ -25,16 +26,24 @@ local function markdownMain()
 ### This is an h3 ######
 <span>haha</span>
 	]]
-	print("Source: " .. source)
+	Logger.d("Source: " .. source)
 	local html = markdown(source)
-	print("html: " .. html)
+	Logger.d("html: " .. html)
 end
 
 
-
-
-
-
+local function testLogTable()
+	myData = {
+	    null = nil,
+	    bool = true,
+	    num = 20,
+	    str = "abc",
+	    subTab = {"111", "222"},
+	    func = print_dump,
+	    sunTab = {"sun_a", {"sun_1", "sun_2"}, {you = "god", i = "man"}}
+	}
+	Logger.i(myData)
+end
 
 
 
@@ -43,6 +52,7 @@ end
 
 local function main()
 	markdownMain()
+	testLogTable()
 end
 
 main()
