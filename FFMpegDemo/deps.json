@@ -1,0 +1,159 @@
+[
+    {
+        "action": "git",
+        "fileName": "ninja",
+        "url": "git clone -b v1.11.1 --depth=1 https://github.com/ninja-build/ninja.git",
+        "build": "cmake",
+        "args": ""
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "yasm-1.3.0",
+        "url": "http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz",
+        "build": "config",
+        "args": ""
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "nasm-2.14",
+        "url": "https://www.nasm.us/pub/nasm/releasebuilds/2.14/nasm-2.14.tar.gz",
+        "build": "config",
+        "args": ""
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "zlib-1.2.13",
+        "url": "https://zlib.net/zlib-1.2.13.tar.gz",
+        "build": "config",
+        "args": ""
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "pkg-config-0.29.2",
+        "url": "https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz",
+        "build": "config",
+        "args": ""
+    }
+
+    // ,
+    // {
+    //     "action": "gz",
+    //     "fileName": "libressl-3.6.1",
+    //     "url": "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-3.6.1.tar.gz",
+    //     "build": "config",
+    //     "args": ""
+    // }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "libpng-1.5.30",
+        "url": "https://nchc.dl.sourceforge.net/project/libpng/libpng15/1.5.30/libpng-1.5.30.tar.gz",
+        "build": "cmake",
+        "args": ""
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "libogg-1.3.5",
+        "url": "https://ftp.osuosl.org/pub/xiph/releases/ogg/libogg-1.3.5.tar.gz",
+        "build": "cmake",
+        "args": ""
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "libvorbis-1.3.7",
+        "url": "https://ftp.osuosl.org/pub/xiph/releases/vorbis/libvorbis-1.3.7.tar.gz",
+        "build": "cmake",
+        "args": ""
+    }
+
+    // ,
+    // {
+    //     "action": "zip",
+    //     "fileName": "libtheora-1.1.1",
+    //     "url": "http://downloads.xiph.org/releases/theora/libtheora-1.1.1.zip",
+    //     "build": "config",
+    //     "args": ""
+    // }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "fdk-aac-2.0.2",
+        "url": "https://downloads.sourceforge.net/opencore-amr/fdk-aac-2.0.2.tar.gz",
+        "build": "cmake",
+        "args": "-DBUILD_SHARED_LIBS=OFF"
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "lame-3.100",
+        "url": "https://udomain.dl.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz",
+        "build": "config",
+        "args": "--disable-shared --disable-frontend --enable-static"
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "opus-1.1.5", 
+        "url": "https://archive.mozilla.org/pub/opus/opus-1.1.5.tar.gz",
+        "build": "config",
+        "args": "--disable-shared"
+    }
+
+    ,
+    {
+        "action": "git",
+        "fileName": "x264",
+        "url": "git clone --depth 1 https://code.videolan.org/videolan/x264.git",
+        "build": "config",
+        "args": "--enable-static"
+    }
+
+    // ,
+    // {
+    //     "action": "git",
+    //     "fileName": "x265",
+    //     "url": "git clone -b 3.5 --depth 1 https://bitbucket.org/multicoreware/x265_git.git x265",
+    //     "build": "cmake",
+    //     "target_dir": "source",
+    //     "args": "-DENABLE_SHARED=OFF -DENABLE_ASSEMBLY=ON"
+    // }
+
+    // ,
+    // {
+    //     "action": "zip",
+    //     "fileName": "aom_v3.5.0", 
+    //     "url": "https://aomedia.googlesource.com/aom/aom_v3.5.0.zip",
+    //     "build": "cmake",
+    //     "args": "-DENABLE_SHARED=OFF -DENABLE_NASM=ON"
+    // }
+
+    ,
+    {
+        "action": "bz2",
+        "fileName": "ffmpeg-5.1.2",
+        "url": "https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.bz2",
+        "build": "config",
+        "args": "--enable-gpl --enable-nonfree --enable-libx264 --enable-libmp3lame --enable-libopus --extra-cxxflags=\"-std=c++11\" --extra-libs=\"-lpthread -lm -lc++\" --enable-pthreads --enable-version3 --enable-hardcoded-tables --extra-cflags=-I//deps/include --extra-ldflags=-L//deps/lib"
+    }
+    // --enable-libx265 --enable-libaom 
+    // --enable-libfdk-aac --enable-libtheora  --enable-libvorbis  --enable-libvorbis
+
+]
+
+

@@ -1,0 +1,67 @@
+/*
+ *
+ * app.cc
+ *
+ * Created by Ruibin.Chow on 2022/10/20.
+ * Copyright (c) 2022年 Ruibin.Chow All rights reserved.
+ */
+
+#include "app.h"
+#include <filesystem>
+#include "log/logging.h"
+#include "util/timer.h"
+#include "platform/platform.h"
+
+#if VIEW_DISPLAY
+#include <QApplication>
+#include <QTextCodec>
+#include <QDir>
+#include "view/window.h"
+#endif
+
+namespace app {
+
+void App::Init() {
+    logger::SetMinWriteLogLevel(logger::VERBOSE);
+    platform::thread_set_name("FFMpegDemo.main-thread");
+    Log(INFO) << "App Init Start.";
+    Log(VERBOSE) << "Current Thread Name: " << platform::thread_get_current_name();
+    
+    Log(INFO) << "App Init End.";
+}
+
+void App::Run(int &argc, char **argv) {
+#if VIEW_DISPLAY
+    QApplication::setAttribute(Qt::AA_UseOpenGLES);
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    
+    QApplication app(argc, argv);
+    app.setApplicationName("FFMpegDemo");
+    app.setApplicationVersion("V1.0.0");
+
+    QString dirPath = QCoreApplication::applicationDirPath().append("/Data");
+    QDir dir(dirPath);
+    if(!dir.exists()) dir.mkdir(dirPath);
+    logger::SetDefaultLoggerDir(dirPath.toStdString());
+#else
+    namespace fs = std::filesystem;
+    fs::path dst = fs::current_path() / std::string("./Data");
+    if (!fs::exists(dst)) fs::create_directory(dst);
+    logger::SetDefaultLoggerDir(dst.string());
+#endif
+    
+    Init();
+    
+#if VIEW_DISPLAY
+    view::Window w;
+    w.show();
+    
+    app.exec();
+#endif
+}
+
+}
+
+
