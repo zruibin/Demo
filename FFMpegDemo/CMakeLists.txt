@@ -83,6 +83,9 @@ function(sourceGroup prefix)
     endforeach()
 endfunction()
 
+#-------------------------------------------------------------------------------
+
+add_definitions("-DPROJECT_DIR=\"${CMAKE_SOURCE_DIR}\"")
 
 #-------------------------------------------------------------------------------
 
@@ -121,6 +124,10 @@ elseif(APPLE)
     list(APPEND DEPS_LIBS "-framework AudioToolbox")
     list(APPEND DEPS_LIBS "-framework CoreAudio")
     list(APPEND DEPS_LIBS "-framework ApplicationServices")
+    list(APPEND DEPS_LIBS "-framework Security")
+    list(APPEND DEPS_LIBS "-framework CoreMedia")
+    list(APPEND DEPS_LIBS "bz2")
+    list(APPEND DEPS_LIBS "iconv")
 elseif(UNIX)
     message(WARNING "Now is UNIX-like OS's. Including aPPLE os x  and CygWin")
 endif()
@@ -150,18 +157,19 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/deps.cmake")
 endif()
 
 # modules
+include("${src_dir}/view/CMakeLists.txt")
 include("${src_dir}/log/CMakeLists.txt")
 include("${src_dir}/platform/CMakeLists.txt")
 include("${src_dir}/util/CMakeLists.txt")
+include("${src_dir}/foundation/CMakeLists.txt")
 
-include("${src_dir}/view/CMakeLists.txt")
 # libs
-
 
 set(MODULES
     ${log_all_file}
     ${platform_all_file}
     ${util_all_file}
+    ${foundation_all_file}
 )
 
 set(DEPENDS_LIBS
@@ -193,8 +201,6 @@ source_group(TREE "${CMAKE_SOURCE_DIR}" FILES ${HEADERS} ${SOURCES} ${EXECUTE_SO
 include_directories(
 
 )
-
-list(APPEND DEPS_LIBS "${WebRTCLib}")
 
 #-------------------------------------------------------------------------------
 
@@ -343,12 +349,6 @@ install(
     DESTINATION lib
     PATTERN "cmake" EXCLUDE
     PATTERN "pkgconfig" EXCLUDE
-    PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
-    GROUP_EXECUTE GROUP_READ
-)
-install(
-    FILES ${WebRTCLib}
-    DESTINATION lib
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
     GROUP_EXECUTE GROUP_READ
 )

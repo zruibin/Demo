@@ -43,15 +43,6 @@
         "args": ""
     }
 
-    // ,
-    // {
-    //     "action": "gz",
-    //     "fileName": "libressl-3.6.1",
-    //     "url": "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-3.6.1.tar.gz",
-    //     "build": "config",
-    //     "args": ""
-    // }
-
     ,
     {
         "action": "gz",
@@ -75,26 +66,26 @@
         "action": "gz",
         "fileName": "libvorbis-1.3.7",
         "url": "https://ftp.osuosl.org/pub/xiph/releases/vorbis/libvorbis-1.3.7.tar.gz",
-        "build": "cmake",
+        "build": "config",
         "args": ""
     }
 
-    // ,
-    // {
-    //     "action": "zip",
-    //     "fileName": "libtheora-1.1.1",
-    //     "url": "http://downloads.xiph.org/releases/theora/libtheora-1.1.1.zip",
-    //     "build": "config",
-    //     "args": ""
-    // }
+    ,
+    {
+        "action": "zip",
+        "fileName": "libtheora-1.1.1",
+        "url": "http://downloads.xiph.org/releases/theora/libtheora-1.1.1.zip",
+        "build": "config",
+        "args": ""
+    }
 
     ,
     {
         "action": "gz",
         "fileName": "fdk-aac-2.0.2",
         "url": "https://downloads.sourceforge.net/opencore-amr/fdk-aac-2.0.2.tar.gz",
-        "build": "cmake",
-        "args": "-DBUILD_SHARED_LIBS=OFF"
+        "build": "config",
+        "args": "--enable-shared=no --enable-static"
     }
 
     ,
@@ -131,17 +122,17 @@
     //     "url": "git clone -b 3.5 --depth 1 https://bitbucket.org/multicoreware/x265_git.git x265",
     //     "build": "cmake",
     //     "target_dir": "source",
-    //     "args": "-DENABLE_SHARED=OFF -DENABLE_ASSEMBLY=ON"
+    //     "args": "-DCROSS_COMPILE_ARM=1 -DENABLE_SHARED=OFF -DENABLE_ASSEMBLY=ON"
     // }
 
-    // ,
-    // {
-    //     "action": "zip",
-    //     "fileName": "aom_v3.5.0", 
-    //     "url": "https://aomedia.googlesource.com/aom/aom_v3.5.0.zip",
-    //     "build": "cmake",
-    //     "args": "-DENABLE_SHARED=OFF -DENABLE_NASM=ON"
-    // }
+    ,
+    {
+        "action": "zip",
+        "fileName": "aom_v3.5.0", 
+        "url": "https://aomedia.googlesource.com/aom/aom_v3.5.0.zip",
+        "build": "cmake",
+        "args": "-DAOM_TARGET_CPU=DEPS_ARCH -DENABLE_SHARED=OFF -DENABLE_NASM=ON"
+    }
 
     ,
     {
@@ -149,10 +140,9 @@
         "fileName": "ffmpeg-5.1.2",
         "url": "https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.bz2",
         "build": "config",
-        "args": "--enable-gpl --enable-nonfree --enable-libx264 --enable-libmp3lame --enable-libopus --extra-cxxflags=\"-std=c++11\" --extra-libs=\"-lpthread -lm -lc++\" --enable-pthreads --enable-version3 --enable-hardcoded-tables --extra-cflags=-I//deps/include --extra-ldflags=-L//deps/lib"
+        "args": "--disable-videotoolbox --disable-audiotoolbox --enable-gpl --enable-nonfree --enable-libaom --enable-libx264 --enable-libmp3lame --enable-libopus --enable-libfdk-aac --enable-libvorbis --enable-libtheora --extra-cxxflags=\"-std=c++11\" --extra-libs=\"-lpthread -lm -lc++\" --enable-cross-compile --disable-debug --disable-doc --enable-pic --enable-pthreads --enable-version3 --enable-hardcoded-tables --extra-cflags=-I//deps/include --extra-ldflags=-L//deps/lib"
     }
-    // --enable-libx265 --enable-libaom 
-    // --enable-libfdk-aac --enable-libtheora  --enable-libvorbis  --enable-libvorbis
+    // --enable-libx265
 
 ]
 
