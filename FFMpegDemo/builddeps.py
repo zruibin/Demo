@@ -485,19 +485,14 @@ def genDirs():
     log("Install Directory: " + outputDir)
     # log("-"*80)
 
-    PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin"
-    PATH = PATH + ":" + outputDir
+    PATH = outputDir
     PATH = PATH + ":" + outputDir + os.path.sep + "bin"
     PATH = PATH + ":" + outputDir + os.path.sep + "include"
     PATH = PATH + ":" + outputDir + os.path.sep + "lib"
     log("PATH:" + PATH)
-    os.putenv("PATH", os.getenv("PATH"))
-    # os.environ["PATH"] = os.getenv("PATH") + ":" + outputDir
-    # os.environ["PATH"] = os.getenv("PATH") + ":" + outputDir + os.path.sep + "bin"
-    # os.environ["PATH"] = os.getenv("PATH") + ":" + outputDir + os.path.sep + "include"
-    # os.environ["PATH"] = os.getenv("PATH") + ":" + outputDir + os.path.sep + "lib"
-    # log("PATH:" + os.getenv("PATH"))
-    # os.putenv("PATH", os.getenv("PATH"))
+    os.environ["PATH"] = os.getenv("PATH") + ":" + PATH
+    # operator("echo $PATH")
+    operator("which nasm")
     pass
 
 

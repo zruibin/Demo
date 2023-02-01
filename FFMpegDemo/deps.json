@@ -140,7 +140,7 @@
         "fileName": "ffmpeg-5.1.2",
         "url": "https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.bz2",
         "build": "config",
-        "args": "--disable-videotoolbox --disable-audiotoolbox --enable-gpl --enable-nonfree --enable-libaom --enable-libx264 --enable-libmp3lame --enable-libopus --enable-libfdk-aac --enable-libvorbis --enable-libtheora --extra-cxxflags=\"-std=c++11\" --extra-libs=\"-lpthread -lm -lc++\" --enable-cross-compile --disable-debug --disable-doc --enable-pic --enable-pthreads --enable-version3 --enable-hardcoded-tables --extra-cflags=-I//deps/include --extra-ldflags=-L//deps/lib"
+        "args": "--enable-debug=3 --disable-optimizations --disable-stripping --disable-videotoolbox --disable-audiotoolbox --enable-gpl --enable-nonfree --enable-libaom --enable-libx264 --enable-libmp3lame --enable-libopus --enable-libfdk-aac --enable-libvorbis --enable-libtheora --extra-cxxflags=\"-std=c++11\" --extra-libs=\"-lpthread -lm -lc++\" --enable-cross-compile --disable-debug --disable-doc --enable-pic --enable-pthreads --enable-version3 --enable-hardcoded-tables --extra-cflags=-I//deps/include --extra-ldflags=-L//deps/lib"
     }
     // --enable-libx265
 
