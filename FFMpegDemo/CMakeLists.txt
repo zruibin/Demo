@@ -181,10 +181,11 @@ list(APPEND ALL_SOURCES ${MODULES} ${DEPENDS_LIBS})
 #-------------------------------------------------------------------------------
 
 set(HEADERS
-    ${Deps_include}
+    ${Deps_Include}
 )
 
 set(SOURCES
+    ${Deps_Source}
 )
 
 set(EXECUTE_SOURCES

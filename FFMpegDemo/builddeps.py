@@ -33,6 +33,7 @@ sourceLockName = sourceDirName + ".lock"
 buildDir = "buildGen" # cmake构建目录
 cmakeOther = ""
 libSufixs = [".a", ".lib", ".so", ".dylib", ".dll"]
+depsSourceFlag = False
 
 CPU_COUNT = multiprocessing.cpu_count()
 DEPS_ARCH = "DEPS_ARCH"
@@ -443,6 +444,22 @@ def genDepsCmakeList():
         cmakeOther = cmakeOther + "\n" + "list(APPEND DEPS_LIBS \"" + libPath + "\")"
 
     depsCamke = "deps.cmake"
+
+    depsSource = """
+file(GLOB_RECURSE Deps_Source
+    "depsSource/**/*.c"
+    "depsSource/**/*.cc"
+    "depsSource/**/*.h"
+    "depsSource/**/*.hpp"
+    "depsSource/**/*.h++"
+    "depsSource/**/*.asm"
+)
+sourceGroup("" ${DepsSource})
+set_source_files_properties(${DepsSource} PROPERTIES HEADER_FILE_ONLY TRUE)
+"""
+    if not depsSourceFlag: 
+        depsSource = ""
+
     depsContent = """
 message("This is deps.cmake")
 
@@ -458,7 +475,7 @@ include_directories("${DEPS_INCLUDE_DIR}")
 link_directories("${DEPS_LIB_DIR}")
 file(GLOB_RECURSE Deps_include ${DEPS_INCLUDE_DIR}**)
 
-""" + cmakeOther
+""" + depsSource + cmakeOther
     log("Deps CmakeList content: " + depsContent)
     with open(depsCamke, "w") as fileHandler:
         fileHandler.write(depsContent)
