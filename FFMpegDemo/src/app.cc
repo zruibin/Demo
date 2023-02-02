@@ -25,6 +25,7 @@
 extern "C" {
 #include <libavutil/ffversion.h>
 #include <libavformat/avformat.h>
+#include <libavcodec/codec.h>
 }
 
 
@@ -102,6 +103,18 @@ void testFFMpeg() {
                 }
                 int DurationAudio = (as->duration) * r2d(as->time_base); //音频总时长，单位为秒。注意如果把单位放大为毫秒或者微妙，音频总时长跟视频总时长不一定相等的
                 printf("音频总时长：%d时%d分%d秒\n", DurationAudio / 3600, (DurationAudio % 3600) / 60, (DurationAudio % 60)); //将音频总时长转换为时分秒的格式打印到控制台上
+                
+                //找到音频流索引
+                int video_index = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+                AVStream* st = ic->streams[as->index];
+                //找到解码器
+                const AVCodec* codec = avcodec_find_decoder(st->codecpar->codec_id);
+                if (!codec) {
+                    printf("Codec not found audio codec.\n");
+                } else {
+                    printf("Codec name: %s.\n", codec->name);
+                }
+                
                 printf("\n");
             }
             else if (AVMEDIA_TYPE_VIDEO == as->codecpar->codec_type)  //如果是视频流，则打印视频的信息
@@ -109,13 +122,30 @@ void testFFMpeg() {
                 printf("视频信息:\n");
                 printf("index:%d\n", as->index);   //如果一个媒体文件既有音频，又有视频，则视频index的值一般为0。但该值不一定准确，所以还是得通过as->codecpar->codec_type判断是视频还是音频
                 printf("视频帧率:%lffps\n", r2d(as->avg_frame_rate)); //视频帧率,单位为fps，表示每秒出现多少帧
-                if (AV_CODEC_ID_MPEG4 == as->codecpar->codec_id) //视频压缩编码格式
+                if (AV_CODEC_ID_H264 == as->codecpar->codec_id) //视频压缩编码格式
                 {
-                    printf("视频压缩编码格式:MPEG4\n");
+                    printf("视频压缩编码格式:H264\n");
                 }
+                if (AV_CODEC_ID_HEVC == as->codecpar->codec_id) //视频压缩编码格式
+                {
+                    printf("视频压缩编码格式:H264\n");
+                }
+                
                 printf("帧宽度:%d 帧高度:%d\n", as->codecpar->width, as->codecpar->height); //视频帧宽度和帧高度
                 int DurationVideo = (as->duration) * r2d(as->time_base); //视频总时长，单位为秒。注意如果把单位放大为毫秒或者微妙，音频总时长跟视频总时长不一定相等的
                 printf("视频总时长：%d时%d分%d秒\n", DurationVideo / 3600, (DurationVideo % 3600) / 60, (DurationVideo % 60)); //将视频总时长转换为时分秒的格式打印到控制台上
+                
+                //找到视频流索引
+                int video_index = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
+                AVStream* st = ic->streams[as->index];
+                //找到解码器
+                const AVCodec* codec = avcodec_find_decoder(st->codecpar->codec_id);
+                if (!codec) {
+                    printf("Codec not found video codec.\n");
+                } else {
+                    printf("Codec name: %s.\n", codec->name);
+                }
+
                 printf("\n");
             }
         }
