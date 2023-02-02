@@ -503,12 +503,14 @@ def genDirs():
     # log("-"*80)
 
     PATH = outputDir
-    PATH = PATH + ":" + outputDir + os.path.sep + "bin"
-    PATH = PATH + ":" + outputDir + os.path.sep + "include"
-    PATH = PATH + ":" + outputDir + os.path.sep + "lib"
+    PATH = PATH + ":" + os.path.join(outputDir, "bin")
+    PATH = PATH + ":" + os.path.join(outputDir, "include")
+    PATH = PATH + ":" + os.path.join(outputDir, "lib")
     log("PATH:" + PATH)
     os.environ["PATH"] = os.getenv("PATH") + ":" + PATH
-    # operator("echo $PATH")
+    os.environ["PKG_CONFIG_PATH"] = os.path.join(outputDir, "bin", "pkg-config")
+    operator("echo $PATH")
+    operator("echo $PKG_CONFIG_PATH")
     operator("which nasm")
     pass
 
