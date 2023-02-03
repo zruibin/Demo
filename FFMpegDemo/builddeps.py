@@ -214,6 +214,7 @@ def cmakeBuild(fileName, cmakeArgs, targetDir=None, genBuilding=True, preCmdList
                 otherCmakeArgs = otherCmakeArgs + os.path.join(outputBinDir, exeFile) + " "
                 break
 
+    operatePrefix = ""
     osName = platform.system()
     if(osName == 'Windows'):
         log("Warning Windows.")
@@ -221,12 +222,13 @@ def cmakeBuild(fileName, cmakeArgs, targetDir=None, genBuilding=True, preCmdList
         log("Warning Linux.")
     elif(osName == 'Darwin'):
         if platform.machine() == "arm64":
+            operatePrefix = "arch -arm64"
             otherCmakeArgs = otherCmakeArgs + "-DCMAKE_OSX_ARCHITECTURES=arm64 "
             otherCmakeArgs = otherCmakeArgs + "-DCMAKE_HOST_SYSTEM_PROCESSOR=arm64 "
             # otherCmakeArgs = otherCmakeArgs + "-DCMAKE_SYSTEM_PROCESSOR=arm64 "
             # otherCmakeArgs = otherCmakeArgs + "-DCMAKE_HOST_SYSTEM_PROCESSOR=arm64 "
 
-    cmdList = ["cmake",
+    cmdList = [operatePrefix, "cmake",
                 cmakeArgs,
                 "-DCMAKE_BUILD_TYPE=RELEASE",
                 otherCmakeArgs,
