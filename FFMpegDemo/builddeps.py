@@ -154,6 +154,7 @@ def swapDepsArgs(args):
 
 def configBuild(fileName, configArgs, debugArgs, targetDir=None, genBuilding=True, install=True):
     os.chdir(fileName)
+    inode = "."
 
     if targetDir != None:
         os.chdir(targetDir)
@@ -163,6 +164,7 @@ def configBuild(fileName, configArgs, debugArgs, targetDir=None, genBuilding=Tru
             shutil.rmtree(buildDir)
         os.makedirs(buildDir)
         os.chdir(buildDir)
+        inode = ".."
 
     log("-"*80)
     log("当前编译路径：" + os.getcwd())
@@ -172,8 +174,9 @@ def configBuild(fileName, configArgs, debugArgs, targetDir=None, genBuilding=Tru
         configArgs = configArgs + " " + debugArgs
     configArgs = swapDepsArgs(configArgs)
 
-    os.chmod("../configure", stat.S_IEXEC|stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
-    cmdStr = "../configure " + "--prefix=" + outputDir + " " + configArgs
+    configureFile = os.path.join(inode, "configure")
+    os.chmod(configureFile, stat.S_IEXEC|stat.S_IRWXU|stat.S_IRWXG|stat.S_IRWXO)
+    cmdStr = configureFile + " --prefix=" + outputDir + " " + configArgs
     makeStr = "make -j" + str(CPU_COUNT)
     makeInstall = "make install"
 
@@ -190,6 +193,7 @@ def configBuild(fileName, configArgs, debugArgs, targetDir=None, genBuilding=Tru
 
 def cmakeBuild(fileName, cmakeArgs, debugArgs, targetDir, genBuilding=True, preCmdList=[], install=True):
     os.chdir(fileName)
+    inode = "."
 
     if targetDir != None:
         log("切换路径：" + str(targetDir))
@@ -200,6 +204,7 @@ def cmakeBuild(fileName, cmakeArgs, debugArgs, targetDir, genBuilding=True, preC
             shutil.rmtree(buildDir)
         os.makedirs(buildDir)
         os.chdir(buildDir)
+        inode = ".."
 
     log("-"*80)
     log("当前编译路径：" + os.getcwd())
@@ -244,7 +249,7 @@ def cmakeBuild(fileName, cmakeArgs, debugArgs, targetDir, genBuilding=True, preC
                 cmakeArgs,
                 otherCmakeArgs,
                 "-DCMAKE_INSTALL_PREFIX="+outputDir, 
-                "..",
+                inode,
                 ]
     operatorCMD(cmdList, False)
     if install:
@@ -327,6 +332,10 @@ def getDictValues(depsDict):
     action = depsDict["action"]
     url = depsDict["url"]
 
+    buildDir = True
+    if "build_dir" in depsDict:
+        buildDir = depsDict["build_dir"]
+
     buildAction = "cmake"
     if "build" in depsDict:
         buildAction = depsDict["build"]
@@ -350,7 +359,8 @@ def getDictValues(depsDict):
         "buildAction": buildAction,
         "args": args,
         "debugArgs": debugArgs,
-        "targetDir": targetDir
+        "targetDir": targetDir,
+        "buildDir": buildDir
     }
 
 
@@ -363,6 +373,7 @@ def downloadAndBuild(depsDict):
     args = depsDict["args"]
     debugArgs = depsDict["debugArgs"]
     targetDir = depsDict["targetDir"]
+    buildDir = depsDict["buildDir"]
 
     if action == "gz": action = "tar.gz"
     if action == "bz2": action = "tar.bz2" 
@@ -385,9 +396,9 @@ def downloadAndBuild(depsDict):
         if fileType == ".bz2": bz2Extract(filePath, sourceDir)
 
     if buildAction == "config":
-        configBuild(fileName, args, debugArgs, targetDir)
+        configBuild(fileName, args, debugArgs, targetDir, buildDir)
     else:
-        cmakeBuild(fileName, args, debugArgs, targetDir)
+        cmakeBuild(fileName, args, debugArgs, targetDir, buildDir)
     pass
 
 
@@ -400,8 +411,9 @@ def buildDeps(depsDict):
     args = depsDict["args"]
     debugArgs = depsDict["debugArgs"]
     targetDir = depsDict["targetDir"]
+    buildDir = depsDict["buildDir"]
 
-    log(str(depsDict))
+    # log(str(depsDict))
 
     if len(fileName) == 0:
         log("Building Deps Was Error!")
@@ -412,9 +424,9 @@ def buildDeps(depsDict):
     operator(url)
 
     if buildAction == "config":
-        configBuild(fileName, args, debugArgs, targetDir)
+        configBuild(fileName, args, debugArgs, targetDir, buildDir)
     else:
-        cmakeBuild(fileName, args, debugArgs, targetDir)
+        cmakeBuild(fileName, args, debugArgs, targetDir, buildDir)
     pass
 
 
