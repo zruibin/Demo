@@ -496,8 +496,8 @@ file(GLOB_RECURSE Deps_Source
     "depsSource/**/*.h++"
     "depsSource/**/*.asm"
 )
-sourceGroup("" ${DepsSource})
-set_source_files_properties(${DepsSource} PROPERTIES HEADER_FILE_ONLY TRUE)
+sourceGroup("" ${Deps_Source})
+set_source_files_properties(${Deps_Source} PROPERTIES HEADER_FILE_ONLY TRUE)
 """
     if not depsSourceFlag: 
         depsSource = ""
