@@ -49,7 +49,8 @@
         "fileName": "libpng-1.5.30",
         "url": "https://nchc.dl.sourceforge.net/project/libpng/libpng15/1.5.30/libpng-1.5.30.tar.gz",
         "build": "cmake",
-        "args": ""
+        "args": "-DPNG_SHARED=OFF -DPNG_STATIC=ON -DPNG_TESTS=OFF",
+        "debug_args": "-DPNG_DEBUG=ON"
     }
 
     ,
@@ -57,8 +58,7 @@
         "action": "gz",
         "fileName": "libogg-1.3.5",
         "url": "https://ftp.osuosl.org/pub/xiph/releases/ogg/libogg-1.3.5.tar.gz",
-        "build": "cmake",
-        "args": ""
+        "build": "cmake"
     }
 
     ,
