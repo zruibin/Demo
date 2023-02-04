@@ -67,20 +67,28 @@ dwarfdump -debug-info /path/FFMpegDemo/deps/lib/libavformat.a | head -n 100
               DW_AT_LLVM_sysroot        ("/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk")
               DW_AT_APPLE_sdk   ("MacOSX.sdk")
               DW_AT_stmt_list   (0x00000000)
-              DW_AT_comp_dir    ("/path/FFMpegDemo/depsSource/ffmpeg-5.1.2/buildGen")
+              DW_AT_comp_dir    ("/path/FFMpegDemo/depsSource/ffmpeg-5.1.2/")
               DW_AT_low_pc      (0x0000000000000000)
               DW_AT_high_pc     (0x00000000000008d8)
 ```
 
+其中：
+
+```
+DW_AT_comp_dir    ("/path/FFMpegDemo/depsSource/ffmpeg-5.1.2/")
+```
+
 ## ffmpeg源码debug
 
-1. configure时加上--extra-cflags=-g --extra-cflags=\"-fno-stack-check\" --enable-debug --disable-optimizations --disable-stripping
+### builddeps.py中 `IS_DEBUG` 设置为True即可，默认为True.
 
-2. 将源码文件进xocde中，单步进入ffmpeg库调试
+1. ~~configure时加上--extra-cflags=-g --extra-cflags=\"-fno-stack-check\" --enable-debug --disable-optimizations --disable-stripping~~
 
-> ffmpeg源码中断点失效问题尚未解决
+> ~~注意：必须在configure所在的目录下执行与编译~~
 
+2. ~~将源码文件目录以**Create folder references**的方式加进xocde中，即可断点调试~~
 
+~~参考：https://blog.csdn.net/weixin_45581597/article/details/127728079~~
 
 
 
