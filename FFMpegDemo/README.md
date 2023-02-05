@@ -110,7 +110,7 @@ DW_AT_comp_dir    ("/path/FFMpegDemo/depsSource/ffmpeg-5.1.2/")
 
 > 在将libavformat等源码目录拖进工程**前**最好先执行下make clean，因为源码目录中可能包含.o文件，以免造成文件过多
 
-3. 新建名为FFMpeg_Building的Aggregate的target，在此
+3. 新建名为FFMpeg_Building的Aggregate的target，在此target的**Build Phases**中新建脚本并执行以下脚本
 
 ```
 pwd
