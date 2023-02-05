@@ -80,17 +80,54 @@ DW_AT_comp_dir    ("/path/FFMpegDemo/depsSource/ffmpeg-5.1.2/")
 
 ## ffmpeg源码debug
 
-### builddeps.py中 `IS_DEBUG` 设置为True即可，默认为True.
+### 一、cmake源码集成方式
 
-1. ~~configure时加上--extra-cflags=-g --extra-cflags=\"-fno-stack-check\" --enable-debug --disable-optimizations --disable-stripping~~
+> 注意：此方式存在函数跳转问题
 
-> ~~注意：必须在configure所在的目录下执行与编译~~
+#### **builddeps.py中 `IS_DEBUG` 设置为True即可，默认为True.**
 
-2. ~~将源码文件目录以**Create folder references**的方式加进xocde中，即可断点调试~~
+#### OR
 
-~~参考：https://blog.csdn.net/weixin_45581597/article/details/127728079~~
+1. configure时加上**--extra-cflags=-g --extra-cflags=\"-fno-stack-check\" --enable-debug --disable-optimizations --disable-stripping**
 
+> 注意：必须在configure所在的目录下执行与编译
 
+2. 将源码文件目录以**Create folder references**的方式加进xocde中，即可断点调试
 
+参考：https://blog.csdn.net/weixin_45581597/article/details/127728079
 
+### 二、xcode工程加入方式
+
+> builddeps.py中**depsSourceFlag**设置为False，防止引过多源码
+>  
+> 此方式必须是有加调试模式的configeure生成的Makefile，即**一.1**所述
+>  
+> 注意：此方式**不存在**函数跳转问题
+
+1. 新建空的**Command Line Tool**工程(Language选C++)，创建成功后将main.cpp及其目录删除只留下.xcodeproj文件(如FFMpeg.xcodeproj)
+
+2. 将FFMpeg.xcodeproj放于FFMpeg源码目录中，打开工程，将libavformat等源码目录拖进工程中，归属FFMpeg(**即加入FFMpeg的可运行target，此步是为了能够建立起文件索引以进行函数跳转**)
+
+> 在将libavformat等源码目录拖进工程**前**最好先执行下make clean，因为源码目录中可能包含.o文件，以免造成文件过多
+
+3. 新建名为FFMpeg_Building的Aggregate的target，在此
+
+```
+pwd
+
+# 需要将path替换为具体的所在路径
+ROOT_DIR=/path/Demo/FFMpegDemo
+
+export PATH=$PATH::$ROOT_DIR/deps:$ROOT_DIR/deps/bin:$ROOT_DIR/deps/include:$ROOT_DIR/deps/lib
+
+make -j4
+
+echo "FFMpeg Make done."
+
+make install
+
+echo "FFMpeg Install done."
+```
+
+4. FFMpegDemo工程的目标target的Target Dependencies中加上 **3** 中将FFMpeg工程的target(即 **FFMpeg_Building** )即可，**顺序位于Core构建之前(保证libavformat等源码的修改所编译出的.a为更改的最新)**
 
