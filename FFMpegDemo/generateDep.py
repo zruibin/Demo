@@ -16,7 +16,7 @@ import datetime
 from pathlib import Path
 
 
-depsCamke = "deps.cmake"
+depsSourceCamke = "depsSource.cmake"
 cmakeList = "CMakeLists.txt"
 configure = "configure"
 makefile = "Makefile"
@@ -68,13 +68,36 @@ sourceGroup("" ${PROJECT_NAME_Source})
 
 add_executable(${TARGET_EXE} ${PROJECT_NAME_Source})
 
+set(command_string [[
+
+import subprocess, os
+
+depsDir = "/path/deps"
+PATH = depsDir
+PATH = PATH + ":" + os.path.join(depsDir, "bin")
+PATH = PATH + ":" + os.path.join(depsDir, "include")
+PATH = PATH + ":" + os.path.join(depsDir, "lib")
+os.environ["PATH"] = os.getenv("PATH") + ":" + PATH
+
+result = subprocess.getstatusoutput("ARCH make")
+action = int(result[0])
+if action == 0:
+    msg = str(result[1])
+    print(msg)
+    if "Nothing to be done" not in msg:
+        result = subprocess.getstatusoutput("ARCH make install")
+        if len(result) > 1:
+            print(result[1])
+        exit(int(result[0]))
+else:
+    exit(action)
+
+]])
+
+include(FindPythonInterp)
 add_custom_target(${TARGET_BUILD}
-    COMMAND ROOT_DIR=/path/
-    COMMAND export PATH=$PATH::$ROOT_DIR/deps:$ROOT_DIR/deps/bin:$ROOT_DIR/deps/include:$ROOT_DIR/deps/lib
-    COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND pwd
-    COMMAND ARCH make
-    COMMAND ARCH make install
+    VERBATIM
+    COMMAND ${PYTHON_EXECUTABLE} -c "${command_string}"
     COMMAND echo "${TARGET_BUILD} done."
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
@@ -121,19 +144,15 @@ def main(path):
 
     name = os.path.basename(sourceDir)
 
-    global depsCamke, cmakeList, configure, makefile
-    depsCamke = os.path.join(homeDir, depsCamke)
+    global depsSourceCamke, cmakeList, configure, makefile
+    depsSourceCamke = os.path.join(homeDir, depsSourceCamke)
     cmakeList = os.path.join(sourceDir, cmakeList)
     configure = os.path.join(sourceDir, configure)
     makefile = os.path.join(sourceDir, makefile)
-    log("depsCamke: " + depsCamke, color=33)
+    log("depsSourceCamke: " + depsSourceCamke, color=33)
     log("cmakeList: " + cmakeList, color=33)
     log("configure: " + configure, color=33)
     log("makefile: " + makefile, color=33)
-
-    if not os.path.exists(depsCamke):
-        log(os.path.basename(depsCamke) + " was not exist!", color=31)
-        return
 
     if not os.path.exists(configure):
         log(os.path.basename(configure) + " was not exist!", color=31)
@@ -149,7 +168,7 @@ def main(path):
 
     global content
     content = content.replace("PROJECT_NAME", name)
-    content = content.replace("/path/", homeDir)
+    content = content.replace("/path", homeDir)
 
     arch = ""
     if platform.machine() == "arm64" and platform.system() == "Darwin":
@@ -169,7 +188,7 @@ list(APPEND Deps_Source_Targets %s_building)
     """
     depsData = depsData % (sourceDir, name)
     
-    with open(depsCamke, "a+") as fileHandle:
+    with open(depsSourceCamke, "a+") as fileHandle:
         fileHandle.write(str(depsData))
 
     pass

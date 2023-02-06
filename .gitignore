@@ -24,6 +24,7 @@ release/
 depsSource/
 deps/
 deps.cmake
+depsSource.cmake
 builddeps.log
 
 CMakeLists.txt.user

@@ -208,11 +208,18 @@ include_directories(
 
 set(RESOURCES
     builddeps.py
+    generateDep.py
     deps.json
-   # deps.cmake
     README.md
     LICENSE
 )
+if(EXISTS "${PROJECT_SOURCE_DIR}/deps.cmake")
+    list(APPEND RESOURCES deps.cmake)
+endif()
+if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource.cmake")
+    include("depsSource.cmake")
+    list(APPEND RESOURCES depsSource.cmake)
+endif()
 source_group(Resources FILES ${RESOURCES})
 
 #-------------------------------------------------------------------------------
@@ -292,7 +299,9 @@ target_link_libraries(${TARGET} PRIVATE ${TARGET_LIB} ${DEPS_LIBS})
 
 endif()
 
-add_dependencies(${TARGET} ${Deps_Source_Targets})
+if(Deps_Source_Targets)
+    add_dependencies(${TARGET} ${Deps_Source_Targets})
+endif()
 
 #-------------------------------------------------------------------------------
 
