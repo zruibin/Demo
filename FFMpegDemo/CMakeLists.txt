@@ -292,6 +292,8 @@ target_link_libraries(${TARGET} PRIVATE ${TARGET_LIB} ${DEPS_LIBS})
 
 endif()
 
+add_dependencies(${TARGET} ${Deps_Source_Targets})
+
 #-------------------------------------------------------------------------------
 
 # 单元测试

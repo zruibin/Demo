@@ -131,3 +131,20 @@ echo "FFMpeg Install done."
 
 4. FFMpegDemo工程的目标target的Target Dependencies中加上 **3** 中将FFMpeg工程的target(即 **FFMpeg_Building** )即可，**顺序位于Core构建之前(保证libavformat等源码的修改所编译出的.a为更改的最新)**
 
+### 三、python脚本生成依赖调试
+
+**于generateDep.py的目录下执行generateDep.py脚本，然后再重新cmake下主工程即可**
+
+如：
+
+```
+# 即可在depsSource/ffmpeg-5.1.2中生成CMakeLists.txt
+./generateDep.py depsSource/ffmpeg-5.1.2
+```
+
+> builddeps.py中**depsSourceFlag**设置为False，防止引过多源码
+>  
+> **步骤三为步骤二的自动化脚本处理**
+
+
+
