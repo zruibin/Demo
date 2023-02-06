@@ -18,6 +18,7 @@
 #include <QApplication>
 #include <QTextCodec>
 #include <QDir>
+#include <QStandardPaths>
 #include "view/window.h"
 #endif
 
@@ -179,10 +180,33 @@ void App::Run(int &argc, char **argv) {
     app.setApplicationName("FFMpegDemo");
     app.setApplicationVersion("V1.0.0");
     
-    QString dirPath = QCoreApplication::applicationDirPath().append("/Data");
+    QString dirPath = QCoreApplication::applicationDirPath().append("/../../../Data");
     QDir dir(dirPath);
     if(!dir.exists()) dir.mkdir(dirPath);
     logger::SetDefaultLoggerDir(dirPath.toStdString());
+    
+//    qDebug() << QDir::currentPath();
+//    qDebug() << QDir::homePath();
+//    qDebug() << QDir::rootPath();
+//    qDebug() << QDir::tempPath();
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::FontsLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation);
+//    qDebug() << QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
     
     QString assetsPath = QCoreApplication::applicationDirPath().append("/../Resources/assets/");
     Assets::SetAssetsDirPath(assetsPath.toStdString());
