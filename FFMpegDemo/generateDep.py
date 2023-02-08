@@ -12,7 +12,7 @@ https://www.cnblogs.com/ping-y/p/5897018.html
 """
 
 import os, re, json, sys, platform, fnmatch, stat
-import datetime
+import datetime, subprocess
 from pathlib import Path
 
 
@@ -20,47 +20,29 @@ depsSourceCamke = "depsSource.cmake"
 cmakeList = "CMakeLists.txt"
 configure = "configure"
 makefile = "Makefile"
+ninjaBuild = "build.ninja"
 
 content = r"""
 
-cmake_minimum_required (VERSION 3.0)
-
 message(WARNING "This Target(PROJECT_NAME) Create By Ruibin.Chow.")
-
-project(PROJECT_NAME)
 
 set(TARGET_EXE "PROJECT_NAME_exe")
 set(TARGET_BUILD "PROJECT_NAME_building")
 
 
-set(sourceGroupPrefixName "")
-
-# 按文件层次结构显示
-function(sourceGroup prefix)
-    foreach(FILE IN LISTS ARGN) 
-        get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
-        string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" GROUP "${PARENT_DIR}")
-        string(REPLACE "${prefix}" "" GROUP "${GROUP}")
-        string(REPLACE "/" "\\" GROUP "${GROUP}")
-
-        if ("${FILE}" MATCHES ".*\\.cpp" AND ".*\\.cc" AND ".*\\.c")
-            set(GROUP "Source Files${GROUP}")
-        elseif("${FILE}" MATCHES ".*\\.h" AND ".*\\.hpp")
-            set(GROUP "Header Files${GROUP}")
-        endif()
-
-        source_group("${GROUP}" FILES "${FILE}")
-    endforeach()
-endfunction()
-
-
 file(GLOB_RECURSE PROJECT_NAME_Source
-    "${CMAKE_CURRENT_SOURCE_DIR}/**/*.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/**/*.cc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/**/*.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/**/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/**/*.h++"
-    "${CMAKE_CURRENT_SOURCE_DIR}/**/*.asm"
+    "/source_path/**/*.c"
+    "/source_path/**/*.cc"
+    "/source_path/**/*.h"
+    "/source_path/**/*.hpp"
+    "/source_path/**/*.h++"
+    "/source_path/**/*.asm"
+    "/source_path/*.c"
+    "/source_path/*.cc"
+    "/source_path/*.h"
+    "/source_path/*.hpp"
+    "/source_path/*.h++"
+    "/source_path/*.asm"
 )
 sourceGroup("" ${PROJECT_NAME_Source})
 #message("sources: ${PROJECT_NAME_Source}")
@@ -77,19 +59,23 @@ PATH = depsDir
 PATH = PATH + ":" + os.path.join(depsDir, "bin")
 PATH = PATH + ":" + os.path.join(depsDir, "include")
 PATH = PATH + ":" + os.path.join(depsDir, "lib")
+PATH = PATH + ":" + "/system_path"
 os.environ["PATH"] = os.getenv("PATH") + ":" + PATH
 
-result = subprocess.getstatusoutput("ARCH make")
+result = subprocess.getstatusoutput("ARCH RUN")
+print("action: " + "ARCH RUN")
 action = int(result[0])
 if action == 0:
     msg = str(result[1])
     print(msg)
-    if "Nothing to be done" not in msg:
-        result = subprocess.getstatusoutput("ARCH make install")
+    if "HINT" not in msg:
+        print("action: " + "ARCH INSTALL")
+        result = subprocess.getstatusoutput("ARCH INSTALL")
         if len(result) > 1:
-            print(result[1])
+            print("install error: " + str(result[1]))
         exit(int(result[0]))
 else:
+    print("error: " + str(action))
     exit(action)
 
 ]])
@@ -99,7 +85,7 @@ add_custom_target(${TARGET_BUILD}
     VERBATIM
     COMMAND ${PYTHON_EXECUTABLE} -c "${command_string}"
     COMMAND echo "${TARGET_BUILD} done."
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    WORKING_DIRECTORY /source_path
 )
 
 """
@@ -144,49 +130,66 @@ def main(path):
 
     name = os.path.basename(sourceDir)
 
-    global depsSourceCamke, cmakeList, configure, makefile
+    global depsSourceCamke, cmakeList, configure, makefile, ninjaBuild
     depsSourceCamke = os.path.join(homeDir, depsSourceCamke)
     cmakeList = os.path.join(sourceDir, cmakeList)
     configure = os.path.join(sourceDir, configure)
     makefile = os.path.join(sourceDir, makefile)
+    ninjaBuild = os.path.join(sourceDir, ninjaBuild)
     log("depsSourceCamke: " + depsSourceCamke, color=33)
     log("cmakeList: " + cmakeList, color=33)
     log("configure: " + configure, color=33)
     log("makefile: " + makefile, color=33)
 
-    if not os.path.exists(configure):
+    cmakeBuild = False
+    if os.path.exists(cmakeList):
+        cmakeBuild = True
+        if not os.path.exists(ninjaBuild):
+            log(os.path.basename(cmakeList) + " was exist! remove it and try again!", color=31)
+            return
+
+    if not cmakeBuild and not os.path.exists(configure):
         log(os.path.basename(configure) + " was not exist!", color=31)
         return
 
-    if not os.path.exists(makefile):
+    if not cmakeBuild and not os.path.exists(makefile):
         log(os.path.basename(makefile) + " was not exist!", color=31)
         return
 
-    if os.path.exists(cmakeList):
-        log(os.path.basename(cmakeList) + " was exist!", color=31)
-        return
 
     global content
     content = content.replace("PROJECT_NAME", name)
     content = content.replace("/path", homeDir)
+    content = content.replace("/source_path", sourceDir)
+    content = content.replace("/system_path", os.getenv("PATH"))
 
     arch = ""
     if platform.machine() == "arm64" and platform.system() == "Darwin":
         arch = "arch -arm64"
+
+    hint = "no work to do" if cmakeBuild else "Nothing to be done"
+    make = "cmake --build ." if cmakeBuild else "make"
+    install = "cmake --install ." if cmakeBuild else "make install"
     content = content.replace("ARCH", arch)
+    content = content.replace("HINT", hint)
+    content = content.replace("RUN", make)
+    content = content.replace("INSTALL", install) 
     
     log(content)
 
-    with open(cmakeList, "w") as fileHandle:
+    cmakeName = name + ".cmake"
+    outputCmakeFile = os.path.join(sourceDir, cmakeName)
+
+    with open(outputCmakeFile, "w") as fileHandle:
         fileHandle.write(str(content))
 
     depsData = """
 
-add_subdirectory(%s)
+include("%s")
 list(APPEND Deps_Source_Targets %s_building)
 
     """
-    depsData = depsData % (sourceDir, name)
+    depsData = depsData % (outputCmakeFile, name)
     
     with open(depsSourceCamke, "a+") as fileHandle:
         fileHandle.write(str(depsData))
