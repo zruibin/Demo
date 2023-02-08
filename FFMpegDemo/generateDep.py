@@ -33,12 +33,14 @@ set(TARGET_BUILD "PROJECT_NAME_building")
 file(GLOB_RECURSE PROJECT_NAME_Source
     "/source_path/**/*.c"
     "/source_path/**/*.cc"
+    "/source_path/**/*.cpp"
     "/source_path/**/*.h"
     "/source_path/**/*.hpp"
     "/source_path/**/*.h++"
     "/source_path/**/*.asm"
     "/source_path/*.c"
     "/source_path/*.cc"
+    "/source_path/*.cpp"
     "/source_path/*.h"
     "/source_path/*.hpp"
     "/source_path/*.h++"
@@ -126,9 +128,14 @@ def main(path):
     homeDir = sys.path[0]
     log("Home Directory: " + homeDir)
     sourceDir = os.path.join(homeDir, path)
-    log("sourceDir: " + sourceDir)
 
-    name = os.path.basename(sourceDir)
+    depsSourceDir = os.path.join(homeDir, "depsSource")
+    name = sourceDir.replace(depsSourceDir, "").replace("/", "_")
+    if name.startswith("_"):
+        name = name[1:]
+    if name.endswith("_"):
+        name = name[:-1]
+    print(name)
 
     global depsSourceCamke, cmakeList, configure, makefile, ninjaBuild
     depsSourceCamke = os.path.join(homeDir, depsSourceCamke)
