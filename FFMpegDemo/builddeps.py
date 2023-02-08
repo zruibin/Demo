@@ -333,7 +333,8 @@ def getDictValues(depsDict):
     action = depsDict["action"]
     url = depsDict["url"]
 
-    buildDir = True
+    # 默认跟随debug，debug需要在源目录生成才有库符号链接
+    buildDir = False if IS_DEBUG else True
     if "build_dir" in depsDict and IS_DEBUG:
         buildDir = depsDict["build_dir"]
 
