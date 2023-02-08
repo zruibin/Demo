@@ -213,6 +213,9 @@ def cmakeBuild(fileName, cmakeArgs, debugArgs, targetDir, genBuilding=True, preC
     if len(preCmdList) > 0:
         operatorCMD(preCmdList, False)
 
+    if cmakeArgs == None:
+        cmakeArgs = ""
+
     if IS_DEBUG:
         if debugArgs != None: # debug
             cmakeArgs = cmakeArgs + debugArgs
@@ -302,7 +305,7 @@ def callbackfunc(blocknum, blocksize, totalsize):
     percent = 100.0 * blocknum * blocksize / totalsize
     if percent > 100:
         percent = 100
-    print("文件下载:%.2f%%"% percent)
+    print("文件下载:%.2f%%"% percent, end="\r")
 
 def downloadFile(url, dirPath):
     urllib.request.urlretrieve(url, dirPath, callbackfunc)

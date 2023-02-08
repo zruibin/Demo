@@ -131,6 +131,7 @@
         "fileName": "aom_v3.5.0", 
         "url": "https://aomedia.googlesource.com/aom/aom_v3.5.0.zip",
         "build": "cmake",
+        "build_dir": 1,
         "args": "-DAOM_TARGET_CPU=DEPS_ARCH -DENABLE_SHARED=OFF -DENABLE_NASM=ON"
     }
 
