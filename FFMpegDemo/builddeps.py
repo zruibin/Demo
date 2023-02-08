@@ -35,7 +35,7 @@ sourceLockName = sourceDirName + ".lock"
 buildDir = "buildGen" # cmake构建目录
 cmakeOther = ""
 libSufixs = [".a", ".lib", ".so", ".dylib", ".dll"]
-depsSourceFlag = False #True if IS_DEBUG else False
+depsSourceFlag = True if IS_DEBUG else False
 
 CPU_COUNT = multiprocessing.cpu_count()
 DEPS_ARCH = "DEPS_ARCH"
@@ -498,6 +498,9 @@ def genDepsCmakeList():
         # cmakeOther = cmakeOther + "\n" + "link_libraries(\"" + libPath + "\")"
         cmakeOther = cmakeOther + "\n" + "list(APPEND DEPS_LIBS \"" + libPath + "\")"
 
+    depsInclude = """
+list(APPEND HEADERS ${Deps_Include})
+"""
 
     depsSource = """
 file(GLOB_RECURSE Deps_Source
@@ -509,9 +512,13 @@ file(GLOB_RECURSE Deps_Source
     "depsSource/**/*.asm"
 )
 sourceGroup("" ${Deps_Source})
-set_source_files_properties(${Deps_Source} PROPERTIES HEADER_FILE_ONLY TRUE)
+#set_source_files_properties(${Deps_Source} PROPERTIES HEADER_FILE_ONLY TRUE)
+source_group(TREE "${CMAKE_SOURCE_DIR}" FILES ${Deps_Include} ${Deps_Source})
+add_library(Deps STATIC ${Deps_Source})
 """
-    if depsSourceFlag == False: 
+    if depsSourceFlag:
+        depsInclude = ""
+    else:
         depsSource = ""
 
     depsContent = """
@@ -529,7 +536,7 @@ include_directories("${DEPS_INCLUDE_DIR}")
 link_directories("${DEPS_LIB_DIR}")
 file(GLOB_RECURSE Deps_Include ${DEPS_INCLUDE_DIR}**)
 
-""" + depsSource + cmakeOther
+""" + depsInclude + depsSource + cmakeOther
     log("Deps CmakeList content: " + depsContent)
     with open(depsCamke, "w") as fileHandler:
         fileHandler.write(depsContent)

@@ -78,13 +78,30 @@ dwarfdump -debug-info /path/FFMpegDemo/deps/lib/libavformat.a | head -n 100
 DW_AT_comp_dir    ("/path/FFMpegDemo/depsSource/ffmpeg-5.1.2/")
 ```
 
+## 运行方式                        
+
+1. 执行builddeps.py，该脚本会根据deps.json的配置来安装第三方依赖库
+   
+2. 脚本执行成功，即可执行以下命令
+                                                          
+```
+mkdir build && cd build
+cmake ..
+```
+
+> builddeps.py中**IS_DEBUG(默认为True)**变量区分第三库是否带有debug符号。
+
 ## ffmpeg源码debug
 
 ### 一、cmake源码集成方式
 
-> 注意：此方式存在函数跳转问题
+1. 设置builddeps.py中**depsSourceFlag**为True(默认跟随**IS_DEBUG**变量)即可引入源码，需要引入debug符号的库。
 
-#### **builddeps.py中 `IS_DEBUG` 设置为True即可，默认为True.**
+2. 删除depsSource/depsSource.lock中对应的库名称，重新执行builddeps.py安装依赖库。
+
+> 若depsSourceFlag设置为True则开启源码调试，若工程中函数无法跳转，则先运行下工程中**Deps**这个target建立源码索引即可(该target不会引入目标工程，且会编译错误可忽略)
+> 
+> ~~注意：此方式存在函数跳转问题~~
 
 #### OR
 
@@ -142,7 +159,9 @@ echo "FFMpeg Install done."
 ./generateDep.py depsSource/ffmpeg-5.1.2
 ```
 
-> builddeps.py中**depsSourceFlag**设置为False，防止引过多源码
+> **此脚本目前只支持依赖configure所生成的Makefile的方式来集成调试！！！**
+> 
+> builddeps.py中**depsSourceFlag**设置为False，防止引过多源码！
 >  
 > **步骤三为步骤二的自动化脚本处理**
 

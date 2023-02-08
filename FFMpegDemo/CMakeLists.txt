@@ -151,12 +151,6 @@ link_directories(
     "${libs_dir}"
 )
 
-# 添加依赖
-if(EXISTS "${PROJECT_SOURCE_DIR}/deps.cmake")
-    message(STATUS "Include deps.cmake")
-    include("deps.cmake")
-endif()
-
 # modules
 include("${src_dir}/view/CMakeLists.txt")
 include("${src_dir}/log/CMakeLists.txt")
@@ -182,11 +176,11 @@ list(APPEND ALL_SOURCES ${MODULES} ${DEPENDS_LIBS})
 #-------------------------------------------------------------------------------
 
 set(HEADERS
-    ${Deps_Include}
+    
 )
 
 set(SOURCES
-    ${Deps_Source}
+    
 )
 
 set(EXECUTE_SOURCES
@@ -194,6 +188,12 @@ set(EXECUTE_SOURCES
     src/app.cc
     src/main.cc
 )
+
+# 添加依赖
+if(EXISTS "${PROJECT_SOURCE_DIR}/deps.cmake")
+    message(STATUS "Include deps.cmake")
+    include("deps.cmake")
+endif()
 
 source_group(TREE "${CMAKE_SOURCE_DIR}" FILES ${HEADERS} ${SOURCES} ${EXECUTE_SOURCES})
 
