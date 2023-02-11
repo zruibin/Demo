@@ -35,7 +35,7 @@ sourceLockName = sourceDirName + ".lock"
 buildDir = "buildGen" # cmake构建目录
 cmakeOther = ""
 libSufixs = [".a", ".lib", ".so", ".dylib", ".dll"]
-depsSourceFlag = True if IS_DEBUG else False
+depsSourceFlag = False #True if IS_DEBUG else False
 
 CPU_COUNT = multiprocessing.cpu_count()
 DEPS_ARCH = "DEPS_ARCH"

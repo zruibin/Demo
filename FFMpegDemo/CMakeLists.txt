@@ -335,7 +335,6 @@ install(
 
 set(output_head_files
     "${src_dir}/app.h"
-    "${src_dir}/engine/engine_interface.h"
 )
 install(FILES ${output_head_files} DESTINATION include)
 
@@ -373,11 +372,14 @@ install(
 
 #-------------------------------------------------------------------------------
 
-
-add_custom_target(run
-    COMMAND ./${TARGET}
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    COMMENT "Intermediate Run target: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
-)
+if(CMAKE_GENERATOR MATCHES "Unix Makefiles")
+    set(RUN_NAME "run")
+    message(STATUS "CMAKE_GENERATOR: ${CMAKE_GENERATOR}, and generate target(${RUN_NAME})")
+    add_custom_target(${RUN_NAME}
+        COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TARGET}
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        COMMENT "Intermediate Run target: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+    )
+endif()
 
 
