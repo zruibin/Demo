@@ -10,6 +10,10 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+/*
+https://www.jianshu.com/p/b88e249fb82e
+https://blog.csdn.net/weixin_45312249/article/details/122512390
+*/ 
 
 struct vc_params_t {
     long width,height;
