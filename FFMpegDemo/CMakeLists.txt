@@ -311,9 +311,10 @@ endif()
 #-------------------------------------------------------------------------------
 
 # 单元测试
-# option(ENABLE_UNIT_TESTS "Enable Unit Tests." ON)
-# include("${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
-
+option(ENABLE_UNIT_TESTS "Enable Unit Tests." OFF)
+if(ENABLE_UNIT_TESTS)
+    include("${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
+endif()
 #-------------------------------------------------------------------------------
 
 
