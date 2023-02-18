@@ -155,11 +155,13 @@ echo "FFMpeg Install done."
 如：
 
 ```
-# 即可在depsSource/ffmpeg-5.1.2中生成CMakeLists.txt
+# 即可在depsSource/ffmpeg-5.1.2中生成ffmpeg-5.1.2.cmake
+# 并于depsSource.cmake中自动添加相对应的引入(不可重复！)
+
 ./generateDep.py depsSource/ffmpeg-5.1.2
 ```
 
-> **此脚本目前只支持依赖configure所生成的Makefile的方式来集成调试！！！**
+> **此脚本依赖configure/cmake所生成的Makefile的方式来集成调试！！！**
 > 
 > builddeps.py中**depsSourceFlag**设置为False，防止引过多源码！
 >  
