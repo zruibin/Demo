@@ -25,6 +25,9 @@ void Assets::SetAssetsDirPath(const String& path) {
 }
 
 String Assets::AssetsDirPath() {
+    if (__staticAssetsPath.length() == 0) {
+        return Assets::ProjectDirPath().append("/assets/");
+    }
     return __staticAssetsPath;
 }
 
