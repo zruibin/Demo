@@ -25,6 +25,7 @@ depsSource/
 deps/
 deps.cmake
 depsSource.cmake
+depsSource.lock
 builddeps.log
 
 CMakeLists.txt.user

@@ -212,7 +212,6 @@ include_directories(
 
 set(RESOURCES
     builddeps.py
-    generateDep.py
     deps.json
     README.md
     LICENSE
@@ -220,8 +219,8 @@ set(RESOURCES
 if(EXISTS "${PROJECT_SOURCE_DIR}/deps.cmake")
     list(APPEND RESOURCES deps.cmake)
 endif()
-if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource/depsSource.lock")
-    list(APPEND RESOURCES depsSource/depsSource.lock)
+if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource.lock")
+    list(APPEND RESOURCES depsSource.lock)
 endif()
 if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource.cmake")
     list(APPEND RESOURCES depsSource.cmake)

@@ -19,6 +19,8 @@ import tarfile, gzip, zipfile, bz2
 import urllib.request
 from pathlib import Path
 import multiprocessing
+import inspect
+
 
 IS_DEBUG = True
 
@@ -31,11 +33,18 @@ sourceDirName = "depsSource"
 outputDirName = "deps"
 depsName = "deps.json"
 depsCamke = "deps.cmake"
-sourceLockName = sourceDirName + ".lock"
+sourceLock = sourceDirName + ".lock"
 buildDir = "buildGen" # cmake构建目录
 cmakeOther = ""
 libSufixs = [".a", ".lib", ".so", ".dylib", ".dll"]
 depsSourceFlag = False #True if IS_DEBUG else False
+
+depsSourceCamke = sourceDirName + ".cmake"
+cmakeList = "CMakeLists.txt"
+configure = "configure"
+makefile = "Makefile"
+ninjaBuild = "build.ninja"
+
 
 CPU_COUNT = multiprocessing.cpu_count()
 DEPS_ARCH = "DEPS_ARCH"
@@ -44,16 +53,27 @@ DEPS_ARCH = "DEPS_ARCH"
 logList = []
 
 def logRecord():
-    with open(os.path.join(homeDir, "builddeps.log"), "w") as fileHandle:
+    with open(os.path.join(homeDir, "builddeps.log"), "a+") as fileHandle:
         for logStr in logList:
             fileHandle.write(str(logStr))
+    pass
 
-def log(string="", newline=True):
+def log(string="", newline=True, color=None, write=True):
+    if len(string) == 0:
+        return
+
+    function = inspect.stack()[1][3]
+    line = inspect.stack()[1][2]
+    string = "[" + str(function) + ":" + str(line) + "] " + string
+
+    if color != None:
+        # 见: https://www.cnblogs.com/ping-y/p/5897018.html
+        string = "\033[" + str(color) + "m" + string + "\033[0m"
     if newline:
-        logList.append(str(string) + "\n")
+        if write: logList.append(str(string) + "\n")
         print(string, end="\n")
     else:
-        logList.append(str(string))
+        if write: logList.append(str(string))
         print(string, end="")
     pass
 
@@ -62,6 +82,7 @@ def operator(cmdString, newline=True):
     output = os.popen(cmdString)
     for line in output.readlines():
         log(line, newline)
+    pass
 
 def operatorCMD(parameterList, newline=True):
     cmdString = " ".join(parameterList)
@@ -140,6 +161,56 @@ def json_minify(string, strip_space=True):
     new_str.append(string[index:])
     return ''.join(new_str)
 
+def untar(fname, dirs):
+    """
+    解压tar.gz文件
+    :param fname: 压缩文件名
+    :param dirs: 解压后的存放路径
+    :return: bool
+    """
+    try:
+        t = tarfile.open(fname)
+        t.extractall(path = dirs)
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def zipExtract(path_zip, path_aim):
+    z = zipfile.ZipFile(path_zip, 'r')
+    for p in z.namelist():
+        z.extract(p, path_aim)
+    z.close()
+    depressName = os.path.split(z.namelist()[0])[0]
+    desName = os.path.splitext(path_zip)[0]
+    if depressName != desName:
+        os.rename(depressName, desName)
+
+def bz2Extract(path_bz2, path_aim):
+    print("bz2Extract: " + path_bz2)
+    archive = tarfile.open(path_bz2,'r:bz2')
+    # archive.debug = 1    # Display the files beeing decompressed.
+    for tarinfo in archive:
+        archive.extract(tarinfo, path_aim) 
+    archive.close()
+
+def callbackfunc(blocknum, blocksize, totalsize):
+    '''回调函数
+    @blocknum: 已经下载的数据块
+    @blocksize: 数据块的大小
+    @totalsize: 远程文件的大小
+    '''
+    percent = 100.0 * blocknum * blocksize / totalsize
+    if percent > 100:
+        percent = 100
+    print("文件下载:%.2f%%"% percent, end="\r")
+
+def downloadFile(url, dirPath):
+    urllib.request.urlretrieve(url, dirPath, callbackfunc)
+    pass
+
+#------------------------------------------------------------------------------------
+
 def swapDepsArgs(args):
     if args == None:
         return ""
@@ -152,6 +223,7 @@ def swapDepsArgs(args):
     
     return args
 
+#------------------------------------------------------------------------------------
 
 def configBuild(fileName, configArgs, debugArgs, targetDir=None, genBuilding=True, install=True):
     os.chdir(fileName)
@@ -191,7 +263,6 @@ def configBuild(fileName, configArgs, debugArgs, targetDir=None, genBuilding=Tru
     operator(makeStr, False)
     operator(makeInstall, False)
     pass
-
 
 def cmakeBuild(fileName, cmakeArgs, debugArgs, targetDir, genBuilding=True, preCmdList=[], install=True):
     os.chdir(fileName)
@@ -260,60 +331,18 @@ def cmakeBuild(fileName, cmakeArgs, debugArgs, targetDir, genBuilding=True, preC
         operator("cmake --build . --target install", False)
     pass
 
+#------------------------------------------------------------------------------------
 
-def untar(fname, dirs):
-    """
-    解压tar.gz文件
-    :param fname: 压缩文件名
-    :param dirs: 解压后的存放路径
-    :return: bool
-    """
-    try:
-        t = tarfile.open(fname)
-        t.extractall(path = dirs)
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-def zipExtract(path_zip, path_aim):
-    z = zipfile.ZipFile(path_zip, 'r')
-    for p in z.namelist():
-        z.extract(p, path_aim)
-    z.close()
-    depressName = os.path.split(z.namelist()[0])[0]
-    desName = os.path.splitext(path_zip)[0]
-    if depressName != desName:
-        os.rename(depressName, desName)
-
-
-def bz2Extract(path_bz2, path_aim):
-    print("bz2Extract: " + path_bz2)
-    archive = tarfile.open(path_bz2,'r:bz2')
-    # archive.debug = 1    # Display the files beeing decompressed.
-    for tarinfo in archive:
-        archive.extract(tarinfo, path_aim) 
-    archive.close()
-
-
-def callbackfunc(blocknum, blocksize, totalsize):
-    '''回调函数
-    @blocknum: 已经下载的数据块
-    @blocksize: 数据块的大小
-    @totalsize: 远程文件的大小
-    '''
-    percent = 100.0 * blocknum * blocksize / totalsize
-    if percent > 100:
-        percent = 100
-    print("文件下载:%.2f%%"% percent, end="\r")
-
-def downloadFile(url, dirPath):
-    urllib.request.urlretrieve(url, dirPath, callbackfunc)
-    pass
-
+def getDepsJson():
+    depsJson = None
+    with open(depsName, 'r', encoding='utf-8') as fw:
+        # json.dump(json_str, fw, indent=4, ensure_ascii=False)
+        jsonString = json_minify(fw.read())
+        depsJson = json.loads(jsonString)
+    return depsJson
 
 def isDesps(fileName):
-    lockFile = os.path.join(sourceDir, sourceLockName)
+    lockFile = os.path.join(homeDir, sourceLock)
     if not os.path.exists(lockFile):
         return False
     with open(lockFile, "r") as f:
@@ -326,10 +355,10 @@ def isDesps(fileName):
     return False
 
 def updateDesps(fileName):
-    lockFile = os.path.join(sourceDir, sourceLockName)
+    lockFile = os.path.join(homeDir, sourceLock)
     with open(lockFile, "a") as f:
         f.writelines(fileName + os.linesep)
-
+    pass
 
 def getDictValues(depsDict):
     fileName = depsDict["fileName"]
@@ -368,7 +397,6 @@ def getDictValues(depsDict):
         "buildDir": buildDir
     }
 
-
 def downloadAndBuild(depsDict):
     depsDict = getDictValues(depsDict)
     fileName = depsDict["fileName"]
@@ -406,7 +434,6 @@ def downloadAndBuild(depsDict):
         cmakeBuild(fileName, args, debugArgs, targetDir, buildDir)
     pass
 
-
 def buildDeps(depsDict):
     depsDict = getDictValues(depsDict)
     fileName = depsDict["fileName"]
@@ -434,7 +461,6 @@ def buildDeps(depsDict):
         cmakeBuild(fileName, args, debugArgs, targetDir, buildDir)
     pass
 
-
 def buildThirdParty():
     os.chdir(homeDir)
     os.chdir(thirdPartyDir) #进入到第三方存放的目录
@@ -459,11 +485,7 @@ def buildFromDepsFile():
         log("Error: " + str(depsName) + " was not exist.")
         return
 
-    depsJson = None
-    with open(depsName, 'r', encoding='utf-8') as fw:
-        # json.dump(json_str, fw, indent=4, ensure_ascii=False)
-        jsonString = json_minify(fw.read())
-        depsJson = json.loads(jsonString)
+    depsJson = getDepsJson()
     if depsJson is None: 
         return
     for depsDict in depsJson:
@@ -482,6 +504,7 @@ def buildFromDepsFile():
         updateDesps(fileName)
     pass
 
+#------------------------------------------------------------------------------------
 
 def genDepsCmakeList():
     log("-"*80)
@@ -546,6 +569,175 @@ file(GLOB_RECURSE Deps_Include ${DEPS_INCLUDE_DIR}**)
         fileHandler.write(depsContent)
     pass
 
+def addDebugDepsCmake(destDir, name):
+    depCmakeList = os.path.join(destDir, cmakeList)
+    depConfigure = os.path.join(destDir, configure)
+    depMakefile = os.path.join(destDir, makefile)
+    depNinjaBuild = os.path.join(destDir, ninjaBuild)
+    log("cmakeList: " + depCmakeList, color=33)
+    log("configure: " + depConfigure, color=33)
+    log("makefile: " + depMakefile, color=33)
+
+    cmakeBuild = False
+    hasBuildDir = False
+    if os.path.exists(depCmakeList):
+        cmakeBuild = True
+        if not os.path.exists(depNinjaBuild):
+            if not os.path.exists(os.path.join(destDir, buildDir)):
+                log(os.path.basename(depCmakeList) + " was exist! remove it and try again!", color=31)
+                return
+            else:
+                hasBuildDir = True
+
+    if not cmakeBuild and not os.path.exists(depConfigure):
+        log(os.path.basename(depConfigure) + " was not exist!", color=31)
+        return
+
+    if not cmakeBuild and not os.path.exists(depMakefile):
+        log(os.path.basename(depMakefile) + " was not exist!", color=31)
+        return
+
+    content = r"""
+message(WARNING "This Target(PROJECT_NAME) Create By Ruibin.Chow.")
+
+set(TARGET_EXE "PROJECT_NAME_exe")
+set(TARGET_BUILD "PROJECT_NAME_building")
+
+
+file(GLOB_RECURSE PROJECT_NAME_Source
+    "/source_path/**/*.c"
+    "/source_path/**/*.cc"
+    "/source_path/**/*.cpp"
+    "/source_path/**/*.h"
+    "/source_path/**/*.hpp"
+    "/source_path/**/*.h++"
+    "/source_path/**/*.asm"
+    "/source_path/*.c"
+    "/source_path/*.cc"
+    "/source_path/*.cpp"
+    "/source_path/*.h"
+    "/source_path/*.hpp"
+    "/source_path/*.h++"
+    "/source_path/*.asm"
+)
+sourceGroup("" ${PROJECT_NAME_Source})
+#message("sources: ${PROJECT_NAME_Source}")
+
+
+add_executable(${TARGET_EXE} ${PROJECT_NAME_Source})
+
+set(command_string [[
+
+import subprocess, os
+
+depsDir = "/path/deps"
+PATH = depsDir
+PATH = PATH + ":" + os.path.join(depsDir, "bin")
+PATH = PATH + ":" + os.path.join(depsDir, "include")
+PATH = PATH + ":" + os.path.join(depsDir, "lib")
+PATH = PATH + ":" + "/system_path"
+os.environ["PATH"] = os.getenv("PATH") + ":" + PATH
+
+result = subprocess.getstatusoutput("ARCH RUN")
+print("action: " + "ARCH RUN")
+action = int(result[0])
+if action == 0:
+    msg = str(result[1])
+    print(msg)
+    if "HINT" not in msg:
+        print("action: " + "ARCH INSTALL")
+        result = subprocess.getstatusoutput("ARCH INSTALL")
+        if len(result) > 1:
+            print("install error: " + str(result[1]))
+        exit(int(result[0]))
+else:
+    print("error: " + str(action))
+    exit(action)
+
+]])
+
+include(FindPythonInterp)
+add_custom_target(${TARGET_BUILD}
+    VERBATIM
+    COMMAND ${PYTHON_EXECUTABLE} -c "${command_string}"
+    COMMAND echo "${TARGET_BUILD} done."
+    WORKING_DIRECTORY /source_path
+)
+
+"""
+    content = content.replace("PROJECT_NAME", name)
+    content = content.replace("/path", homeDir)
+    content = content.replace("/source_path", destDir)
+    content = content.replace("/system_path", os.getenv("PATH"))
+
+    arch = ""
+    if platform.machine() == "arm64" and platform.system() == "Darwin":
+        arch = "arch -arm64"
+
+    directory = buildDir if hasBuildDir else "."
+    hint = "no work to do" if cmakeBuild else "Nothing to be done"
+    make = "cmake --build " + directory if cmakeBuild else "make"
+    install = "cmake --install " + directory if cmakeBuild else "make install"
+
+    content = content.replace("ARCH", arch)
+    content = content.replace("HINT", hint)
+    content = content.replace("RUN", make)
+    content = content.replace("INSTALL", install) 
+    
+    log(content, write=False)
+
+    cmakeName = name + ".cmake"
+    outputCmakeFile = os.path.join(destDir, cmakeName)
+
+    with open(outputCmakeFile, "w") as fileHandle:
+        fileHandle.write(str(content))
+
+    genDebugDepsCmake()
+    pass
+
+def removeDebugDepsCmake(destDir, name):
+    cmakeName = name + ".cmake"
+    debugCmakeFile = os.path.join(destDir, cmakeName)
+    if os.path.exists(debugCmakeFile):
+        os.remove(debugCmakeFile)
+
+    genDebugDepsCmake()
+    pass
+
+def genDebugDepsCmake():
+    depsJson = getDepsJson()
+    if depsJson is None: 
+        return
+
+    depsData = ""
+    for depsDict in depsJson:
+        depsDict = getDictValues(depsDict)
+        targetDir = depsDict["targetDir"]
+        name = depsDict["fileName"]
+        file = name + ".cmake"
+
+        debugCmakePath = os.path.join(sourceDir, name)
+        if targetDir != None:
+            name = name + "_" + targetDir
+            file = name + ".cmake"
+            debugCmakePath = os.path.join(debugCmakePath, targetDir)
+
+        debugCmakeFile = os.path.join(debugCmakePath, file)
+        if os.path.exists(debugCmakeFile):
+            log("debugCmakeFile: " + debugCmakeFile)
+            cmakeData = """
+include("%s")
+list(APPEND Deps_Source_Targets %s_building)
+    """  % (debugCmakeFile, name)
+            depsData = depsData + cmakeData
+
+    if len(depsData) > 0:
+        log("depsSourceCamke: " + depsSourceCamke, color=33)
+        with open(depsSourceCamke, "w") as fileHandle:
+            fileHandle.write(str(depsData))
+    pass
+
+#------------------------------------------------------------------------------------
 
 def genDirs():
     if not os.path.exists(sourceDirName):
@@ -554,16 +746,10 @@ def genDirs():
         os.makedirs(outputDirName)
     if not os.path.exists(thirdPartyDirName):
         os.makedirs(thirdPartyDirName)
-    
-    global homeDir, sourceDir, thirdPartyDir, outputDir
 
-    homeDir = sys.path[0]
     log("Home Directory: " + homeDir)
-    sourceDir = os.path.join(homeDir, sourceDirName)
     log("Deps Directory: " + sourceDir)
-    thirdPartyDir = os.path.join(homeDir, thirdPartyDirName)
     log("ThirdParty Directory: " + thirdPartyDir)
-    outputDir = os.path.join(homeDir, outputDirName)
     log("Install Directory: " + outputDir)
     # log("-"*80)
 
@@ -579,26 +765,94 @@ def genDirs():
     operator("which nasm")
     pass
 
+#------------------------------------------------------------------------------------
 
-
-if __name__ == '__main__':
-    begin = datetime.datetime.now()
-    log("更新时间：" + str(begin))
-
+def deps():
     # 生成目录
     genDirs()
 
     # 构建第三方库
     buildFromDepsFile()
 
-    # # 构建本地第三方库
+    # 构建本地第三方库
     buildThirdParty()
-
-    # # 生成cmake文件
+    
+    # 生成cmake文件
     genDepsCmakeList()
+    pass
+
+def debugDepsCmake():
+    path = None
+    action = None
+    if len(sys.argv) > 2:
+        action = sys.argv[1]
+        path = sys.argv[2]
+    else:
+        log("\033[5;31m" + "Error: It was need path!" + "\033[0m")
+        return
+
+    destDir = os.path.join(homeDir, path)
+    depsSourceDir = os.path.join(homeDir, "depsSource")
+    name = destDir.replace(depsSourceDir, "").replace("/", "_")
+    if name.startswith("_"):
+        name = name[1:]
+    if name.endswith("_"):
+        name = name[:-1]
+    print(name)
+
+    if action == "add" or action == "-a":
+        addDebugDepsCmake(destDir, name)
+    elif action == "remove" or action == "-r":
+        removeDebugDepsCmake(destDir, name)
+    pass
+
+def help():
+    helpStr = """
+Command:
+    deps           根据deps.json安装依赖
+    add dep_dir    根据库dep_dir添加依赖调试
+    remove dep_dir 根据库dep_dir删除依赖调试
+    help           说明
+Default:
+    deps"""
+    log(helpStr)
+    pass
+
+def init():
+    global homeDir, sourceDir, thirdPartyDir, outputDir
+    homeDir = sys.path[0]
+    sourceDir = os.path.join(homeDir, sourceDirName)
+    thirdPartyDir = os.path.join(homeDir, thirdPartyDirName)
+    outputDir = os.path.join(homeDir, outputDirName)
+
+    global depsSourceCamke
+    depsSourceCamke = os.path.join(homeDir, depsSourceCamke)
+    pass
+
+
+#------------------------------------------------------------------------------------
+
+
+if __name__ == '__main__':
+    log("-"*80)
+    begin = datetime.datetime.now()
+    log("开始时间：" + str(begin))
+
+    init()
+
+    if len(sys.argv) == 1:
+        deps()
+    if len(sys.argv) == 2:
+        if sys.argv[1] == "help" or sys.argv[1] == "-h":
+            help()
+        elif sys.argv[1] == "deps":
+            deps()
+    elif len(sys.argv) > 2:
+        debugDepsCmake()
 
     end = datetime.datetime.now()
     log(('花费时间: %.3f 秒' % (end - begin).seconds))
+    log("-"*80)
     logRecord()
     pass
 
