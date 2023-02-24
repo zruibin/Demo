@@ -150,7 +150,7 @@ echo "FFMpeg Install done."
 
 ### 三、python脚本生成依赖调试
 
-**于generateDep.py的目录下执行generateDep.py脚本，然后再重新cmake下主工程即可**
+**builddeps.py的目录下执行 `builddeps.py add 库目径` 脚本命令，然后再重新cmake下主工程即可**
 
 如：
 
@@ -158,10 +158,10 @@ echo "FFMpeg Install done."
 # 即可在depsSource/ffmpeg-5.1.2中生成ffmpeg-5.1.2.cmake
 # 并于depsSource.cmake中自动添加相对应的引入(不可重复！)
 
-./generateDep.py depsSource/ffmpeg-5.1.2
+./builddeps.py add depsSource/ffmpeg-5.1.2
 ```
 
-> **此脚本依赖configure/cmake所生成的Makefile的方式来集成调试！！！**
+> **此脚本依赖configure/cmake所生成的Makefile/build.ninja的方式来集成调试！！！**
 > 
 > builddeps.py中**depsSourceFlag**设置为False，防止引过多源码！
 >  
