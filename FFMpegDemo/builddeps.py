@@ -600,7 +600,7 @@ def addDebugDepsCmake(destDir, name):
     content = r"""
 message(WARNING "This Target(PROJECT_NAME) Create By Ruibin.Chow.")
 
-set(TARGET_EXE "PROJECT_NAME_exe")
+set(TARGET_ERROR "PROJECT_NAME_error")
 set(TARGET_BUILD "PROJECT_NAME_building")
 
 
@@ -612,6 +612,7 @@ file(GLOB_RECURSE PROJECT_NAME_Source
     "/source_path/**/*.hpp"
     "/source_path/**/*.h++"
     "/source_path/**/*.asm"
+    "/source_path/**/*.S"
     "/source_path/*.c"
     "/source_path/*.cc"
     "/source_path/*.cpp"
@@ -619,12 +620,13 @@ file(GLOB_RECURSE PROJECT_NAME_Source
     "/source_path/*.hpp"
     "/source_path/*.h++"
     "/source_path/*.asm"
+    "/source_path/*.S"
+    "/source_path/*.cmake"
 )
 sourceGroup("" ${PROJECT_NAME_Source})
 #message("sources: ${PROJECT_NAME_Source}")
 
-
-add_executable(${TARGET_EXE} ${PROJECT_NAME_Source})
+add_library(${TARGET_ERROR} STATIC ${PROJECT_NAME_Source})
 
 set(command_string [[
 
