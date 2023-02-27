@@ -142,7 +142,7 @@
         "url": "https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.bz2",
         "build": "config",
         "args": "--pkg-config-flags=\"--static\" --disable-videotoolbox --disable-audiotoolbox --enable-gpl --enable-nonfree --enable-libaom --enable-libx264 --enable-libx265 --enable-libmp3lame --enable-libopus --enable-libfdk-aac --enable-libvorbis --enable-libtheora --extra-cxxflags=\"-std=c++11\" --extra-libs=\"-lpthread -lm -lc++\" --enable-cross-compile --disable-debug --disable-doc --enable-pic --enable-pthreads --enable-version3 --enable-hardcoded-tables --extra-cflags=-I//deps/include --extra-ldflags=-L//deps/lib",
-        "debug_args": "--extra-cflags=-g --extra-cflags=\"-fno-stack-check\" --enable-debug --disable-optimizations --disable-stripping --disable-programs"
+        "debug_args": "--extra-cflags=-g --extra-cflags=\"-fno-stack-check\" --enable-debug --disable-optimizations --disable-stripping --disable-programs --disable-doc"
     }
 
 ]
