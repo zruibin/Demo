@@ -79,9 +79,27 @@ def log(string="", newline=True, color=None, write=True):
 
 def operator(cmdString, newline=True):
     log(cmdString)
-    output = os.popen(cmdString)
-    for line in output.readlines():
-        log(line, newline)
+    # output = os.popen(cmdString)
+    # for line in output.readlines():
+    #     log(line, newline)
+    res = subprocess.Popen(cmdString, 
+                            shell=True, 
+                            stdout=subprocess.PIPE,
+                            stdin=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    sout, serr = res.communicate() # res.stdout, res.stderr
+    if serr:
+        datas = str(serr, "utf-8").split("\n")
+        for data in datas: log(data)
+    else:
+        datas = str(sout, "utf-8").split("\n")
+        hasError = False
+        for data in datas: 
+            log(data)
+            if "error:" in data: hasError = True
+        if hasError:
+            errStr = "\033[" + str(31) + "m" + "stdout->Error." + "\033[0m"
+            raise Exception(errStr)
     pass
 
 def operatorCMD(parameterList, newline=True):
