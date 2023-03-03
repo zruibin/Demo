@@ -101,11 +101,19 @@ def operator(cmdString, newline=True):
                             stderr=subprocess.PIPE)
     sout, serr = res.communicate() # res.stdout, res.stderr
     if serr:
-        datas = str(serr, "utf-8").split("\n")
-        for data in datas: log(data)
-    else:
-        datas = str(sout, "utf-8").split("\n")
         hasError = False
+        datas = str(serr, "utf-8").split("\n")
+        for data in datas: 
+            log(data)
+            if "error:" in data: hasError = True
+        if hasError:
+            errStr = "\033[" + str(31) + "m" + "stdout->Error." + "\033[0m"
+            log(errStr, color=Color.Red)
+            logRecord()
+            raise Exception(errStr)
+    if sout:
+        hasError = False
+        datas = str(sout, "utf-8").split("\n")
         for data in datas: 
             log(data)
             if "error:" in data: hasError = True
