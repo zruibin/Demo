@@ -20,6 +20,7 @@ import urllib.request
 from pathlib import Path
 import multiprocessing
 import inspect
+from enum import Enum
 
 
 IS_DEBUG = True
@@ -56,7 +57,18 @@ def logRecord():
     with open(os.path.join(homeDir, "builddeps.log"), "a+") as fileHandle:
         for logStr in logList:
             fileHandle.write(str(logStr))
+    logList.clear()
     pass
+
+class Color(Enum):
+    Black = 30
+    Red = 31
+    Green = 32
+    Yellow = 33
+    Blue = 34
+    Fuchsia = 35 # 紫红色
+    Cyan = 36 # 青蓝色
+    White = 37
 
 def log(string="", newline=True, color=None, write=True):
     if len(string) == 0:
@@ -68,7 +80,7 @@ def log(string="", newline=True, color=None, write=True):
 
     if color != None:
         # 见: https://www.cnblogs.com/ping-y/p/5897018.html
-        string = "\033[" + str(color) + "m" + string + "\033[0m"
+        string = "\033[" + str(color.value) + "m" + string + "\033[0m"
     if newline:
         if write: logList.append(str(string) + "\n")
         print(string, end="\n")
@@ -99,6 +111,8 @@ def operator(cmdString, newline=True):
             if "error:" in data: hasError = True
         if hasError:
             errStr = "\033[" + str(31) + "m" + "stdout->Error." + "\033[0m"
+            log(errStr, color=Color.Red)
+            logRecord()
             raise Exception(errStr)
     pass
 
@@ -224,7 +238,12 @@ def callbackfunc(blocknum, blocksize, totalsize):
     print("文件下载:%.2f%%"% percent, end="\r")
 
 def downloadFile(url, dirPath):
-    urllib.request.urlretrieve(url, dirPath, callbackfunc)
+    try:
+        urllib.request.urlretrieve(url, dirPath, callbackfunc)
+    except Exception as e:
+        log(str(e), color=Color.Red)
+        logRecord()
+        raise e
     pass
 
 #------------------------------------------------------------------------------------
@@ -592,9 +611,9 @@ def addDebugDepsCmake(destDir, name):
     depConfigure = os.path.join(destDir, configure)
     depMakefile = os.path.join(destDir, makefile)
     depNinjaBuild = os.path.join(destDir, ninjaBuild)
-    log("cmakeList: " + depCmakeList, color=33)
-    log("configure: " + depConfigure, color=33)
-    log("makefile: " + depMakefile, color=33)
+    log("cmakeList: " + depCmakeList, color=Color.Yellow)
+    log("configure: " + depConfigure, color=Color.Yellow)
+    log("makefile: " + depMakefile, color=Color.Yellow)
 
     cmakeBuild = False
     hasBuildDir = False
@@ -602,17 +621,17 @@ def addDebugDepsCmake(destDir, name):
         cmakeBuild = True
         if not os.path.exists(depNinjaBuild):
             if not os.path.exists(os.path.join(destDir, buildDir)):
-                log(os.path.basename(depCmakeList) + " was exist! remove it and try again!", color=31)
+                log(os.path.basename(depCmakeList) + " was exist! remove it and try again!", color=Color.Red)
                 return
             else:
                 hasBuildDir = True
 
     if not cmakeBuild and not os.path.exists(depConfigure):
-        log(os.path.basename(depConfigure) + " was not exist!", color=31)
+        log(os.path.basename(depConfigure) + " was not exist!", color=Color.Red)
         return
 
     if not cmakeBuild and not os.path.exists(depMakefile):
-        log(os.path.basename(depMakefile) + " was not exist!", color=31)
+        log(os.path.basename(depMakefile) + " was not exist!", color=Color.Red)
         return
 
     content = r"""
@@ -752,7 +771,7 @@ list(APPEND Deps_Source_Targets %s_building)
             depsData = depsData + cmakeData
 
     if len(depsData) > 0:
-        log("depsSourceCamke: " + depsSourceCamke, color=33)
+        log("depsSourceCamke: " + depsSourceCamke, color=Color.Yellow)
         with open(depsSourceCamke, "w") as fileHandle:
             fileHandle.write(str(depsData))
     pass
