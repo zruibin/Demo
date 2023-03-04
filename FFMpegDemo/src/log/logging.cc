@@ -23,13 +23,16 @@ void SetMinWriteLogLevel(LoggingSeverity level) {
 }
 
 static const char* loggingSeverityCover(LoggingSeverity severity) {
+    /*
+     赋值需要按顺序，否则会报NON-TRIVIAL DESIGNATED INITIALIZERS NOT SUPPORTED-C++
+     */
     static const char* severityList[] = {
+        [NONE] = "[N]",
         [VERBOSE] = "[V]",
-        [INFO] = "[I]",
         [DEBUG] = "[D]",
+        [INFO] = "[I]",
         [WARNING] = "[W]",
         [ERROR] = "[E]",
-        [NONE] = "[N]",
     };
     
     return severityList[severity];

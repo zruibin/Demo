@@ -13,6 +13,7 @@
 #include <functional>
 #include <mutex>
 #include <thread>
+#include <memory>
 
 /// SEC:秒,PER:每, NSEC:纳秒, MSEC:毫秒, USEC:微秒
 #define TIME_NSEC_PER_SEC 1000000000ull // 多少纳秒 = 1秒, 1秒 = 10亿纳秒
