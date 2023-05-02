@@ -30,6 +30,7 @@ builddeps.log
 
 node_modules
 package-lock.json
+dist/
 
 CMakeLists.txt.user
 #svn文件夹忽略
