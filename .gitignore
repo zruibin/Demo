@@ -28,6 +28,9 @@ depsSource.cmake
 depsSource.lock
 builddeps.log
 
+node_modules
+package-lock.json
+
 CMakeLists.txt.user
 #svn文件夹忽略
 .svn/
