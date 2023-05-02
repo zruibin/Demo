@@ -34,3 +34,4 @@ npm run prod
 ## Reference
 
 * https://github.com/alexdevero/electron-react-webpack-boilerplate
+* https://blog.csdn.net/qq_32682301/article/details/105222411

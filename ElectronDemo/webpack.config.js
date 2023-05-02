@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { spawn } = require('child_process')
 
 // Any directories you will be adding code/files into, need to be added to this array so webpack will pick them up
-const appPath = "src"
+const appPath = "./src/app"
 const defaultInclude = path.resolve(__dirname, appPath)
 
 const pluginsDev = [
@@ -58,9 +58,7 @@ module.exports = (mode) => {
       ]
     },
     target: 'electron-renderer',
-    // entry: {
-    //   index: appPath + '/index',
-    // },
+    entry: appPath + '/index',
     plugins: isProduction ? plugins : pluginsDev,
     devtool: isProduction ? 'source-map':'inline-source-map',
     devServer: isProduction ? {} : {
