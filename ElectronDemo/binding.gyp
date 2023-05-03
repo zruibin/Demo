@@ -17,7 +17,7 @@
         "dependencies" : [ "native" ],
         "copies":[
             {
-                'destination': '<(module_root_dir)/lib/',
+                'destination': '<(module_root_dir)/deps/',
                 'files': ['<(module_root_dir)/build/release/native.node']
             }
         ]

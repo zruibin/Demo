@@ -54,6 +54,7 @@ function createWindow() {
 
   mainWindow.loadURL(indexPath)
   logger.info(tag, "main.js load.")
+  logger.info(tag, "indexPath：" + indexPath)
   native()
 
   // Don't show until we are ready and loaded
@@ -102,7 +103,7 @@ app.on('activate', () => {
 })
 
 function native() {
-  let native = require('bindings')({ bindings: "native", try: [['module_root', 'lib', 'bindings']] });//调用C++扩展
+  let native = require('./bindings')("native")
   logger.debug(tag, native.mytest());
   logger.debug(tag, native.youtest('aaa','bbb'));
 }

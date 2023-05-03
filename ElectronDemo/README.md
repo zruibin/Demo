@@ -26,6 +26,12 @@ npm run package
 npm run build
 ```
 
+#### Build the Native (must)
+
+```
+npm run native
+```
+
 #### Test the app (after `npm run build`)
 ```
 npm run prod
