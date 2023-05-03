@@ -11,6 +11,7 @@
     "npm": ">=5.0.0",
     "yarn": ">=1.0.0"
   },
+  "gypfile": true,
   "browserslist": [
     "last 4 versions"
   ],
@@ -20,7 +21,8 @@
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js --mode production",
     "package": "npm run build",
     "postpackage": "electron-packager ./ --out=./build",
-    "hot": "gulp watch:electron"
+    "hot": "gulp watch:electron",
+    "native": "node-gyp configure && node-gyp build && node-gyp clean"
   },
   "devDependencies": {
     "electron-debug": "3.2.0",
@@ -32,6 +34,8 @@
     "@babel/preset-react": "^7.17.12",
     "antd": "^5.4.6",
     "babel-loader": "^8.2.5",
+    "bindings": "^1.5.0",
+    "cmake-js": "^7.2.1",
     "concurrently": "8.0.1",
     "cross-env": "7.0.3",
     "css-loader": "^6.7.1",
@@ -46,6 +50,8 @@
     "gulp-watch": "5.0.1",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
+    "node-addon-api": "^6.1.0",
+    "node-gyp": "^9.3.1",
     "postcss": "^8.4.8",
     "postcss-import": "^14.1.0",
     "postcss-loader": "^7.0.0",

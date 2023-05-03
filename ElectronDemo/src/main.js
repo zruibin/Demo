@@ -4,6 +4,7 @@ const { autoUpdater } = require('electron-updater')
 const path = require('path')
 const url = require('url')
 const logger = require('./log')
+let tag = "[main]"
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -52,7 +53,8 @@ function createWindow() {
   }
 
   mainWindow.loadURL(indexPath)
-  logger.info("[main]", "main.js load.")
+  logger.info(tag, "main.js load.")
+  native()
 
   // Don't show until we are ready and loaded
   mainWindow.once('ready-to-show', () => {
@@ -63,7 +65,7 @@ function createWindow() {
       const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
 
       installExtension(REACT_DEVELOPER_TOOLS)
-        .catch(err => logger.error("[main]", 'Error loading React DevTools: ', err))
+        .catch(err => logger.error(tag, 'Error loading React DevTools: ', err))
       mainWindow.webContents.openDevTools()
     }
   })
@@ -99,3 +101,8 @@ app.on('activate', () => {
   }
 })
 
+function native() {
+  let native = require('bindings')({ bindings: "native", try: [['module_root', 'lib', 'bindings']] });//调用C++扩展
+  logger.debug(tag, native.mytest());
+  logger.debug(tag, native.youtest('aaa','bbb'));
+}
