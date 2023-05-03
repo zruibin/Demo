@@ -3,6 +3,7 @@ const { app, BrowserWindow } = require('electron')
 const { autoUpdater } = require('electron-updater')
 const path = require('path')
 const url = require('url')
+const logger = require('./log')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -51,7 +52,7 @@ function createWindow() {
   }
 
   mainWindow.loadURL(indexPath)
-  console.log("main.js load.")
+  logger.info("[main]", "main.js load.")
 
   // Don't show until we are ready and loaded
   mainWindow.once('ready-to-show', () => {
@@ -62,7 +63,7 @@ function createWindow() {
       const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
 
       installExtension(REACT_DEVELOPER_TOOLS)
-        .catch(err => console.log('Error loading React DevTools: ', err))
+        .catch(err => logger.error("[main]", 'Error loading React DevTools: ', err))
       mainWindow.webContents.openDevTools()
     }
   })
