@@ -23,22 +23,22 @@ logger.transports.file.fileName = date + '.log' // 创建文件名格式为 '时
 
 // 有六个日志级别error, warn, info, verbose, debug, silly。默认是silly
 module.exports = {
-  info(tag, param) {
-    logger.info(tag + " " + param)
+  info() {
+    logger.info(...arguments)
   },                   
-  warn(tag, param) {
-    logger.warn(tag + " " + param)
+  warn() {
+    logger.warn(...arguments)
   },
-  error(tag, param) {
-    logger.error(tag + " " + param)
+  error() {
+    logger.error(...arguments)
   },
-  debug(tag, param) {
-    logger.debug(tag + " " + param)
+  debug() {
+    logger.debug(...arguments)
   },
-  verbose(param) {
-    logger.verbose(tag + " " + param)
+  verbose() {
+    logger.verbose(...arguments)
   },
-  silly(tag, param) {
-    logger.silly(tag + " " + param)
+  silly() {
+    logger.silly(...arguments)
   }
 };

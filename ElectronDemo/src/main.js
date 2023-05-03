@@ -53,8 +53,7 @@ function createWindow() {
   }
 
   mainWindow.loadURL(indexPath)
-  logger.info(tag, "main.js load.")
-  logger.info(tag, "indexPath：" + indexPath)
+  logger.info(tag, "main.js loaded.", "indexPath:", indexPath)
   native()
 
   // Don't show until we are ready and loaded
@@ -80,27 +79,35 @@ function createWindow() {
   })
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
 
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+const gotTheLock = app.requestSingleInstanceLock()
+ 
+if (!gotTheLock) {
+  logger.error(tag, "It was not single instance then app quit.")
+  app.quit()
+} else {
+  // This method will be called when Electron has finished
+  // initialization and is ready to create browser windows.
+  // Some APIs can only be used after this event occurs.
+  app.on('ready', createWindow)
 
-app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
+  // Quit when all windows are closed.
+  app.on('window-all-closed', () => {
+    // On macOS it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
+  })
+
+  app.on('activate', () => {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) {
+      createWindow()
+    }
+  })
+}
 
 function native() {
   let native = require('./bindings')("native")
