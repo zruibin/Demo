@@ -35,7 +35,7 @@ copyList.forEach(value => {
     fsExtra.copySync(value, dist)
 });
 
-let srcApp = path.join(appPath, "src", "app")
+let srcApp = path.join(appPath, "src", "renderer")
 let modeModulsPath = path.join(appPath, "node_modules")
 let removeList = [
     srcApp,

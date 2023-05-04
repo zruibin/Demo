@@ -3,7 +3,7 @@
   "productName": "Electron Demo",
   "description": "My Electron application description",
   "keywords": [],
-  "main": "src/main.js",
+  "main": "src/main/main.js",
   "version": "1.0.0",
   "author": "ruibin.chow",
   "engines": {

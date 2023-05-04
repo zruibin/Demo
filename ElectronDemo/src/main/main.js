@@ -36,7 +36,6 @@ function createWindow() {
 
   // and load the index.html of the app.
   let indexPath
-
   if (dev && process.argv.indexOf('--noDevServer') === -1) {
     indexPath = url.format({
       protocol: 'http:',
@@ -45,9 +44,11 @@ function createWindow() {
       slashes: true
     })
   } else {
+    let dirname = __dirname.replace("/src/main", "")
+    let filePath = path.join(dirname, 'dist', 'index.html')
     indexPath = url.format({
       protocol: 'file:',
-      pathname: path.join(__dirname, '..', 'dist', 'index.html'),
+      pathname: filePath,
       slashes: true
     })
   }

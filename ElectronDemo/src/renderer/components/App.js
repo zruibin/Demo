@@ -1,12 +1,11 @@
 import React from 'react'
 import '../assets/css/App.css'
-import logger from '../../log'
+// import logger from '../../log'
 import { Button, message, notification } from 'antd';
 
 
-
 function App() {
-  logger.debug("[App]", "App Load.");
+  // logger.debug("[App]", "App Load.");
 
   const [messageApi, messageHolder] = message.useMessage();
   const info = () => {
