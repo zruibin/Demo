@@ -3,9 +3,9 @@ const { app, BrowserWindow } = require('electron')
 const { autoUpdater } = require('electron-updater')
 const path = require('path')
 const url = require('url')
-const { default: installExtension, 
-        REACT_DEVELOPER_TOOLS, 
-        REDUX_DEVTOOLS } = require('electron-devtools-installer')
+// const { default: installExtension, 
+//         REACT_DEVELOPER_TOOLS, 
+//         REDUX_DEVTOOLS } = require('electron-devtools-installer')
 const logger = require('./log')
 let tag = "[main]"
 
@@ -66,11 +66,11 @@ function createWindow() {
 
     // Open the DevTools automatically if developing
     if (dev) {
-      [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
-        installExtension(extension)
-            .then((name) => logger.debug(tag, `Added Extension: ${name}`))
-            .catch((err) => logger.error(tag, 'An error occurred: ', err));
-      });
+      // [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
+      //   installExtension(extension)
+      //       .then((name) => logger.debug(tag, `Added Extension: ${name}`))
+      //       .catch((err) => logger.error(tag, 'An error occurred: ', err));
+      // });
       mainWindow.webContents.openDevTools()
     }
   })
