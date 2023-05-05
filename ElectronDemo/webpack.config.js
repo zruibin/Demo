@@ -66,16 +66,27 @@ module.exports = (mode) => {
     plugins: isProduction ? plugins : pluginsDev,
     devtool: isProduction ? 'source-map':'inline-source-map',
     devServer: isProduction ? {} : {
-      contentBase: path.resolve(__dirname, 'dist'),
-      before() {
+      port: 8080,
+      compress: true,
+      hot: true,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      static: {
+        publicPath: '/',
+      },
+      historyApiFallback: {
+        verbose: true,
+      },
+      setupMiddlewares(middlewares) {
         spawn(
           'electron',
           ['.'],
           { shell: true, env: process.env, stdio: 'inherit' }
         )
         .on('close', code => process.exit(0))
-        .on('error', spawnError => console.error(spawnError))
-      }
+        .on('error', spawnError => console.error(spawnError));
+        console.log('Starting Renderer Process...');
+        return middlewares;
+      },
     },
 
     stats: isProduction ? {

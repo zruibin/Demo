@@ -3,6 +3,9 @@ const { app, BrowserWindow } = require('electron')
 const { autoUpdater } = require('electron-updater')
 const path = require('path')
 const url = require('url')
+const { default: installExtension, 
+        REACT_DEVELOPER_TOOLS, 
+        REDUX_DEVTOOLS } = require('electron-devtools-installer')
 const logger = require('./log')
 let tag = "[main]"
 
@@ -63,10 +66,11 @@ function createWindow() {
 
     // Open the DevTools automatically if developing
     if (dev) {
-      const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
-
-      installExtension(REACT_DEVELOPER_TOOLS)
-        .catch(err => logger.error(tag, 'Error loading React DevTools: ', err))
+      [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS].forEach(extension => {
+        installExtension(extension)
+            .then((name) => logger.debug(tag, `Added Extension: ${name}`))
+            .catch((err) => logger.error(tag, 'An error occurred: ', err));
+      });
       mainWindow.webContents.openDevTools()
     }
   })
@@ -90,7 +94,9 @@ if (!gotTheLock) {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
-  app.on('ready', createWindow)
+  app.on('ready', () => {
+    createWindow()
+  })
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {

@@ -44,4 +44,6 @@ npm run prod
 * https://ant.design/components/overview-cn/
 * https://segmentfault.com/a/1190000041833755?utm_source=sf-similar-article
 * https://codeleading.com/article/15811159110/
+* https://newsn.net/say/electron-log.html
+* https://zhuanlan.zhihu.com/p/429142646
 

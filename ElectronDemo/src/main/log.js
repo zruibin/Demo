@@ -13,7 +13,12 @@ logger.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope}
 let date = new Date()
 date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 logger.transports.file.fileName = date + '.log' // 创建文件名格式为 '时间.log' (2023-02-01.log)
-// /Users/ruibin.chow/Library/Logs/Electron Demo
+
+/*
+Linux: ~/.config/<app name>/log.log
+mac: ~/Library/Logs/<app name>/log.log
+windows: %USERPROFILE%\AppData\Roaming\<app name>\log.log
+*/
  
  // 可以将文件放置到指定文件夹中，例如放到安装包文件夹中
 //  const path = require('path')
