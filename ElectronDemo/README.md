@@ -47,3 +47,5 @@ npm run prod
 * https://newsn.net/say/electron-log.html
 * https://zhuanlan.zhihu.com/p/429142646
 
+* https://juejin.cn/post/6976593900521816072
+* https://juejin.cn/post/6977373208370479117
