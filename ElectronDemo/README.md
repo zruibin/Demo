@@ -39,7 +39,8 @@ npm run prod
 
 ## node api (C and C++)
 
-* https://nodejs.org/docs/latest-v18.x/api/n-api.html
+* https://nodejs.org/docs/latest-v20.x/api/n-api.html
+* https://nodejs.org/docs/latest-v20.x/api/addons.html#addons_c_addons
 * https://github.com/nodejs/node-addon-api
 * https://github.com/nodejs/node-addon-examples
 * https://mp.weixin.qq.com/s/HwhIhMCGuJsfbrINW1oUpw
