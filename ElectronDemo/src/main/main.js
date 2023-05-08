@@ -118,6 +118,15 @@ if (!gotTheLock) {
 
 function native() {
   let native = require('./bindings')("native")
-  logger.debug(tag, native.mytest());
-  logger.debug(tag, native.youtest('aaa','bbb'));
+  var obj = new native.MyObject(10);
+  logger.debug(obj.plusOne()); // 11
+  logger.debug(obj.plusOne()); // 12
+  logger.debug(obj.plusOne()); // 13
+
+  logger.debug(obj.multiply().value()); // 13
+  logger.debug(obj.multiply(10).value()); // 130
+
+  var newobj = obj.multiply(-1);
+  logger.debug(newobj.value()); // -13
+  logger.debug(obj === newobj); // false
 }

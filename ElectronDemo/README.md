@@ -37,6 +37,15 @@ npm run native
 npm run prod
 ```
 
+## node api (C and C++)
+
+* https://nodejs.org/docs/latest-v18.x/api/n-api.html
+* https://github.com/nodejs/node-addon-api
+* https://github.com/nodejs/node-addon-examples
+* https://mp.weixin.qq.com/s/HwhIhMCGuJsfbrINW1oUpw
+* https://www.cnblogs.com/sexintercourse/p/16411034.html
+* https://cnodejs.org/topic/60f8c5e7e3e671375d58ef30
+
 ## Reference
 
 * https://github.com/alexdevero/electron-react-webpack-boilerplate
