@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/css/App.css'
 import logger from '../log'
-import { Button, message, notification } from 'antd';
+import { Button, message as Message, notification } from 'antd';
 import emitter from "../eventbus"
 
 class App extends React.Component {
@@ -57,7 +57,7 @@ class App extends React.Component {
   }
   
   info() {
-    message.info("Electron Demo");
+    Message.info("Electron Demo");
     logger.debug("[App]", "Alert.");
     emitter.emit('app', "haha.");
 

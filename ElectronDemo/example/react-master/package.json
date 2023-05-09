@@ -15,15 +15,8 @@
     "lint": "eslint ./ --cache --fix --ignore-pattern .gitignore",
     "test": "jest --coverage",
     "mock": "nodemon --watch app/mocks/ app/mocks/http.js",
-    "precommit": "lint-staged",
-    "preCommitInit": "node ./node_modules/husky/lib/installer/bin.js install",
     "test:report": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "dll": "webpack --config ./scripts/webpack.dll.config.js"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "author": "duxianwei",
   "contributors": [
@@ -163,7 +156,6 @@
     "echarts": "^4.5.0",
     "enzyme-adapter-react-16": "^1.6",
     "esri-loader": "0.3.1",
-    "husky": "^1.1.2",
     "identity-obj-proxy": "^3.0.0",
     "immutable": "~3.8.1",
     "lint-staged": "^7.3.0",
