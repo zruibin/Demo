@@ -201,6 +201,24 @@ def json_minify(string, strip_space=True):
     new_str.append(string[index:])
     return ''.join(new_str)
 
+def checkAndReplaceName(originName, destName):
+    baseName = os.path.basename(destName)
+    suffix = ".tar.gz"
+    if suffix in baseName:
+        baseName = baseName.replace(suffix, "")
+    suffix = ".tar.bz2"
+    if suffix in baseName:
+        baseName = baseName.replace(suffix, "")
+    suffix = ".zip"
+    if suffix in baseName:
+        baseName = baseName.replace(suffix, "")
+    
+    if originName != baseName:
+        print(baseName)
+        print(originName)
+        os.rename(originName, baseName)
+    pass
+
 def untar(fname, dirs):
     """
     解压tar.gz文件
@@ -211,6 +229,8 @@ def untar(fname, dirs):
     try:
         t = tarfile.open(fname)
         t.extractall(path = dirs)
+        originName = t.getnames()[0]
+        checkAndReplaceName(originName, fname)
         return True
     except Exception as e:
         print(e)
@@ -229,10 +249,12 @@ def zipExtract(path_zip, path_aim):
 def bz2Extract(path_bz2, path_aim):
     print("bz2Extract: " + path_bz2)
     archive = tarfile.open(path_bz2,'r:bz2')
+    originName = archive.getnames()[0]
     # archive.debug = 1    # Display the files beeing decompressed.
     for tarinfo in archive:
         archive.extract(tarinfo, path_aim) 
     archive.close()
+    checkAndReplaceName(originName, path_bz2)
 
 def callbackfunc(blocknum, blocksize, totalsize):
     '''回调函数
