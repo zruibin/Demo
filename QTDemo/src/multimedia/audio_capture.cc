@@ -10,7 +10,6 @@
 #include <QDebug>
 #include <QUrl>
 #include <QFileDialog>
-#include "permission.h"
 #include <QDir>
 #include <QStandardPaths>
 
@@ -23,21 +22,14 @@ AudioCaputer::AudioCaputer() {
     QString desktop = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
     qDebug() << "Desktop Path:" << desktop;
     filePath_.reset(new QString(desktop.append("/record.pcm")));
-    
-    Qt::PermissionStatus status = Permission::GetInstance()->CheckMicrophonePermission();
-    if (status != Qt::PermissionStatus::Granted) {
-        Permission::GetInstance()->RequestMicrophonePermission([this](const QPermission &permission) {
-            qDebug() << "MicrophonePermission status: " << permission.status();
-        });
-    }
 }
 
 AudioCaputer::~AudioCaputer() {
     if (running_) {
         Stop();
+        audioProbe_->stop();
         running_ = false;
     }
-    audioProbe_->stop();
 }
 
 void AudioCaputer::Init() {
@@ -99,6 +91,7 @@ void AudioCaputer::Start() {
     file_.reset(new QFile(*filePath_.get()));
     if (!file_->open(QIODevice::WriteOnly)) {
         qDebug() << "写文件失败！";
+        return;
     }
     
     auto *io = audioSource_->start();
@@ -124,6 +117,7 @@ void AudioCaputer::Stop() {
     qDebug() << "AudioCaputer::Stop.";
 //    audioRecorder_->stop();
     audioSource_->stop();
+    file_->flush();
     file_->close();
     running_ = false;
 }

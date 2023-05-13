@@ -18,7 +18,7 @@
 #include <QResizeEvent>
 #include "multimedia/devices.h"
 #include "multimedia/video_capture.h"
-
+#include "multimedia/permission.h"
 
 namespace UI {
 
@@ -43,11 +43,11 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     this->setCentralWidget(pCenterWidget_);//把这个空窗口设置为QMainWindow的中心窗口
 
     deviceButton_ = QSharedPointer<QPushButton>(new QPushButton);
-    deviceButton_->setText("DevicesMain");
+    deviceButton_->setText("Devices Info");
     deviceButton_->setStyleSheet("QPushButton{ font-family:'Microsoft YaHei';font-size:13px;color:red;}");
     // button->move(10, 20);
     // button->setFixedSize(100,40);
-    deviceButton_->setGeometry(QRect((this->width()-100)/2, 20, 100, 40));
+    deviceButton_->setGeometry(QRect((this->width()-100)/2, 10, 100, 40));
     deviceButton_->clearMask();
     deviceButton_->setBackgroundRole(QPalette::Base);
     connect(deviceButton_.get(), SIGNAL(clicked()), this, SLOT(ClickDevicesButton()));
@@ -56,10 +56,17 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     audioButton_ = QSharedPointer<QPushButton>(new QPushButton);
     audioButton_->setText("开始音频采集");
     audioButton_->setStyleSheet("QPushButton{font-size:13px;color:#000;}");
-    audioButton_->setGeometry(QRect(this->width()/2+20, 60, 100, 40));
     audioButton_->clearMask();
     audioButton_->setBackgroundRole(QPalette::Base);
     connect(audioButton_.get(), &QPushButton::clicked, this, [this](){
+        Qt::PermissionStatus status = Permission::GetInstance()->CheckMicrophonePermission();
+        if (status != Qt::PermissionStatus::Granted) {
+            Permission::GetInstance()->RequestMicrophonePermission([this](const QPermission &permission) {
+                qDebug() << "MicrophonePermission status: " << permission.status();
+            });
+            return ;
+        }
+        
         if (!audioCaputre_.IsInit()) {
             audioCaputre_.Init();
         }
@@ -72,14 +79,40 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
         }
     });
     audioButton_->setParent(pCenterWidget_);
+    
+    audioRenderButton_ = QSharedPointer<QPushButton>(new QPushButton);
+    audioRenderButton_->setText("开始播放音频");
+    audioRenderButton_->setStyleSheet("QPushButton{font-size:13px;color:#000;}");
+    audioRenderButton_->clearMask();
+    audioRenderButton_->setBackgroundRole(QPalette::Base);
+    connect(audioRenderButton_.get(), &QPushButton::clicked, this, [this](){
+        if (!audioRender_.IsInit()) {
+            audioRender_.Init();
+        }
+        if (audioRender_.IsRunning()) {
+            audioRender_.Stop();
+            audioRenderButton_->setText("开始播放音频");
+        } else {
+            audioRender_.Start();
+            audioRenderButton_->setText("停止播放音频");
+        }
+    });
+    audioRenderButton_->setParent(pCenterWidget_);
 
     videoButton_ = QSharedPointer<QPushButton>(new QPushButton);
     videoButton_->setText("开始相机采集");
     videoButton_->setStyleSheet("QPushButton{font-size:13px;color:#000;}");
-    videoButton_->setGeometry(QRect(this->width()/2-120, 60, 100, 40));
     videoButton_->clearMask();
     videoButton_->setBackgroundRole(QPalette::Base);
     connect(videoButton_.get(), &QPushButton::clicked, this, [this](){
+        Qt::PermissionStatus status = Permission::GetInstance()->CheckCameraPermission();
+        if (status != Qt::PermissionStatus::Granted) {
+            Permission::GetInstance()->RequestCameraPermission([this](const QPermission &permission) {
+                qDebug() << "CameraPermission status: " << permission.status();
+            });
+            return;
+        }
+        
         if (!videoCapture_.IsInit()) {
             videoCapture_.Init();
         }
@@ -132,20 +165,40 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     });
 
     videoWidget_.reset(new VideoWidget);
-    videoWidget_->setGeometry(QRect(30, 100, 300, 200));
     videoWidget_->clearMask();
     videoWidget_->setParent(pCenterWidget_);
 
     imageView_.reset(new QLabel);
-    imageView_->setGeometry(QRect(400, 100, 300, 200));
     imageView_->clearMask();
     imageView_->setStyleSheet("QLabel{background-color:rgb(0,0,0);}");
     imageView_->setParent(pCenterWidget_);
+    
+    textArea_.reset(new QTextEdit);
+    textArea_->setReadOnly(true);
+    textArea_->setParent(pCenterWidget_);
+    
+    audioButton_->setGeometry(QRect(this->width()/2-50,
+                                    deviceButton_->geometry().bottom()+5,
+                                    100, 40));
+    videoButton_->setGeometry(QRect(audioButton_->geometry().left()-audioButton_->geometry().width()-10,
+                                    audioButton_->geometry().top(), 100, 40));
+    audioRenderButton_->setGeometry(QRect(audioButton_->geometry().right()+10,
+                                          audioButton_->geometry().top(), 100, 40));
+    
+    videoWidget_->setGeometry(QRect(this->width()/2-310, audioButton_->geometry().bottom()+10, 300, 200));
+    imageView_->setGeometry(QRect(this->width()/2+10, videoWidget_->geometry().top(), 300, 200));
+    
+    textArea_->setGeometry(QRect(10,
+                                 imageView_->geometry().bottom()+10,
+                                 this->width()-20,
+                                 this->height()-imageView_->geometry().bottom()-20));
 }
 
 void Window::ClickDevicesButton() {
     std::cout << "PushButton Click." << std::endl;
-    DevicesMain();
+    QString info = DevicesMain();
+    qDebug() << "Devices info: " << info;
+    textArea_->setText(info);
 }
 
 void Window::resizeEvent(QResizeEvent *event) {
@@ -153,9 +206,22 @@ void Window::resizeEvent(QResizeEvent *event) {
                 << " oldSize:" << event->oldSize();
     qDebug() << "Window resizeEvent, frame:" << this->rect()
                 << " size:" << this->frameSize();
-    deviceButton_->move((this->width()-100)/2, 20);
-    videoButton_->move(this->width()/2-120, 60);
-    audioButton_->move(this->width()/2+20, 60);
+    deviceButton_->move((this->width()-100)/2, deviceButton_->geometry().top());
+    
+    audioButton_->move(this->width()/2-50,
+                       deviceButton_->geometry().bottom()+5);
+    videoButton_->move(audioButton_->geometry().left()-audioButton_->geometry().width()-10,
+                       audioButton_->geometry().top());
+    audioRenderButton_->move(audioButton_->geometry().right()+10,
+                             audioButton_->geometry().top());
+    
+    videoWidget_->move(this->width()/2-310, audioButton_->geometry().bottom()+10);
+    imageView_->move(this->width()/2+10, videoWidget_->geometry().top());
+    
+    textArea_->setGeometry(QRect(10,
+                                 imageView_->geometry().bottom()+10,
+                                 this->width()-20,
+                                 this->height()-imageView_->geometry().bottom()-20));
 }
 
 }

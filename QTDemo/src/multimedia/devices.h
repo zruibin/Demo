@@ -118,9 +118,10 @@ void printVideoDeviceInfo(QTextStream &out, const QCameraDevice &cameraDevice)
     out << Qt::endl;
 }
 
-int DevicesMain()
+QString DevicesMain()
 {
-    QTextStream out(stdout);
+    QString *deviceInfo = new QString();
+    QTextStream out(deviceInfo);
 
     const auto audioInputDevices = QMediaDevices::audioInputs();
     const auto audioOutputDevices = QMediaDevices::audioOutputs();
@@ -138,7 +139,9 @@ int DevicesMain()
     for (auto &cameraDevice : videoInputDevices)
         printVideoDeviceInfo(out, cameraDevice);
 
-    return 0;
+    QString info = QString(*deviceInfo);
+    delete deviceInfo;
+    return info;
 }
 
 #endif /* !DEVICES_H */

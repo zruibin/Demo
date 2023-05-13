@@ -7,16 +7,6 @@
  */
 
 #include "video_capture.h"
-#include "permission.h"
-
-VideoCaputer::VideoCaputer() {
-    Qt::PermissionStatus status = Permission::GetInstance()->CheckCameraPermission();
-    if (status != Qt::PermissionStatus::Granted) {
-        Permission::GetInstance()->RequestCameraPermission([this](const QPermission &permission) {
-            qDebug() << "CameraPermission status: " << permission.status();
-        });
-    }
-}
 
 VideoCaputer::~VideoCaputer() {
     if (running_) {
