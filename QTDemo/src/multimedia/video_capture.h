@@ -20,7 +20,7 @@ class VideoCaputer : public QObject {
     Q_OBJECT
 public:
     using FrameCallBack = std::function<void(const QVideoFrame &frame)>;
-    VideoCaputer() = default;
+    explicit VideoCaputer();
     virtual ~VideoCaputer();
 
     void Init();

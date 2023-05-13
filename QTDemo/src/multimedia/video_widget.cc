@@ -51,12 +51,12 @@ void VideoWidget::paintGL() {
     }
 
     videoFrame_->map(QVideoFrame::ReadOnly);
-//    qDebug()<< "VideoWidget::paintGL->frame Render.";
-    videoRender_->Render(videoFrame_->textureHandle(0),
-                         videoFrame_->textureHandle(1));
-//    videoRender_->Render(videoFrame_->bits(0),
-//                         videoFrame_->bits(1),
-//                         videoFrame_->width(),
-//                         videoFrame_->height());
+//    qDebug()<< "VideoWidget::paintGL->frame Render." << videoFrame_->planeCount();
+//    videoRender_->Render(videoFrame_->textureHandle(0),
+//                         videoFrame_->textureHandle(1));
+    videoRender_->Render(videoFrame_->bits(0),
+                         videoFrame_->bits(1),
+                         videoFrame_->width(),
+                         videoFrame_->height());
     videoFrame_->unmap();
 }

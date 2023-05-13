@@ -94,12 +94,17 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if(EXISTS "${PROJECT_SOURCE_DIR}/deps/") 
+    set(CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/deps/")
+    message(WARNING "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+endif() 
+
 #在这里添加要使用的模块，不要忘记了下面链接时候也要添加相应模块
 set(QtModule
     Widgets
     Core5Compat
-    LinguistTools  #翻译模块不用链接
-#    Network
+    # LinguistTools  #翻译模块不用链接
+    Network
     Multimedia
     MultimediaWidgets
     OpenGL
@@ -113,7 +118,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QtModule} REQUIRED)
 set(QtModuleLibs
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Core5Compat
-#    Qt${QT_VERSION_MAJOR}::Network
+    Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Multimedia
     Qt${QT_VERSION_MAJOR}::MultimediaWidgets
     Qt${QT_VERSION_MAJOR}::OpenGL
@@ -223,13 +228,44 @@ if(WIN32)
     message(WARNING "Now is windows")
 elseif(APPLE)
     message(WARNING "Now is Apple systens.")
-    # set(CMAKE_SYSTEM_PROCESSOR arm64)
-#    set(CMAKE_OSX_ARCHITECTURES "x86_64")
-     set(CMAKE_OSX_ARCHITECTURES arm64)
-    message(STATUS "osx architectures was ${CMAKE_OSX_ARCHITECTURES}")
+    # Check whether we are running under Rosetta on arm64 hardware.
+    execute_process(COMMAND sysctl -q hw.optional.arm64
+        OUTPUT_VARIABLE _sysctl_stdout
+        ERROR_VARIABLE _sysctl_stderr
+        RESULT_VARIABLE _sysctl_result
+    )
+    if(_sysctl_result EQUAL 0 AND _sysctl_stdout MATCHES "hw.optional.arm64: 1")
+        set(CMAKE_HOST_SYSTEM_PROCESSOR "arm64")
+    endif()
+
+    if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86_64")
+        set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    else()
+        set(CMAKE_OSX_ARCHITECTURES arm64)
+    endif()
+    message(STATUS "OSX Architectures: ${CMAKE_OSX_ARCHITECTURES}")
+    message(WARNING "Host System Processor: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
 elseif(UNIX)
     message(WARNING "Now is UNIX-like OS's. Including aPPLE os x  and CygWin")
 endif()
+
+set(RESOURCES
+    builddeps.py
+    deps.json
+    README.md
+    LICENSE
+)
+if(EXISTS "${PROJECT_SOURCE_DIR}/deps.cmake")
+    list(APPEND RESOURCES deps.cmake)
+endif()
+if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource.lock")
+    list(APPEND RESOURCES depsSource.lock)
+endif()
+if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource.cmake")
+    list(APPEND RESOURCES depsSource.cmake)
+endif()
+source_group(Resources FILES ${RESOURCES})
+
 
 set(TARGET ${PROJECT_NAME})
 
@@ -239,7 +275,13 @@ set(TARGET ${PROJECT_NAME})
 #set(TARGET_SHARED_LIB "${PROJECT_NAME}_shared")
 #add_library(${TARGET_SHARED_LIB} SHARED ${DEPENDS_LIBS} ${HEADERS} ${SOURCES} ${all_list})
 
-qt_add_executable(${TARGET} MANUAL_FINALIZATION ${DEPENDS_LIBS} ${HEADERS} ${SOURCES} ${ASSETS})
+qt_add_executable(${TARGET} MANUAL_FINALIZATION
+    ${DEPENDS_LIBS}
+    ${HEADERS}
+    ${SOURCES}
+    ${ASSETS}
+    ${RESOURCES}
+)
 
 set_target_properties(${TARGET} PROPERTIES
     WIN32_EXECUTABLE TRUE

@@ -7,6 +7,16 @@
  */
 
 #include "video_capture.h"
+#include "permission.h"
+
+VideoCaputer::VideoCaputer() {
+    Qt::PermissionStatus status = Permission::GetInstance()->checkCameraPermission();
+    if (status != Qt::PermissionStatus::Granted) {
+        Permission::GetInstance()->requestCameraPermission([this](const QPermission &permission) {
+            qDebug() << "CameraPermission status: " << permission.status();
+        });
+    }
+}
 
 VideoCaputer::~VideoCaputer() {
     if (running_) {
@@ -17,11 +27,17 @@ VideoCaputer::~VideoCaputer() {
 
 void VideoCaputer::Init() {
     qDebug()<< "VideoCaputer::Init.";
-    QCameraDevice camerDevice = QMediaDevices::defaultVideoInput();
-    camera_.reset(new QCamera(camerDevice));
+
+    QCameraDevice cameraDevice;
+    const QList<QCameraDevice> availableCameras = QMediaDevices::videoInputs();
+    for (const QCameraDevice &availableCamera : availableCameras) {
+        if (availableCamera == QMediaDevices::defaultVideoInput())
+            cameraDevice = availableCamera;
+    }
+    camera_.reset(new QCamera(cameraDevice));
 
     if (camera_->cameraFormat().isNull()) {
-        auto formats = camerDevice.videoFormats();
+        auto formats = cameraDevice.videoFormats();
         if (!formats.isEmpty()) {
             // Choose a decent camera format: Maximum resolution at at least 30 FPS
             // we use 29 FPS to compare against as some cameras report 29.97 FPS...

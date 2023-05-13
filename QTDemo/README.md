@@ -51,3 +51,7 @@
 
 * http://www.skcircle.com/?id=971
 
+### Permission
+
+* https://doc-snapshots.qt.io/qt6-dev/qpermission.html
+* https://blog.csdn.net/aggs1990/article/details/128603440

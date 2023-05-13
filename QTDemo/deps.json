@@ -1,0 +1,52 @@
+[
+    {
+        "action": "git",
+        "fileName": "ninja",
+        "url": "git clone -b v1.11.1 --depth=1 https://github.com/ninja-build/ninja.git",
+        "build": "cmake",
+        "args": ""
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "QtBase", 
+        "url": "https://download.qt.io/official_releases/qt/6.5/6.5.0/submodules/qtbase-everywhere-src-6.5.0.tar.xz",
+        "build": "cmake",
+        "build_dir": 1,
+        "args": ""
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "QtShadertools", 
+        "url": "https://download.qt.io/official_releases/qt/6.5/6.5.0/submodules/qtshadertools-everywhere-src-6.5.0.tar.xz",
+        "build": "cmake",
+        "build_dir": 1,
+        "args": ""
+    }
+ 
+     ,
+     {
+         "action": "gz",
+         "fileName": "Qt5compat",
+         "url": "https://download.qt.io/official_releases/qt/6.5/6.5.0/submodules/qt5compat-everywhere-src-6.5.0.tar.xz",
+         "build": "cmake",
+         "build_dir": 1,
+         "args": ""
+     }
+    
+    ,
+    {
+        "action": "gz",
+        "fileName": "QtMultimedia", 
+        "url": "https://download.qt.io/official_releases/qt/6.5/6.5.0/submodules/qtmultimedia-everywhere-src-6.5.0.tar.xz",
+        "build": "cmake",
+        "build_dir": 1,
+        "args": ""
+    }
+
+]
+
+
