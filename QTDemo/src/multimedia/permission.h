@@ -19,10 +19,10 @@ class Permission {
 public:
     static std::shared_ptr<Permission>& GetInstance();
     
-    Qt::PermissionStatus checkCameraPermission();
-    void requestCameraPermission(PermissionFunc);
-    Qt::PermissionStatus checkMicrophonePermission();
-    void requestMicrophonePermission(PermissionFunc);
+    Qt::PermissionStatus CheckCameraPermission();
+    void RequestCameraPermission(PermissionFunc);
+    Qt::PermissionStatus CheckMicrophonePermission();
+    void RequestMicrophonePermission(PermissionFunc);
 };
 
 

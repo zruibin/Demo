@@ -52,27 +52,46 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     deviceButton_->setBackgroundRole(QPalette::Base);
     connect(deviceButton_.get(), SIGNAL(clicked()), this, SLOT(ClickDevicesButton()));
     deviceButton_->setParent(pCenterWidget_);
+    
+    audioButton_ = QSharedPointer<QPushButton>(new QPushButton);
+    audioButton_->setText("开始音频采集");
+    audioButton_->setStyleSheet("QPushButton{font-size:13px;color:#000;}");
+    audioButton_->setGeometry(QRect(this->width()/2+20, 60, 100, 40));
+    audioButton_->clearMask();
+    audioButton_->setBackgroundRole(QPalette::Base);
+    connect(audioButton_.get(), &QPushButton::clicked, this, [this](){
+        if (!audioCaputre_.IsInit()) {
+            audioCaputre_.Init();
+        }
+        if (audioCaputre_.IsRunning()) {
+            audioCaputre_.Stop();
+            audioButton_->setText("开始音频采集");
+        } else {
+            audioCaputre_.Start();
+            audioButton_->setText("停止音频采集");
+        }
+    });
+    audioButton_->setParent(pCenterWidget_);
 
-
-    captureButton_ = QSharedPointer<QPushButton>(new QPushButton);
-    captureButton_->setText("开始相机采集");
-    captureButton_->setStyleSheet("QPushButton{font-size:13px;color:#000;}");
-    captureButton_->setGeometry(QRect(10, 60, 100, 40));
-    captureButton_->clearMask();
-    captureButton_->setBackgroundRole(QPalette::Base);
-    connect(captureButton_.get(), &QPushButton::clicked, this, [this](){
+    videoButton_ = QSharedPointer<QPushButton>(new QPushButton);
+    videoButton_->setText("开始相机采集");
+    videoButton_->setStyleSheet("QPushButton{font-size:13px;color:#000;}");
+    videoButton_->setGeometry(QRect(this->width()/2-120, 60, 100, 40));
+    videoButton_->clearMask();
+    videoButton_->setBackgroundRole(QPalette::Base);
+    connect(videoButton_.get(), &QPushButton::clicked, this, [this](){
         if (!videoCapture_.IsInit()) {
             videoCapture_.Init();
         }
         if (videoCapture_.IsRunning()) {
             videoCapture_.Stop();
-            captureButton_->setText("开始相机采集");
+            videoButton_->setText("开始相机采集");
         } else {
             videoCapture_.Start();
-            captureButton_->setText("停止相机采集");
+            videoButton_->setText("停止相机采集");
         }
     });
-    captureButton_->setParent(pCenterWidget_);
+    videoButton_->setParent(pCenterWidget_);
 
     videoCapture_.SetMirrored(true);
     videoCapture_.SetFrameCallBack([this](const QVideoFrame &frame){
@@ -135,6 +154,8 @@ void Window::resizeEvent(QResizeEvent *event) {
     qDebug() << "Window resizeEvent, frame:" << this->rect()
                 << " size:" << this->frameSize();
     deviceButton_->move((this->width()-100)/2, 20);
+    videoButton_->move(this->width()/2-120, 60);
+    audioButton_->move(this->width()/2+20, 60);
 }
 
 }

@@ -19,11 +19,11 @@ std::shared_ptr<Permission>& Permission::GetInstance() {
     return instance_;
 }
 
-Qt::PermissionStatus Permission::checkCameraPermission() {
+Qt::PermissionStatus Permission::CheckCameraPermission() {
     return qApp->checkPermission(QCameraPermission{});
 }
 
-void Permission::requestCameraPermission(PermissionFunc func) {
+void Permission::RequestCameraPermission(PermissionFunc func) {
     qApp->requestPermission(QCameraPermission{}, [func](const QPermission &permission) {
         if (func) {
             func(permission);
@@ -31,13 +31,12 @@ void Permission::requestCameraPermission(PermissionFunc func) {
     });
 }
 
-Qt::PermissionStatus Permission::checkMicrophonePermission() {
+Qt::PermissionStatus Permission::CheckMicrophonePermission() {
     return qApp->checkPermission(QMicrophonePermission{});
 }
 
-void Permission::requestMicrophonePermission(PermissionFunc func) {
+void Permission::RequestMicrophonePermission(PermissionFunc func) {
     qApp->requestPermission(QMicrophonePermission{}, [func](const QPermission &permission) {
-        qDebug() << "MicrophonePermission status: " << permission.status();
         if (func) {
             func(permission);
         }

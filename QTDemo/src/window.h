@@ -15,6 +15,7 @@
 
 #include "multimedia/video_capture.h"
 #include "multimedia/video_widget.h"
+#include "multimedia/audio_capture.h"
 
 class QWidget;
 class QAction;
@@ -45,7 +46,9 @@ private slots:
 
 private:
     VideoCaputer videoCapture_;
-    QSharedPointer<QPushButton> captureButton_;
+    AudioCaputer audioCaputre_;
+    QSharedPointer<QPushButton> videoButton_;
+    QSharedPointer<QPushButton> audioButton_;
     QSharedPointer<QPushButton> deviceButton_;
     QScopedPointer<VideoWidget> videoWidget_;
     QScopedPointer<QLabel> imageView_;
