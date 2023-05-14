@@ -306,9 +306,9 @@ endif()
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource.cmake")
     include("depsSource.cmake")
-endif()
-if(Deps_Source_Targets)
-    add_dependencies(${TARGET} ${Deps_Source_Targets})
+    if(Deps_Source_Targets)
+        add_dependencies(${TARGET} ${Deps_Source_Targets})
+    endif()
 endif()
 
 #-------------------------------------------------------------------------------

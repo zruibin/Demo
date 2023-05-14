@@ -30,7 +30,7 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     //                     Qt::CustomizeWindowHint | 
     //                     Qt::MSWindowsFixedSizeDialogHint);
     this->setFixedSize(800, 560);
-    this->setWindowOpacity(0.98);
+    this->setWindowOpacity(0.95);
     this->setMouseTracking(true);
     this->setMaximumSize(QSize(16777215, 16777215));
 
@@ -47,7 +47,7 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     deviceButton_->setStyleSheet("QPushButton{ font-family:'Microsoft YaHei';font-size:13px;color:red;}");
     // button->move(10, 20);
     // button->setFixedSize(100,40);
-    deviceButton_->setGeometry(QRect((this->width()-100)/2, 10, 100, 40));
+    deviceButton_->setGeometry(QRect((this->width()-100)/2, 0, 100, 40));
     deviceButton_->clearMask();
     deviceButton_->setBackgroundRole(QPalette::Base);
     connect(deviceButton_.get(), SIGNAL(clicked()), this, SLOT(ClickDevicesButton()));
@@ -180,7 +180,7 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     audioButton_->setGeometry(QRect(this->width()/2-50,
                                     deviceButton_->geometry().bottom()+5,
                                     100, 40));
-    videoButton_->setGeometry(QRect(audioButton_->geometry().left()-audioButton_->geometry().width()-10,
+    videoButton_->setGeometry(QRect(audioButton_->x()-audioButton_->width()-10,
                                     audioButton_->geometry().top(), 100, 40));
     audioRenderButton_->setGeometry(QRect(audioButton_->geometry().right()+10,
                                           audioButton_->geometry().top(), 100, 40));
@@ -210,7 +210,7 @@ void Window::resizeEvent(QResizeEvent *event) {
     
     audioButton_->move(this->width()/2-50,
                        deviceButton_->geometry().bottom()+5);
-    videoButton_->move(audioButton_->geometry().left()-audioButton_->geometry().width()-10,
+    videoButton_->move(audioButton_->x()-audioButton_->width()-10,
                        audioButton_->geometry().top());
     audioRenderButton_->move(audioButton_->geometry().right()+10,
                              audioButton_->geometry().top());

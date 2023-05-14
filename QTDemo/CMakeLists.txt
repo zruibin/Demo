@@ -311,4 +311,11 @@ target_link_libraries(${TARGET} PRIVATE ${all_list} ${deps_list} ${QtModuleLibs}
 
 qt_finalize_executable(${TARGET})
 
+if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource.cmake")
+    include("depsSource.cmake")
+    if(Deps_Source_Targets)
+        add_dependencies(${TARGET} ${Deps_Source_Targets})
+    endif()
+endif()
+
 

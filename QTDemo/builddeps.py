@@ -23,7 +23,7 @@ import inspect
 from enum import Enum
 
 
-IS_DEBUG = False
+IS_DEBUG = True
 
 homeDir = ""
 thirdPartyDir = ""
