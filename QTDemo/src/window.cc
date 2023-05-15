@@ -59,10 +59,10 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     audioButton_->clearMask();
     audioButton_->setBackgroundRole(QPalette::Base);
     connect(audioButton_.get(), &QPushButton::clicked, this, [this](){
-        Qt::PermissionStatus status = Permission::GetInstance()->CheckMicrophonePermission();
-        if (status != Qt::PermissionStatus::Granted) {
-            Permission::GetInstance()->RequestMicrophonePermission([this](const QPermission &permission) {
-                qDebug() << "MicrophonePermission status: " << permission.status();
+        Permission::Status status = Permission::GetInstance()->CheckMicrophonePermission();
+        if (status != Permission::Status::Granted) {
+            Permission::GetInstance()->RequestMicrophonePermission([this](const Permission &permission) {
+                qDebug() << "MicrophonePermission status: " << permission.statusString();
             });
             return ;
         }
@@ -105,10 +105,10 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     videoButton_->clearMask();
     videoButton_->setBackgroundRole(QPalette::Base);
     connect(videoButton_.get(), &QPushButton::clicked, this, [this](){
-        Qt::PermissionStatus status = Permission::GetInstance()->CheckCameraPermission();
-        if (status != Qt::PermissionStatus::Granted) {
-            Permission::GetInstance()->RequestCameraPermission([this](const QPermission &permission) {
-                qDebug() << "CameraPermission status: " << permission.status();
+        Permission::Status status = Permission::GetInstance()->CheckCameraPermission();
+        if (status != Permission::Status::Granted) {
+            Permission::GetInstance()->RequestCameraPermission([this](const Permission &permission) {
+                qDebug() << "CameraPermission status: " << permission.statusString();
             });
             return;
         }

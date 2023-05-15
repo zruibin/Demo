@@ -11,18 +11,31 @@
 #include <memory>
 #include <functional>
 #include <QApplication>
-#include <QPermissions>
 
-using PermissionFunc = std::function<void (const QPermission &)>;
 
 class Permission {
 public:
+    using PermissionFunc = std::function<void (const Permission &)>;
+    
+    enum class Status {
+        Undetermined,
+        Granted,
+        Denied
+    };
+    
     static std::shared_ptr<Permission>& GetInstance();
     
-    Qt::PermissionStatus CheckCameraPermission();
+    Status CheckCameraPermission();
     void RequestCameraPermission(PermissionFunc);
-    Qt::PermissionStatus CheckMicrophonePermission();
+    Status CheckMicrophonePermission();
     void RequestMicrophonePermission(PermissionFunc);
+    
+public:
+    Status status() const { return status_;};
+    const char* statusString() const;
+
+private:
+    Status status_;
 };
 
 
