@@ -29,6 +29,9 @@ struct Assets final {
     static String FontsDirPath();
     static String FontsDirPath(const String& fontName);
     static String FontFamily(const String& fontName);
+    
+    static String AudioDirPath();
+    static String AudioDirPath(const String& audioName);
 };
 
 }

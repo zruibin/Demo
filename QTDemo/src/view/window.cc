@@ -19,6 +19,7 @@
 #include "multimedia/devices.h"
 #include "multimedia/video_capture.h"
 #include "multimedia/permission.h"
+#include <lame/lame.h>
 
 namespace UI {
 

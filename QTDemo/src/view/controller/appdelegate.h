@@ -12,8 +12,8 @@
 #include <QScopedPointer>
 #include <QHBoxLayout>
 #include <QSplitter>
-#include "controller/left_controller.h"
-#include "controller/right_controller.h"
+#include "left_controller.h"
+#include "right_controller.h"
 
 namespace UI {
 

@@ -62,4 +62,12 @@ String Assets::FontFamily(const String& fontName) {
     return "";//fontFamilies.at(0).toStdString();
 }
 
+String Assets::AudioDirPath() {
+    return AssetsDirPath() + "audio/";
+}
+
+String Assets::AudioDirPath(const String& audioName) {
+    return AudioDirPath() + audioName;
+}
+
 }

@@ -91,6 +91,11 @@ endfunction()
 
 add_definitions("-DPROJECT_DIR=\"${CMAKE_SOURCE_DIR}\"")
 
+if(EXISTS "${PROJECT_SOURCE_DIR}/deps/") 
+    list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/deps/")
+    message(WARNING "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+endif() 
+
 #-------------------------------------------------------------------------------
 
 if(WIN32)

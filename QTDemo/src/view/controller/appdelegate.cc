@@ -6,8 +6,7 @@
  * Copyright (c) 2022年 Ruibin.Chow All rights reserved.
  */
 
-#include "controller/appdelegate.h"
-
+#include "appdelegate.h"
 #include <QPushButton>
 
 

@@ -6,7 +6,7 @@
  * Copyright (c) 2022年 Ruibin.Chow All rights reserved.
  */
 
-#include "controller/left_controller.h"
+#include "left_controller.h"
 #include <QDebug>
 #include <QPushButton>
 #include <QResizeEvent>

@@ -47,6 +47,15 @@
         "args": ""
     }
 
+    ,
+    {
+        "action": "gz",
+        "fileName": "lame-3.100",
+        "url": "https://udomain.dl.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz",
+        "build": "config",
+        "args": "--disable-shared --disable-frontend --enable-static"
+    }
+
 ]
 
 

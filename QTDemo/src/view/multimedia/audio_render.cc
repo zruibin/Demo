@@ -46,7 +46,8 @@ void AudioRender::Start() {
     }
     
     std::thread playThred([this, io](){
-        file_ = fopen(filePath_->toStdString().c_str(), "rb");
+        std::string filePath = filePath_->toStdString();
+        file_ = fopen(filePath.c_str(), "rb");
         int size = 4096;
         char *buf = new char[size];
         

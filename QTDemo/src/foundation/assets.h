@@ -15,6 +15,9 @@ namespace Foundation {
 using String = std::string;
 
 struct Assets final {
+    static String ProjectDirPath();
+    
+    static void SetAssetsDirPath(const String& path);
     static String AssetsDirPath();
     
     static String CssDirPath();

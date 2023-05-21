@@ -6,7 +6,7 @@
  * Copyright (c) 2022年 Ruibin.Chow All rights reserved.
  */
 
-#include "controller/right_controller.h"
+#include "right_controller.h"
 #include <QDebug>
 #include <QPushButton>
 #include <QPalette>
