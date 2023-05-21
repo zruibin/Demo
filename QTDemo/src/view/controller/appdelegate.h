@@ -10,6 +10,7 @@
 
 #include <QMainWindow>
 #include <QScopedPointer>
+#include <QSharedPointer>
 #include <QHBoxLayout>
 #include <QSplitter>
 #include "left_controller.h"
@@ -26,11 +27,9 @@ public:
     virtual ~AppDelegate() = default;
 
 private:
-    QScopedPointer<LeftController> leftController;
-    QScopedPointer<RightController> rightController;
-    QScopedPointer<QHBoxLayout> layout_;
+    LeftController* leftController_;
+    RightController* rightController_;
     QScopedPointer<QSplitter> pSplitter_;
-    QScopedPointer<QWidget> centerWidget_;
 };
 
 }

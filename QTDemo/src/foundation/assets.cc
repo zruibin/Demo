@@ -58,10 +58,10 @@ String Assets::FontsDirPath(const String& fontName) {
 }
 
 String Assets::FontFamily(const String& fontName) {
-//    String fontDirPath = FontsDirPath(fontName);
+    String fontDirPath = FontsDirPath(fontName);
 //    int fontId = QFontDatabase::addApplicationFont(fontDirPath.c_str());
 //    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
-    return "";//fontFamilies.at(0).toStdString();
+    return fontDirPath;//fontFamilies.at(0).toStdString();
 }
 
 String Assets::AudioDirPath() {

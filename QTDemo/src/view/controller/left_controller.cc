@@ -12,6 +12,7 @@
 #include <QResizeEvent>
 #include <QFile>
 #include <QFont>
+#include <QFontDatabase>
 #include "foundation/foundation.h"
 #include "foundation/assets.h"
 
@@ -37,7 +38,6 @@ LeftController::LeftController(QWidget* parent) : QWidget(parent) {
         style = QLatin1String(file.readAll());
         qDebug() << "style: " << style.toStdString().c_str();
     }
-    QFont font;
     
     testButton1_.reset(new QPushButton(this));
     testButton1_->setText("Left");
@@ -54,12 +54,16 @@ LeftController::LeftController(QWidget* parent) : QWidget(parent) {
     animation_->setTargetObject(testButton1_.get());    //设置使用动画的控件
     animation_->setEasingCurve(QEasingCurve::Linear);//设置动画效果
     
+    int fontId = QFontDatabase::addApplicationFont(Assets::FontFamily("themissinglink.ttf").c_str());
+    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
+    QFont font(fontFamilies.at(0).toStdString().c_str());
+    
     testButton2_.reset(new QPushButton(this));
     testButton2_->setText("Left2");
     testButton2_->setGeometry(QRect(0, testButton1_->y()+testButton1_->height(), 100, 30));
     testButton2_->setObjectName("Left2");
     testButton2_->setStyleSheet(style);
-    testButton2_->setFont(QFont(Assets::FontFamily("themissinglink.ttf").c_str()));
+    testButton2_->setFont(font);
     testButton2_->setAutoFillBackground(true);
     testButton2_->setBackgroundRole(QPalette::Button);
     testButton2_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);

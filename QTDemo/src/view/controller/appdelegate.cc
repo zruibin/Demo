@@ -20,29 +20,29 @@ AppDelegate::AppDelegate(QWidget *parent) : QMainWindow(parent) {
     setMouseTracking(true);
     setMaximumSize(QSize(16777215, 16777215));
 
-    leftController.reset(new LeftController);
-    rightController.reset(new RightController);
+    leftController_ = new LeftController;
+    rightController_ = new RightController;
 
     pSplitter_.reset(new QSplitter(Qt::Horizontal, this));
     pSplitter_->setStyleSheet("QSplitter::handle{ background-color:rgb(0.13,0.63,0.13)}"); //设置分界线的样式
     pSplitter_->setHandleWidth(1);
-    pSplitter_->addWidget(leftController.get());
-    pSplitter_->addWidget(rightController.get());
+    pSplitter_->addWidget(leftController_);
+    pSplitter_->addWidget(rightController_);
     pSplitter_->setChildrenCollapsible(false);
     QList<int> sizes;
     sizes << 20000 << 80000;
     pSplitter_->setSizes(sizes);
     
-    leftController->setMaximumWidth(200);
-    leftController->setMinimumWidth(80);
+    leftController_->setMaximumWidth(200);
+    leftController_->setMinimumWidth(80);
 
-    centerWidget_.reset(new QWidget);
-    layout_.reset(new QHBoxLayout());
-    layout_->setSpacing(0);
-    layout_->setContentsMargins(0, 0, 0, 0);
-    layout_->addWidget(pSplitter_.get());
-    centerWidget_->setLayout(layout_.get());
-    this->setCentralWidget(centerWidget_.get());
+    QWidget* centerWidget = new QWidget;
+    QHBoxLayout* layout = new QHBoxLayout();
+    layout->setSpacing(0);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(pSplitter_.get());
+    centerWidget->setLayout(layout);
+    this->setCentralWidget(centerWidget);
 }
 
 }

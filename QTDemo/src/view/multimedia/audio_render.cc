@@ -13,7 +13,7 @@
 #include <QStandardPaths>
 #include <QThread>
 #include <thread>
-#include <foundation/assets.h>
+#include "foundation/assets.h"
 
 
 AudioRender::AudioRender() {
