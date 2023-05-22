@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <filesystem>
+#include <iomanip>
 
 
 /*
@@ -144,8 +145,10 @@ int LameCodec::Decode(short* pcmL, short* pcmR) {
         if (nout > 0) {
             // 达到一帧，时长 = 数据长度 / 采样率
             duration += nout * 1.0f / sampleRate_;
-            std::cout << "Decode->duration:" << duration << std::endl;
-            std::cout << "Decode->current:" << current_ << std::endl;
+            std::cout << "Decode->duration:" << duration << "s precent: "
+                    << std::fixed << std::setprecision(2)
+                    << (current_ * 1.0f / size_) * 100
+                    << "% current:" << current_ << "b" << std::endl;
 //            return nout;
         }
     }
