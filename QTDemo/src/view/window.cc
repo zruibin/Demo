@@ -19,6 +19,7 @@
 #include "multimedia/devices.h"
 #include "multimedia/video_capture.h"
 #include "multimedia/permission.h"
+#include "multimedia/audio_player.h"
 
 namespace UI {
 
@@ -88,6 +89,9 @@ Window::Window(QWidget *parent) : QMainWindow(parent) {
     connect(audioRenderButton_.get(), &QPushButton::clicked, this, [this](){
         if (!audioRender_.IsInit()) {
             audioRender_.Init();
+            
+            AudioPlayer audioPlayer;
+            audioPlayer.Init();
         }
         if (audioRender_.IsRunning()) {
             audioRender_.Stop();
