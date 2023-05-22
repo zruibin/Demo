@@ -33,8 +33,9 @@ public:
     
 private:
     int nChannels_{-1};
-    int samplerate_{-1};
+    int sampleRate_{-1};
     int bitrate_{-1};
+    int frameSize_{-1};
     long size_{-1};
     long current_{-1};
     

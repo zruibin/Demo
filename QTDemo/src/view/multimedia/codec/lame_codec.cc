@@ -61,22 +61,10 @@ bool LameCodec::OpenDecode(const std::string& mp3Path) {
     mp3data_struct mp3data;
     
     int read;
-    if ((read = fread(mp3_buffer, sizeof(char), MP3_SIZE, decoderFile_)) > 0) {
+    while ((read = fread(mp3_buffer, sizeof(char), MP3_SIZE, decoderFile_)) > 0) {
         hip_decode1_headers(decoderHip_, mp3_buffer, read, NULL, NULL, &mp3data);
         if (mp3data.header_parsed == 1) {
             /*
-             (mp3data_struct) mp3data = {
-               header_parsed = 1
-               stereo = 2
-               samplerate = 44100
-               bitrate = 128
-               mode = 1
-               mode_ext = 2
-               framesize = 1152
-               nsamp = 4341410608
-               totalframes = 39386016
-               framenum = 24576
-             }
              Metadata:
                  title           : Canon in D Major (Pachebel)
                  artist          : Lee Galloway
@@ -86,22 +74,32 @@ bool LameCodec::OpenDecode(const std::string& mp3Path) {
                Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
              */
             nChannels_ = mp3data.stereo;
-            samplerate_ = mp3data.samplerate;
+            sampleRate_ = mp3data.samplerate;
             bitrate_ = mp3data.bitrate;
+            frameSize_ = mp3data.framesize;
+            break;
         }
     }
     
     fseek(decoderFile_, 0L, SEEK_END);
     size_ = ftell(decoderFile_);
     
-    int bufferLen = samplerate_ * nChannels_ * 2 / 50;
-    long frameSize = mp3data.framesize / 8 * mp3data.bitrate * 1000 / mp3data.samplerate + 1;
+    int bufferLen = sampleRate_ * nChannels_ * 2 / 50;
+    long sizeOfSecond = mp3data.framesize / 8 * mp3data.bitrate * 1000 / mp3data.samplerate;
     
     //2737342b -> 2,737,342 字节（磁盘上的2.7 MB）
     std::cout << "OpenDecode->fileSize: " << size_
             << " Channels:" << nChannels_
-            << " Samplerate:" << samplerate_
-            << " Bitrate:" << bitrate_ << " FrameSize:" << frameSize << std::endl;
+            << " Samplerate:" << sampleRate_
+            << " Bitrate:" << bitrate_
+            << " FrameSize:" << frameSize_
+            << " sizeOfSecond:" << sizeOfSecond
+            << std::endl;
+    std::cout << "OpenDecode->nsamp: " << mp3data.nsamp
+            << " totalframes:" << mp3data.totalframes
+            << " framenum:" << mp3data.framenum
+            << std::endl;
+
     fseek(decoderFile_ ,0, SEEK_SET); //将文件指针拨回起点
     return true;
 }
@@ -124,21 +122,20 @@ bool LameCodec::CloseDecode() {
 
 int LameCodec::Decode(short* pcmL, short* pcmR) {
     int nout = -1;
+    
     static const int DECODE_BUFFER_SIZE = 256;
     
 //    short pcm_l[DECODE_BUFFER_SIZE];
 //    short pcm_r[DECODE_BUFFER_SIZE];
     int bytes;
     unsigned char mp3_buf[DECODE_BUFFER_SIZE];
-    mp3data_struct mp3data;
 
-    double duration = 0;
+    static double duration = 0;
     while ((bytes = fread(mp3_buf, DECODE_BUFFER_SIZE, 1, decoderFile_)) > 0) {
-        nout = hip_decode_headers(decoderHip_,
-                                  mp3_buf,
-                                  256,
-                                  pcmL, pcmR,
-                                  &mp3data);
+        nout = hip_decode1(decoderHip_,
+                           mp3_buf,
+                           256,
+                           pcmL, pcmR);
         if (nout < 0) {
             std::cout << "Decode->Error:" << nout << std::endl;
             return nout;
@@ -146,8 +143,8 @@ int LameCodec::Decode(short* pcmL, short* pcmR) {
         current_ += DECODE_BUFFER_SIZE;
         if (nout > 0) {
             // 达到一帧，时长 = 数据长度 / 采样率
-            duration += double(current_) / double(mp3data.samplerate);
-            std::cout << "Decode->duration:" << nout << std::endl;
+            duration += nout * 1.0f / sampleRate_;
+            std::cout << "Decode->duration:" << duration << std::endl;
             std::cout << "Decode->current:" << current_ << std::endl;
 //            return nout;
         }
