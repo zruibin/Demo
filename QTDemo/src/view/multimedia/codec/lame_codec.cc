@@ -74,6 +74,20 @@ static bool isMp3File(FILE *fp) {
     return true;
 }
 
+static void lameError(const char *format, va_list ap) {
+    printf("lameError:");
+    printf(format, ap);
+}
+
+static void lameDebug(const char *format, va_list ap) {
+    printf("lameDebug:");
+    printf(format, ap);
+}
+
+static void lameMsg(const char *format, va_list ap) {
+    printf("lameMsg:");
+    printf(format, ap);
+}
 
 LameCodec::LameCodec() {
 
@@ -112,15 +126,26 @@ bool LameCodec::OpenDecode(const std::string& mp3Path) {
     lame_set_decode_only(decoderLame_, 1);
     decoderHip_ = hip_decode_init();
     
+    hip_set_errorf(decoderHip_, lameError);
+    hip_set_debugf(decoderHip_, lameDebug);
+    hip_set_msgf(decoderHip_, lameMsg);
+    
     fseek(decoderFile_, 0, SEEK_SET);
     
     const int MP3_SIZE = 1024;
     unsigned char mp3_buffer[MP3_SIZE];
     mp3data_struct mp3data;
     
+    short pcm_l[MP3_SIZE];
+    short pcm_r[MP3_SIZE];
+    
     int read;
     while ((read = fread(mp3_buffer, sizeof(char), MP3_SIZE, decoderFile_)) > 0) {
-        hip_decode1_headers(decoderHip_, mp3_buffer, read, NULL, NULL, &mp3data);
+        int nout = hip_decode1_headers(decoderHip_, mp3_buffer, read, pcm_l, pcm_r, &mp3data);
+        if (nout < 0) {
+            std::cout << "OpenDecode->Error:" << nout << std::endl;
+            return false;
+        }
         if (mp3data.header_parsed == 1) {
             /*
              Metadata:
