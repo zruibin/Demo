@@ -8,6 +8,7 @@
 
 #include "lame_codec.h"
 #include <iostream>
+#include <stdio.h>
 #include <vector>
 #include <filesystem>
 #include <iomanip>
@@ -17,7 +18,62 @@
  https://www.jianshu.com/p/c9feaec59bab
  https://www.cnblogs.com/musicfans/archive/2012/07/16/2819299.html
  https://www.jianshu.com/p/fb531239cd79
+ https://blog.csdn.net/geekster/article/details/7888099
+ http://www.zzvips.com/article/104036.html
  */
+
+struct mp3 {
+    char header[3]; // 标签头是"ID3", 非必须
+    char footer[3]; // 标签头是"TAG"，必须
+    char title[30]; // 标题
+    char artist[30]; // 作者
+    char album[30]; // 专集
+    char year[4]; // 出品年代
+    char comment[30]; // 备注
+};
+
+static bool isMp3File(FILE *fp) {
+    struct mp3 mp3_info; //存放读取的mp3 ID3V1信息
+    fseek(fp, 0, SEEK_SET);
+    
+    //读取标签头
+    fread(mp3_info.header, sizeof(char), 3, fp);
+    // mp3以末尾的128字节存放，偏移-128
+    fseek(fp, -128*sizeof(char), SEEK_END);
+    fread(mp3_info.footer, sizeof(char), 3, fp);
+    
+    // 判断开头是不是ID3
+    if(!(mp3_info.header[0] == 'I'
+         && mp3_info.header[1] == 'D'
+         && mp3_info.header[2] == '3')) {
+        printf("file contains no ID3 tag\n");
+        if(!(mp3_info.footer[0] == 'T'
+             && mp3_info.footer[1] == 'A'
+             && mp3_info.footer[2] == 'G')) {
+            printf("file contains no TAG tag\n");
+            return false;
+        }
+    }
+    printf("header: %s\n", mp3_info.header);
+    printf("footer: %s\n", mp3_info.footer);
+    
+//    //读取信息
+    fread(mp3_info.title, sizeof(char), 30, fp);
+    fread(mp3_info.artist, sizeof(char), 30, fp);
+    fread(mp3_info.album, sizeof(char), 30, fp);
+    fread(mp3_info.year, sizeof(char), 4, fp);
+    fread(mp3_info.comment, sizeof(char), 30, fp);
+
+//    //打印信息
+    printf("title: %s\n", mp3_info.title);
+    printf("artist: %s\n", mp3_info.artist);
+    printf("blbum: %s\n", mp3_info.album);
+    printf("year: %s\n", mp3_info.year);
+    printf("comment: %s\n", mp3_info.comment);
+    
+    return true;
+}
+
 
 LameCodec::LameCodec() {
 
@@ -29,11 +85,6 @@ LameCodec::~LameCodec() {
 
 void LameCodec::Init() {
     std::cout << "Init." << std::endl;
-    hip_t hip = hip_decode_init();
-    if (!hip) {
-        std::cout << "创建mp3 codec失败" << std::endl;
-        return;
-    }
 }
 
 
@@ -50,11 +101,17 @@ bool LameCodec::OpenDecode(const std::string& mp3Path) {
         return false;
     }
     
+    decoderFile_ = fopen(mp3Path.c_str(), "rb");
+    
+    if (!isMp3File(decoderFile_)) {
+        std::cout << "OpenDecode->It was not mp3 file." << std::endl;
+        return false;
+    }
+    
     decoderLame_ = lame_init();
     lame_set_decode_only(decoderLame_, 1);
     decoderHip_ = hip_decode_init();
     
-    decoderFile_ = fopen(mp3Path.c_str(), "rb");
     fseek(decoderFile_, 0, SEEK_SET);
     
     const int MP3_SIZE = 1024;
@@ -83,23 +140,27 @@ bool LameCodec::OpenDecode(const std::string& mp3Path) {
     }
     
     fseek(decoderFile_, 0L, SEEK_END);
-    size_ = ftell(decoderFile_);
+    fileSize_ = ftell(decoderFile_);
     
-    int bufferLen = sampleRate_ * nChannels_ * 2 / 50;
-    long sizeOfSecond = mp3data.framesize / 8 * mp3data.bitrate * 1000 / mp3data.samplerate;
+    // 一帧时长 = 数据长度 / 采样率
+    double frameDuration = frameSize_ * 1.0f / sampleRate_;
+    // 总播放时间 = 文件大小 * 8 / 比特率
+    double allDuration = (1.0f * fileSize_ * 8) / (bitrate_ * 1000);
     
-    //2737342b -> 2,737,342 字节（磁盘上的2.7 MB）
-    std::cout << "OpenDecode->fileSize: " << size_
-            << " Channels:" << nChannels_
-            << " Samplerate:" << sampleRate_
-            << " Bitrate:" << bitrate_
-            << " FrameSize:" << frameSize_
-            << " sizeOfSecond:" << sizeOfSecond
+    std::cout << std::fixed << std::setprecision(3)
+            << "OpenDecode->文件大小:" << fileSize_ << "b = "
+            << (1.0f * fileSize_ / 1024 / 1024) << "M"
+            << " 通道数:" << nChannels_
+            << " 采样率:" << sampleRate_
+            << "Hz 比特率:" << bitrate_
+            << "kbps 一帧大小:" << frameSize_
+            << "b 一帧时长:" << frameDuration
+            << "s 总时长:" << allDuration << "s"
             << std::endl;
-    std::cout << "OpenDecode->nsamp: " << mp3data.nsamp
-            << " totalframes:" << mp3data.totalframes
-            << " framenum:" << mp3data.framenum
-            << std::endl;
+//    std::cout << "OpenDecode->nsamp: " << mp3data.nsamp
+//            << " totalframes:" << mp3data.totalframes
+//            << " framenum:" << mp3data.framenum
+//            << std::endl;
 
     fseek(decoderFile_ ,0, SEEK_SET); //将文件指针拨回起点
     return true;
@@ -124,10 +185,8 @@ bool LameCodec::CloseDecode() {
 int LameCodec::Decode(short* pcmL, short* pcmR) {
     int nout = -1;
     
-    static const int DECODE_BUFFER_SIZE = 256;
-    
-//    short pcm_l[DECODE_BUFFER_SIZE];
-//    short pcm_r[DECODE_BUFFER_SIZE];
+    const int DECODE_BUFFER_SIZE = 256;
+
     int bytes;
     unsigned char mp3_buf[DECODE_BUFFER_SIZE];
 
@@ -141,17 +200,17 @@ int LameCodec::Decode(short* pcmL, short* pcmR) {
             std::cout << "Decode->Error:" << nout << std::endl;
             return nout;
         }
-        current_ += DECODE_BUFFER_SIZE;
+        fileCurrent_ += DECODE_BUFFER_SIZE;
         if (nout > 0) {
             // 达到一帧，时长 = 数据长度 / 采样率
             duration += nout * 1.0f / sampleRate_;
-            std::cout << "Decode->duration:" << duration << "s precent: "
-                    << std::fixed << std::setprecision(2)
-                    << (current_ * 1.0f / size_) * 100
-                    << "% current:" << current_ << "b" << std::endl;
-//            return nout;
+            return nout;
         }
     }
+    std::cout << "Decode->duration:" << duration << "s precent: "
+            << std::fixed << std::setprecision(2)
+            << (fileCurrent_ * 1.0f / fileSize_) * 100
+            << "% current:" << fileCurrent_ << "b" << std::endl;
     
     return -2; // reach file end
 }

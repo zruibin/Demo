@@ -36,8 +36,8 @@ private:
     int sampleRate_{-1};
     int bitrate_{-1};
     int frameSize_{-1};
-    long size_{-1};
-    long current_{-1};
+    long fileSize_{-1};
+    long fileCurrent_{-1};
     
     FILE *decoderFile_{nullptr};
     lame_global_flags* decoderLame_{nullptr};
