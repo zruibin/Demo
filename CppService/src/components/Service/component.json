@@ -1,0 +1,21 @@
+{
+    "name": "ComponentService",
+    "description": "ComponentService Component.",
+    "version": "1.0.0",
+    "homepage": "https://www.github.com/",
+    "author": "ruibin.chow",
+
+    "object": {
+    	"ServiceInterface": "ServiceImpl"
+    },
+
+    "public": ["include/*"],
+
+    "source": ["source/*"],
+
+    "exclude": [],
+
+    "resource": ["resource/*"],
+
+    "dependency": ["libkernel", "lm"]
+}

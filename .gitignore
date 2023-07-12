@@ -27,6 +27,7 @@ deps.cmake
 depsSource.cmake
 depsSource.lock
 builddeps.log
+.xmake/
 
 node_modules
 package-lock.json
