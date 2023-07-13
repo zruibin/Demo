@@ -28,6 +28,7 @@ std::shared_ptr<BaseService> Engine::GetServiceByName(const std::string& name) {
         if (builder != nullptr) {
             builder->SetEngine(this->shared_from_this());
             auto service = builder->BuildService();
+            service->Init();
             serviceMap_->emplace(name, service);
             return service;
         }
