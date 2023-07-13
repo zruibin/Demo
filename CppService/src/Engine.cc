@@ -20,6 +20,9 @@ Engine::~Engine() {
 }
 
 std::shared_ptr<BaseService> Engine::GetServiceByName(const std::string& name) {
+    if (name.length() == 0) {
+        return nullptr;
+    }
     auto serviceIter = serviceMap_->find(name);
     if (serviceIter != serviceMap_->end()) {
         return serviceIter->second;
@@ -32,6 +35,19 @@ std::shared_ptr<BaseService> Engine::GetServiceByName(const std::string& name) {
             serviceMap_->emplace(name, service);
             return service;
         }
+    }
+    return nullptr;
+}
+
+std::shared_ptr<BaseService> Engine::CreateServiceByName(const std::string& name) {
+    if (name.length() == 0) {
+        return nullptr;
+    }
+    auto builder = componentFactory_->GetBuilder(name);
+    if (builder != nullptr) {
+        builder->SetEngine(this->shared_from_this());
+        auto service = builder->BuildService();
+        return service;
     }
     return nullptr;
 }

@@ -10,9 +10,10 @@
 
 #include <memory>
 #include <unordered_map>
+#include "BaseComponentFactory.h"
 #include "BaseServiceBuilder.h"
 
-class ComponentFactory final {
+class ComponentFactory: public BaseComponentFactory {
     
 public:
     explicit ComponentFactory() {
@@ -20,9 +21,9 @@ public:
     };
     
 public:
-    void ConstructBuilders();
+    void ConstructBuilders() override;
     
-    std::shared_ptr<BaseServiceBuilder> GetBuilder(const std::string& name) {
+    std::shared_ptr<BaseServiceBuilder> GetBuilder(const std::string& name) override {
         if (name.length() == 0) {
             return nullptr;
         }
@@ -32,7 +33,7 @@ public:
         }
         return nullptr;
     };
-    void UpdateBuilder(std::shared_ptr<BaseServiceBuilder> builder) {
+    void UpdateBuilder(std::shared_ptr<BaseServiceBuilder> builder) override {
         if (builder == nullptr) {
             return;
         }

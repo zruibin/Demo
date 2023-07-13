@@ -19,7 +19,8 @@ public:
     virtual ~Engine();
 
 protected:
-    virtual std::shared_ptr<BaseService> GetServiceByName(const std::string&) override;
+    std::shared_ptr<BaseService> GetServiceByName(const std::string&) override;
+    std::shared_ptr<BaseService> CreateServiceByName(const std::string&) override;
 
 public:
     void Init(void) override;
@@ -29,7 +30,6 @@ public:
 private:
     std::shared_ptr<std::unordered_map<std::string, 
                                        std::shared_ptr<BaseService>>> serviceMap_;
-    std::shared_ptr<ComponentFactory> componentFactory_;
 };
 
 

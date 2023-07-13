@@ -29,6 +29,17 @@ void AudioDectImpl::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter
 void AudioDectImpl::Description() {
     std::cout << "AudioDectImpl::Description." << std::endl;
     
+    std::cout << "**********************************************************" << std::endl;
+    {
+        std::shared_ptr<ServiceInterface> tmpService = adapter_->GetEngine()->CreateService<ServiceInterface>(Protocol(ServiceInterface));
+        if (tmpService != nullptr) {
+            tmpService->Init();
+            tmpService->Description();
+            tmpService->Test();
+            tmpService->Destory();
+        }}
+    std::cout << "**********************************************************" << std::endl;
+    
     auto service = adapter_->GetEngine()->GetService<ServiceInterface>(Protocol(ServiceInterface));
     std::cout << "AudioDectImpl::Description->" << service->GetTestString() << std::endl;
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include <memory>
+#include <iostream>
 #include "Engine.h"
 #include "ServiceInterface.h"
 #include "AudioDectInterface.h"
@@ -22,6 +23,18 @@ int main(int argc, char** argv)
     if (audioDectService != nullptr) {
         audioDectService->Description();
     }
+    
+    std::cout << "----------------------------------------------------------" << std::endl;
+    {
+        std::shared_ptr<ServiceInterface> tmpService = engine->CreateService<ServiceInterface>(Protocol(ServiceInterface));
+        if (tmpService != nullptr) {
+            tmpService->Init();
+            tmpService->Description();
+            tmpService->Test();
+            tmpService->Destory();
+        }
+    }
+    std::cout << "----------------------------------------------------------" << std::endl;
     
     engine->Destory();
     return 0;
