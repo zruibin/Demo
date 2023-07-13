@@ -9,23 +9,45 @@
 #define COMPONENTFACTORY_H
 
 #include <memory>
-#include <vector>
-
-class BaseServiceBuilder;
-class BaseEngine;
+#include <unordered_map>
+#include "BaseServiceBuilder.h"
 
 class ComponentFactory final {
     
 public:
-    explicit ComponentFactory();
+    explicit ComponentFactory() {
+        builderMap_ = std::make_shared<std::unordered_map<std::string, std::shared_ptr<BaseServiceBuilder>>>();
+    };
     
 public:
     void ConstructBuilders();
-    using SharedBuilders = std::shared_ptr<std::vector<std::shared_ptr<BaseServiceBuilder>>>;
-    SharedBuilders GetBuilders() { return builders_;};
+    
+    std::shared_ptr<BaseServiceBuilder> GetBuilder(const std::string& name) {
+        if (name.length() == 0) {
+            return nullptr;
+        }
+        auto it = builderMap_->find(name);
+        if (it != builderMap_->end()) {
+            return it->second;
+        }
+        return nullptr;
+    };
+    void UpdateBuilder(std::shared_ptr<BaseServiceBuilder> builder) {
+        if (builder == nullptr) {
+            return;
+        }
+        const std::string& name = builder->GetServiceName();
+        auto it = builderMap_->find(name);
+        if (it != builderMap_->end()) {
+            it->second = builder;
+        } else {
+            builderMap_->emplace(name, builder);
+        }
+    };
     
 private:
-    SharedBuilders builders_;
+    using BuilderMap = std::shared_ptr<std::unordered_map<std::string, std::shared_ptr<BaseServiceBuilder>>>;
+    BuilderMap builderMap_;
 };
 
 

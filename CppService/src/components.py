@@ -352,17 +352,14 @@ def updateComponentFactory():
 ${headersString}
 
 #define ADD_SERVICE_BUILDER(_builder_) { \
-    std::shared_ptr<BaseServiceBuilder> serviceBuild = std::make_shared<_builder_>(); \
-    builders_->push_back(serviceBuild); \
+    std::shared_ptr<BaseServiceBuilder> builder = std::make_shared<_builder_>(); \
+    builderMap_->emplace(builder->GetServiceName(), builder); \
 }
 
 void ComponentFactory::ConstructBuilders() {
 ${buildersString}
 }
-
-ComponentFactory::ComponentFactory() {
-    builders_ = std::make_shared<std::vector<std::shared_ptr<BaseServiceBuilder>>>();
-}"""
+"""
     factoryContent = TPL(factoryContent).substitute({
                                                 "headersString": headersString,
                                                 "buildersString": buildersString
