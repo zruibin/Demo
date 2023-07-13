@@ -438,16 +438,41 @@ list(APPEND RESOURCES "${COMPONENT_PATH}/components.py")
 
     pass
 
+def update():
+    updateComponentFactory()
+    updateCmake()
+    pass
+
+def help():
+    helpStr = """
+Command:
+    update/-p         根据components目录中的组件生成components.cmake
+    create/-c name    根据name生成组件
+    help              说明
+Default:
+    update
+    """
+    log(helpStr)
+    pass
+
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        log("Please input component name.")
-    if len(sys.argv) == 2:
-        name = str(sys.argv[1])
-        if check(name):
-            createComponent(name)
-            updateComponentFactory()
-            updateCmake()
+        update()
+    if len(sys.argv) > 1:
+        action = str(sys.argv[1])
+        if action == "help" or action == "-h":
+            help()
+        elif action == "update" or action == "-p":
+            update()
+        elif action == "create" or action == "-c":
+            if len(sys.argv) > 2:
+                name = str(sys.argv[2])
+                if check(name):
+                    createComponent(name)
+                    update()
+            else:
+                log("Please input component name.")
     pass
 
 
