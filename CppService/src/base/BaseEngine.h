@@ -24,7 +24,11 @@ public:
 public:
     template <class T, class = std::enable_if_t<std::is_base_of_v<BaseService, T>>>
     std::shared_ptr<T> GetService(const std::string& name) {
-        return std::dynamic_pointer_cast<T>(this->GetServiceByName(name));
+        std::shared_ptr<BaseService> baseService = this->GetServiceByName(name);
+        if (baseService != nullptr) {
+            return std::dynamic_pointer_cast<T>(baseService);
+        }
+        return nullptr;
     }
     
 public:
