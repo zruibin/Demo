@@ -32,6 +32,10 @@ public:
     std::string GetServiceName() override {
         return "AudioDectInterface";
     };
+    
+    std::string GetBuilderName() override {
+        return "AudioDectBuilder";
+    };
 };
 
 #endif /* !AUDIODECTBUILDER_H */

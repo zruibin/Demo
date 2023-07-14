@@ -32,6 +32,10 @@ public:
     std::string GetServiceName() override {
         return "ServiceInterface";
     };
+    
+    std::string GetBuilderName() override {
+        return "ServiceBuilder";
+    };
 };
 
 #endif /* !SERVICEBUILDER_H */

@@ -22,6 +22,7 @@ public:
 public:
     virtual std::shared_ptr<BaseService> BuildService() = 0;
     virtual std::string GetServiceName() = 0;
+    virtual std::string GetBuilderName() = 0;
     virtual void SetEngine(std::shared_ptr<BaseEngine> engine) {
         engine_ = engine;
     }

@@ -307,6 +307,10 @@ public:
     std::string GetServiceName() override {
         return "${interfaceName}";
     };
+    
+    std::string GetBuilderName() override {
+        return "${name}";
+    };
 };
 
 #endif /* !${upperName}_H */
