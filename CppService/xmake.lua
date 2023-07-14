@@ -1,25 +1,35 @@
 
+includes("check_cxxtypes.lua")
+includes("check_cxxincludes.lua")
+includes("check_cxxfuncs.lua")
+includes("check_cxxsnippets.lua")
+
+
 set_project("CppService")
+
+set_installdir("install")
 
 add_rules("mode.debug", "mode.release")
 
-
-add_requires("cmake::cJSON", {system = true, configs = {moduledirs = "/opt/homebrew/lib/cmake"}})
-
+-- add_requires("cmake::cJSON", {system = true, configs = {moduledirs = "/opt/homebrew/lib/cmake"}})
 
 target("CppService")
     
     set_kind("binary")
-
-    includes("src/service2/service2.lua")
-    includes("src/service/service.lua")
-    add_deps("service2", "service")
-
-    add_files("src/*.cc")
     add_defines("DEBUG")
 
-    -- on_load -> after_load -> on_config -> before_build -> on_build -> after_build
+    add_cxxflags("-stdlib=libc++", {tools = "clang"})
+    set_languages("c99", "cxx17")
 
+    add_includedirs(os.dirs(path.join(os.scriptdir(), "src/components/**")))
+    add_includedirs(os.dirs(path.join(os.scriptdir(), "src/shell/**")))
+    includes("src/components.lua")
+    add_files("src/main.cc")
+    add_deps("Service")
+
+
+    -- on_load -> after_load -> on_config -> before_build -> on_build -> after_build
+    --[=[
     on_load(function (target)
         print("on_load: " .. target:basename())
         if is_plat("linux", "macosx") then
@@ -31,7 +41,7 @@ target("CppService")
         print("before_build: " .. target:basename())
         import("core.base.json")
 
-        local componentPath = "./src/service/"
+        local componentPath = "./src/components/Service/"
         local luatable = json.loadfile(componentPath .. "component.json")
         print(luatable)
 
@@ -64,10 +74,6 @@ target("CppService")
         task.run("xmakeTask")
     end)
 
-    -- before_link(function (target)
-    --     print("before_link")
-    -- end)
-
     after_build(function (target)
         import("core.project.config")
         local targetfile = target:targetfile()
@@ -84,7 +90,7 @@ target("CppService")
             print("arm")
         end
     end)
-
+    ]=]
 
 
 task("xmakeTask")
@@ -92,6 +98,7 @@ task("xmakeTask")
     -- on_run(function ()
     --     print("xmakeTask on_run")
     -- end)
+
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io

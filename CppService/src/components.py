@@ -14,7 +14,7 @@
 import os, re, json, sys, platform, fnmatch, stat
 from pathlib import Path
 from string import Template as TPL
-import datetime
+import datetime, shutil
 
 
 loginName = os.getlogin()
@@ -28,14 +28,13 @@ filePath = os.path.split(os.path.realpath(__file__))[0]
 componentPath = os.path.join(filePath, componentName)
 shellName = "shell"
 shellPath = os.path.join(filePath, shellName)
-factoryFile = os.path.join(shellPath, "ComponentFactory.cc")
-componentCmakeFile = os.path.join(filePath, "components.cmake")
+factoryName = "ComponentFactory.cc"
+factoryFile = os.path.join(shellPath, factoryName)
 
 # print("filePath: " + filePath)
 # print("componentPath: " + componentPath)
 # print("shellPath: " + shellPath)
 # print("factoryFile: " + factoryFile)
-# print("componentCmakeFile: " + componentCmakeFile)
 
 componentIncludeName = "include"
 componentSourceName = "source"
@@ -331,6 +330,18 @@ public:
     pass
 
 
+def deleteComponent(name):
+    deletePaths = [
+        os.path.join(componentPath, name), 
+        os.path.join(shellPath, name + "Builder")
+    ]
+    for path in deletePaths:
+        if os.path.exists(path):
+            log(path)
+            shutil.rmtree(path)
+    pass
+
+
 def updateComponentFactory():
     existComponents = Path(shellPath)
     existComponents = [x for x in existComponents.iterdir() if x.is_dir()]
@@ -346,7 +357,7 @@ def updateComponentFactory():
     # log(buildersString)
 
     factoryContent = r"""/*
- * ComponentFactory.cc
+ * ${factoryName}
  *
  * Created by Ruibin.Chow on 2023/07/12.
  * Copyright (c) 2023年 Ruibin.Chow All rights reserved.
@@ -365,6 +376,7 @@ ${buildersString}
 }
 """
     factoryContent = TPL(factoryContent).substitute({
+                                                "factoryName": factoryName,
                                                 "headersString": headersString,
                                                 "buildersString": buildersString
                                                 })
@@ -375,106 +387,40 @@ ${buildersString}
     pass
 
 
-def updateCmake():
-    existComponents = Path(componentPath)
-    existComponents = [x for x in existComponents.iterdir() if x.is_dir()]
-
-    directories = []
-    for path in existComponents:
-        directories.append("# " + path.name)
-        directories.append("list(APPEND DIRECTORIES ${COMPONENT_PATH}/shell/" + path.name + "Builder)")
-        directories.append("list(APPEND DIRECTORIES ${COMPONENT_PATH}/components/" + path.name + "/" + componentIncludeName + ")")
-        directories.append("list(APPEND DIRECTORIES ${COMPONENT_PATH}/components/" + path.name + "/" + componentSourceName + ")")
-        directories.append("list(APPEND EXPORT_HEADS_DIRECTORIES ${COMPONENT_PATH}/components/" + path.name + "/" + componentIncludeName + ")")
-    # log(directories)
-    directoriesString = "\n".join(directories)
-
-    cmakeContent = """
-set(COMPONENT_PATH "${CMAKE_SOURCE_DIR}/src")
-
-list(APPEND DIRECTORIES ${COMPONENT_PATH}/base)
-list(APPEND EXPORT_HEADS_DIRECTORIES ${COMPONENT_PATH}/base)
-list(APPEND DIRECTORIES ${COMPONENT_PATH}/shell)
-""" + directoriesString + """
-
-foreach(directory IN LISTS DIRECTORIES)
-    # 相当于g++选项中的-I参数的作用
-    include_directories(${directory})
-
-    file(GLOB_RECURSE files "${directory}/*.h")
-    list(APPEND HEADERS "${files}")
-    file(GLOB_RECURSE files "${directory}/*.hpp")
-    list(APPEND HEADERS "${files}")
-    
-    file(GLOB_RECURSE files "${directory}/*.c")
-    list(APPEND SOURCES "${files}")
-    file(GLOB_RECURSE files "${directory}/*.cc")
-    list(APPEND SOURCES "${files}")
-    file(GLOB_RECURSE files "${directory}/*.cpp")
-    list(APPEND SOURCES "${files}")
-endforeach()
-
-list(APPEND HEADERS "${COMPONENT_PATH}/Engine.h")
-list(APPEND SOURCES "${COMPONENT_PATH}/Engine.cc")
-
-
-list(APPEND EXPORT_HEADS_DIRECTORIES ${COMPONENT_PATH}/base)
-list(APPEND EXPORT_HEADS_DIRECTORIES ${COMPONENT_PATH}/components/service/include)
-foreach(directory IN LISTS EXPORT_HEADS_DIRECTORIES)
-    file(GLOB_RECURSE files "${directory}/*.h")
-    list(APPEND EXPORT_HEADS "${files}")
-    file(GLOB_RECURSE files "${directory}/*.hpp")
-    list(APPEND EXPORT_HEADS "${files}")
-endforeach()
-list(APPEND EXPORT_HEADS "${COMPONENT_PATH}/Engine.h")
-
-list(APPEND RESOURCES "${COMPONENT_PATH}/components.cmake")
-list(APPEND RESOURCES "${COMPONENT_PATH}/components.py")
-
-
-# message(STATUS "HEADERS: ${HEADERS}")
-# message(STATUS "SOURCES: ${SOURCES}")
-# message(STATUS "EXPORT_HEADS: ${EXPORT_HEADS}")
-# message(STATUS "RESOURCES: ${RESOURCES}")
-    """
-    with open(componentCmakeFile, "w") as fileHandle:
-            fileHandle.write(str(cmakeContent))
-
-    pass
-
-def update():
-    updateComponentFactory()
-    updateCmake()
-    pass
-
 def help():
     helpStr = """
 Command:
-    update/-p         根据components目录中的组件生成components.cmake
+    update/-p         根据components目录中的组件生成${factoryName}内容
     create/-c name    根据name生成组件
-    help              说明
+    help/-h           说明
 Default:
     update
     """
+    helpStr = TPL(helpStr).substitute({"factoryName": factoryName})
     log(helpStr)
     pass
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        update()
+        updateComponentFactory()
     if len(sys.argv) > 1:
         action = str(sys.argv[1])
         if action == "help" or action == "-h":
             help()
-        elif action == "update" or action == "-p":
-            update()
         elif action == "create" or action == "-c":
             if len(sys.argv) > 2:
                 name = str(sys.argv[2])
                 if check(name):
                     createComponent(name)
-                    update()
+                    updateComponentFactory()
+            else:
+                log("Please input component name.")
+        elif action == "delete" or action == "-d":
+            if len(sys.argv) > 2:
+                name = str(sys.argv[2])
+                deleteComponent(name)
+                updateComponentFactory()
             else:
                 log("Please input component name.")
         else:

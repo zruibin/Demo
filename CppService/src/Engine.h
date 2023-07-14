@@ -10,7 +10,6 @@
 
 #include <unordered_map>
 #include "BaseEngine.h"
-#include "ComponentFactory.h"
 
 class Engine: public BaseEngine
 {

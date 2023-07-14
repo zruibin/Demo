@@ -8,6 +8,7 @@
 
 #include "Engine.h"
 #include "BaseService.h"
+#include "ComponentFactory.h"
 
 Engine::Engine() {
     serviceMap_ = std::make_shared<std::unordered_map<std::string, 
