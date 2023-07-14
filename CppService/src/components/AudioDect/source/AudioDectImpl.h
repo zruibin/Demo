@@ -21,7 +21,7 @@ public:
     void Init() override;
     void Destory() override;
     void SetAdapter(const std::shared_ptr<BaseServiceAdapter>) override;
-    void Description() override;
+    std::string Description() override;
     
 private:
     std::shared_ptr<AudioDectAdapterInterface> adapter_;

@@ -34,9 +34,10 @@ void ServiceImpl::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter) 
     adapter_ = adapter->GetCastAdapter<ServiceAdapterInterface>();
 }
 
-void ServiceImpl::Description() {
+std::string ServiceImpl::Description() {
     std::cout << "ServiceImpl::Description." << std::endl;
     adapter_->print();
+    return "ServiceImpl";
 }
 
 void ServiceImpl::Test() {

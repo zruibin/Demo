@@ -161,7 +161,7 @@ public:
     void Init() override;
     void Destory() override;
     void SetAdapter(const std::shared_ptr<BaseServiceAdapter>) override;
-    void Description() override;
+    std::string Description() override;
     
 private:
     std::shared_ptr<${adapterName}> adapter_;
@@ -211,8 +211,8 @@ void ${name}::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter) {
     adapter_ = adapter->GetCastAdapter<${adapterName}>();
 }
 
-void ${name}::Description() {
-    std::cout << "${name}::Description." << std::endl;
+std::string ${name}::Description() {
+    return "${name}";
 }
 """
     sourceImplContent = TPL(sourceImplContent).substitute({
@@ -473,6 +473,8 @@ if __name__ == '__main__':
                     update()
             else:
                 log("Please input component name.")
+        else:
+            help()
     pass
 
 
