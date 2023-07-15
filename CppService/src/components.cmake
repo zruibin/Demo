@@ -75,6 +75,7 @@ list(APPEND EXPORT_HEADS "${COMPONENTS_ROOT_PATH}/Engine.h")
 
 list(APPEND RESOURCES "${COMPONENTS_ROOT_PATH}/components.cmake")
 list(APPEND RESOURCES "${COMPONENTS_ROOT_PATH}/components.py")
+list(APPEND RESOURCES "${COMPONENTS_ROOT_PATH}/components.lua")
 
 
 # message(STATUS "HEADERS: ${HEADERS}")

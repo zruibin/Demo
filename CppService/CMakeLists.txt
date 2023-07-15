@@ -116,6 +116,10 @@ set(EXECUTE_SOURCES
     src/main.cc
 )
 
+list(APPEND RESOURCES "${CMAKE_SOURCE_DIR}/xmake.lua")
+list(APPEND RESOURCES "${CMAKE_SOURCE_DIR}/task.lua")
+list(APPEND RESOURCES "${CMAKE_SOURCE_DIR}/README.md")
+
 source_group(TREE "${CMAKE_SOURCE_DIR}" FILES ${HEADERS} ${SOURCES} ${EXECUTE_SOURCES})
 source_group(Resources FILES ${RESOURCES})
 
