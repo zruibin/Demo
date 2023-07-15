@@ -11,7 +11,7 @@
 #include "BaseServiceAdapter.h"
 #include <string>
 
-class ServiceAdapterInterface: public BaseServiceAdapter
+class ServiceAdapterInterface : public BaseServiceAdapter
 {
 public:
     virtual ~ServiceAdapterInterface() = default;

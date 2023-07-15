@@ -12,7 +12,7 @@
 #include "ServiceAdapterInterface.h"
 #include "LoggerInterface.h"
 
-class ServiceAdapterImpl: public ServiceAdapterInterface
+class ServiceAdapterImpl : public ServiceAdapterInterface
 {
 public:
     ServiceAdapterImpl() = default;

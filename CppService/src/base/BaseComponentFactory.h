@@ -10,8 +10,8 @@
 
 class BaseServiceBuilder;
 
-class BaseComponentFactory {
-
+class BaseComponentFactory
+{
 public:
     virtual ~BaseComponentFactory() = default;
     

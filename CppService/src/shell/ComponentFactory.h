@@ -13,8 +13,8 @@
 #include "BaseComponentFactory.h"
 #include "BaseServiceBuilder.h"
 
-class ComponentFactory: public BaseComponentFactory {
-    
+class ComponentFactory : public BaseComponentFactory
+{
 public:
     explicit ComponentFactory() {
         builderMap_ = std::make_shared<std::unordered_map<std::string, std::shared_ptr<BaseServiceBuilder>>>();

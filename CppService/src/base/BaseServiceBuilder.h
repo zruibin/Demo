@@ -14,7 +14,7 @@
 class BaseService;
 class BaseEngine;
 
-class BaseServiceBuilder: public std::enable_shared_from_this<BaseServiceBuilder>
+class BaseServiceBuilder : public std::enable_shared_from_this<BaseServiceBuilder>
 {
 public:
     virtual ~BaseServiceBuilder() = default;

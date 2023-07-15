@@ -29,7 +29,8 @@ private:
     std::shared_ptr<LoggerAdapterInterface> adapter_;
 };
 
-class LoggerManager final {
+class LoggerManager final
+{
 public:
     static LoggerManager& GetInstance();
 public:

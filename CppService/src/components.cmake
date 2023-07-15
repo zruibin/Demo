@@ -1,7 +1,7 @@
 
 
 MACRO(COMPONENTS_SUBDIRLIST result curdir)
-FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+FILE(GLOB children RELATIVE ${curdir} "${curdir}/*")
 SET(dirlist "")
 FOREACH(child ${children})
   IF(IS_DIRECTORY ${curdir}/${child})

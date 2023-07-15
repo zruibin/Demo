@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include "BaseEngine.h"
 
-class Engine: public BaseEngine
+class Engine : public BaseEngine
 {
 public:
     Engine();

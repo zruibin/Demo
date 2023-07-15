@@ -14,7 +14,7 @@
 #include "ServiceImpl.h"
 #include "ServiceAdapterImpl.hpp"
 
-class ServiceBuilder: public BaseServiceBuilder
+class ServiceBuilder : public BaseServiceBuilder
 {
 public:
     ServiceBuilder() = default;

@@ -11,7 +11,7 @@
 #include <string>
 #include "BaseServiceAdapter.h"
 
-class BaseService: public std::enable_shared_from_this<BaseService>
+class BaseService : public std::enable_shared_from_this<BaseService>
 {
 public:
     virtual ~BaseService() = default;

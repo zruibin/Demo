@@ -10,7 +10,7 @@
 
 #include "LoggerAdapterInterface.h"
 
-class LoggerAdapterImpl: public LoggerAdapterInterface
+class LoggerAdapterImpl : public LoggerAdapterInterface
 {
 public:
     LoggerAdapterImpl() = default;

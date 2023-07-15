@@ -14,7 +14,7 @@
 #include "LoggerImpl.h"
 #include "LoggerAdapterImpl.hpp"
 
-class LoggerBuilder: public BaseServiceBuilder
+class LoggerBuilder : public BaseServiceBuilder
 {
 public:
     LoggerBuilder() = default;

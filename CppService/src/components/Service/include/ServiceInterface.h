@@ -11,7 +11,7 @@
 #include <memory>
 #include "BaseService.h"
 
-class ServiceInterface: public BaseService
+class ServiceInterface : public BaseService
 {
 public:
     virtual ~ServiceInterface() = default;

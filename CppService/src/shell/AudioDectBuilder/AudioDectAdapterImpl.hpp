@@ -10,7 +10,7 @@
 
 #include "AudioDectAdapterInterface.h"
 
-class AudioDectAdapterImpl: public AudioDectAdapterInterface
+class AudioDectAdapterImpl : public AudioDectAdapterInterface
 {
 public:
     AudioDectAdapterImpl() = default;

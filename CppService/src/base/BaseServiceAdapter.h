@@ -12,7 +12,7 @@
 
 class BaseEngine;
 
-class BaseServiceAdapter: public std::enable_shared_from_this<BaseServiceAdapter>
+class BaseServiceAdapter : public std::enable_shared_from_this<BaseServiceAdapter>
 {
 public:
     virtual ~BaseServiceAdapter() = default;

@@ -10,7 +10,7 @@
 
 #include "BaseServiceAdapter.h"
 
-class LoggerAdapterInterface: public BaseServiceAdapter
+class LoggerAdapterInterface : public BaseServiceAdapter
 {
 public:
     virtual ~LoggerAdapterInterface() = default;

@@ -14,7 +14,7 @@
 #include "AudioDectImpl.h"
 #include "AudioDectAdapterImpl.hpp"
 
-class AudioDectBuilder: public BaseServiceBuilder
+class AudioDectBuilder : public BaseServiceBuilder
 {
 public:
     AudioDectBuilder() = default;

@@ -11,7 +11,7 @@
 #include <memory>
 #include "BaseService.h"
 
-class AudioDectInterface: public BaseService
+class AudioDectInterface : public BaseService
 {
 public:
     virtual ~AudioDectInterface() = default;

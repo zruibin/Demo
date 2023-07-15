@@ -29,7 +29,7 @@ enum LoggingSeverity {
 
 using LoggerHandler = std::function<void(LoggingSeverity, const char*)>;
 
-class LoggerInterface: public BaseService
+class LoggerInterface : public BaseService
 {
 public:
     virtual ~LoggerInterface() = default;

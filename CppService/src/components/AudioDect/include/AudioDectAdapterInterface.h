@@ -10,7 +10,7 @@
 
 #include "BaseServiceAdapter.h"
 
-class AudioDectAdapterInterface: public BaseServiceAdapter
+class AudioDectAdapterInterface : public BaseServiceAdapter
 {
 public:
     virtual ~AudioDectAdapterInterface() = default;

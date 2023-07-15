@@ -81,7 +81,7 @@ def createComponent(name):
 #include <memory>
 #include "BaseService.h"
 
-class ${name}: public BaseService
+class ${name} : public BaseService
 {
 public:
     virtual ~${name}() = default;
@@ -115,7 +115,7 @@ public:
 
 #include "BaseServiceAdapter.h"
 
-class ${name}: public BaseServiceAdapter
+class ${name} : public BaseServiceAdapter
 {
 public:
     virtual ~${name}() = default;
@@ -191,16 +191,15 @@ private:
  */
 
 #include "${name}.h"
-#include <iostream>
 #include <memory>
 #include "BaseEngine.h"
 
 void ${name}::Init() {
-    std::cout << "${name}::Init." << std::endl;
+
 }
 
 void ${name}::Destory() {
-    std::cout << "${name}::Destory." << std::endl;
+    
 }
 
 void ${name}::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter) {
@@ -248,7 +247,7 @@ std::string ${name}::Description() {
 
 #include "${adapterInterfaceName}.h"
 
-class ${name}: public ${adapterInterfaceName}
+class ${name} : public ${adapterInterfaceName}
 {
 public:
     ${name}() = default;
@@ -288,7 +287,7 @@ public:
 #include "${implName}.h"
 #include "${adapterName}.hpp"
 
-class ${name}: public BaseServiceBuilder
+class ${name} : public BaseServiceBuilder
 {
 public:
     ${name}() = default;
