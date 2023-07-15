@@ -15,10 +15,10 @@
 #include <functional>
 #include "BaseService.h"
 
-#define Log(severity) LogMessage(__FILE__, __LINE__, severity)
-#define LogOrigin(severity) LogMessage(__FILE__, __LINE__, severity, true)
+#define Log(severity) LogMessage(__FILE__, __LINE__, LoggingSeverity::severity)
+#define LogOrigin(severity) LogMessage(__FILE__, __LINE__, LoggingSeverity::severity, true)
 
-enum LoggingSeverity {
+enum class LoggingSeverity {
     NONE,
     VERBOSE,
     DEBUG,

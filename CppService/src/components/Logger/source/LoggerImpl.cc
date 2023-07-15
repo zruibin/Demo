@@ -39,7 +39,7 @@ void LoggerImpl::InjectLoggerHanlder(LoggerHandler handler) {
     }
 }
 
-static LoggingSeverity minWriteLevel = INFO;
+static LoggingSeverity minWriteLevel = LoggingSeverity::INFO;
 
 LoggerManager& LoggerManager::GetInstance() {
     static LoggerManager *instance = nullptr;
@@ -70,15 +70,15 @@ void LoggerManager::Write(LoggingSeverity severity, const char* string) {
 
 static const char* loggingSeverityCover(LoggingSeverity severity) {
     static const char* severityList[] = {
-        [VERBOSE] = "[V]",
-        [INFO] = "[I]",
-        [DEBUG] = "[D]",
-        [WARNING] = "[W]",
-        [ERROR] = "[E]",
-        [NONE] = "[N]",
+        [static_cast<int>(LoggingSeverity::VERBOSE)] = "[V]",
+        [static_cast<int>(LoggingSeverity::INFO)] = "[I]",
+        [static_cast<int>(LoggingSeverity::DEBUG)] = "[D]",
+        [static_cast<int>(LoggingSeverity::WARNING)] = "[W]",
+        [static_cast<int>(LoggingSeverity::ERROR)] = "[E]",
+        [static_cast<int>(LoggingSeverity::NONE)] = "[N]",
     };
     
-    return severityList[severity];
+    return severityList[static_cast<int>(severity)];
 }
 
 LogMessage::LogMessage(const char* file, int line, LoggingSeverity severity, bool origin)

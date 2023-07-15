@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     
     std::shared_ptr<LoggerInterface> loggerService = engine->GetService<LoggerInterface>(Protocol(LoggerInterface));
     if (loggerService != nullptr) {
-        loggerService->SetMinSeverity(VERBOSE);
+        loggerService->SetMinSeverity(LoggingSeverity::VERBOSE);
         loggerService->InjectLoggerHanlder([](LoggingSeverity, const char* string) {
             std::cout << string;
         });

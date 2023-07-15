@@ -16,7 +16,7 @@ add_rules("mode.debug", "mode.release")
 target("CppService")
     
     set_kind("binary")
-    add_defines("DEBUG")
+    -- add_defines("DEBUG")
 
     add_cxxflags("-stdlib=libc++", {tools = "clang"})
     set_languages("c99", "cxx17")

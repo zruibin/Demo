@@ -11,7 +11,7 @@ target("Service")
     set_kind("static")
 
     if is_mode("debug") then
-        add_defines("DEBUG")
+        -- add_defines("DEBUG")
     elseif is_mode("release") then
         set_symbols("hidden")
         set_optimize("fastest")
