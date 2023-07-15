@@ -3,6 +3,7 @@
 #include <memory>
 #include <iostream>
 #include "Engine.h"
+#include "LoggerInterface.h"
 #include "ServiceInterface.h"
 #include "AudioDectInterface.h"
 
@@ -12,6 +13,15 @@ int main(int argc, char** argv)
     
     std::shared_ptr<Engine> engine = std::make_shared<Engine>();
     engine->Init();
+    
+    std::shared_ptr<LoggerInterface> loggerService = engine->GetService<LoggerInterface>(Protocol(LoggerInterface));
+    if (loggerService != nullptr) {
+        loggerService->SetMinSeverity(VERBOSE);
+        loggerService->InjectLoggerHanlder([](LoggingSeverity, const char* string) {
+            std::cout << string;
+        });
+        std::cout << loggerService->Description() << std::endl;
+    }
     
     std::shared_ptr<ServiceInterface> service = engine->GetService<ServiceInterface>(Protocol(ServiceInterface));
     if (service != nullptr) {

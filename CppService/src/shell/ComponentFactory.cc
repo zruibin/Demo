@@ -7,6 +7,7 @@
 
 #include "ComponentFactory.h"
 #include "ServiceBuilder.hpp"
+#include "LoggerBuilder.hpp"
 #include "AudioDectBuilder.hpp"
 
 #define ADD_SERVICE_BUILDER(_builder_) { \
@@ -16,5 +17,6 @@
 
 void ComponentFactory::ConstructBuilders() {
     ADD_SERVICE_BUILDER(ServiceBuilder)
+    ADD_SERVICE_BUILDER(LoggerBuilder)
     ADD_SERVICE_BUILDER(AudioDectBuilder)
 }

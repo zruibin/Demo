@@ -10,13 +10,14 @@
 #include <memory>
 #include "BaseEngine.h"
 #include "ServiceInterface.h"
+#include "LoggerInterface.h"
 
 void AudioDectImpl::Init() {
-    std::cout << "AudioDectImpl::Init." << std::endl;
+    Log(DEBUG) << "AudioDectImpl::Init.";
 }
 
 void AudioDectImpl::Destory() {
-    std::cout << "AudioDectImpl::Destory." << std::endl;
+    Log(DEBUG) << "AudioDectImpl::Destory.";
 }
 
 void AudioDectImpl::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter) {
@@ -27,9 +28,9 @@ void AudioDectImpl::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter
 }
 
 std::string AudioDectImpl::Description() {
-    std::cout << "AudioDectImpl::Description." << std::endl;
+    Log(DEBUG) << "AudioDectImpl::Description.";
     
-    std::cout << "**********************************************************" << std::endl;
+    Log(DEBUG) << "**********************************************************";
     {
         std::shared_ptr<ServiceInterface> tmpService = adapter_->GetEngine()->CreateService<ServiceInterface>(Protocol(ServiceInterface));
         if (tmpService != nullptr) {
@@ -38,10 +39,10 @@ std::string AudioDectImpl::Description() {
             tmpService->Test();
             tmpService->Destory();
         }}
-    std::cout << "**********************************************************" << std::endl;
+    Log(DEBUG) << "**********************************************************";
     
     auto service = adapter_->GetEngine()->GetService<ServiceInterface>(Protocol(ServiceInterface));
-    std::cout << "AudioDectImpl::Description->" << service->GetTestString() << std::endl;
+    Log(DEBUG) << "AudioDectImpl::Description->" << service->GetTestString();
     
     return "AudioDectImpl";
 }

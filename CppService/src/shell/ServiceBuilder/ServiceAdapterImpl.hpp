@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include "ServiceAdapterInterface.h"
+#include "LoggerInterface.h"
 
 class ServiceAdapterImpl: public ServiceAdapterInterface
 {
@@ -19,7 +20,7 @@ public:
 
 public:
     void print() override {
-        std::cout << "ServiceAdapterImpl::print" << std::endl;
+        Log(DEBUG) << "ServiceAdapterImpl::print";
     };
 };
 

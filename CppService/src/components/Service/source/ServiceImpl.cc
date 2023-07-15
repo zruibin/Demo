@@ -10,21 +10,22 @@
 #include <iostream>
 #include <memory>
 #include "BaseEngine.h"
+#include "LoggerInterface.h"
 
 ServiceImpl::ServiceImpl() {
-    std::cout << "ServiceImpl::ServiceImpl: " << this << std::endl;
+    Log(DEBUG) << "ServiceImpl::ServiceImpl: " << this;
 }
 
 ServiceImpl::~ServiceImpl() {
-    std::cout << "ServiceImpl::~ServiceImpl: " << this << std::endl;
+    Log(DEBUG) << "ServiceImpl::~ServiceImpl: " << this;
 }
 
 void ServiceImpl::Init() {
-    std::cout << "ServiceImpl::Init." << std::endl;
+    Log(DEBUG) << "ServiceImpl::Init.";
 }
 
 void ServiceImpl::Destory() {
-    std::cout << "ServiceImpl::Destory." << std::endl;
+    Log(DEBUG)  << "ServiceImpl::Destory.";
 }
 
 void ServiceImpl::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter) {
@@ -35,13 +36,13 @@ void ServiceImpl::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter) 
 }
 
 std::string ServiceImpl::Description() {
-    std::cout << "ServiceImpl::Description." << std::endl;
+    Log(DEBUG) << "ServiceImpl::Description.";
     adapter_->print();
     return "ServiceImpl";
 }
 
 void ServiceImpl::Test() {
-    std::cout << "ServiceImpl::test." << std::endl;
+    Log(DEBUG) << "ServiceImpl::test.";
 }
 
 std::string ServiceImpl::GetTestString() {
