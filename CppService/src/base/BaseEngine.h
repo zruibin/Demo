@@ -15,7 +15,7 @@
 
 class BaseService;
 class BaseServiceBuilder;
-class BaseComponentFactory;
+class BaseServiceFactory;
 
 class BaseEngine : public std::enable_shared_from_this<BaseEngine>
 {
@@ -55,7 +55,7 @@ public:
 protected:
     virtual std::shared_ptr<BaseService> GetServiceByName(const std::string&) = 0;
     virtual std::shared_ptr<BaseService> CreateServiceByName(const std::string&) = 0;
-    std::shared_ptr<BaseComponentFactory> componentFactory_;
+    std::shared_ptr<BaseServiceFactory> componentFactory_;
 };
 
 #endif /* !BASEENGINE_H */

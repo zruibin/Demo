@@ -1,19 +1,19 @@
 /*
- * BaseComponentFactory.h
+ * BaseServiceFactory.h
  *
  * Created by Ruibin.Chow on 2023/07/13.
  * Copyright (c) 2023年 Ruibin.Chow All rights reserved.
  */
 
-#ifndef BASECOMPONENTFACTORY_H
-#define BASECOMPONENTFACTORY_H
+#ifndef BASESERVICEFACTORY_H
+#define BASESERVICEFACTORY_H
 
 class BaseServiceBuilder;
 
-class BaseComponentFactory
+class BaseServiceFactory
 {
 public:
-    virtual ~BaseComponentFactory() = default;
+    virtual ~BaseServiceFactory() = default;
     
 public:
     virtual void ConstructBuilders() = 0;
@@ -21,4 +21,4 @@ public:
     virtual void UpdateBuilder(std::shared_ptr<BaseServiceBuilder>) = 0;
 };
 
-#endif /* !BASECOMPONENTFACTORY_H */
+#endif /* !BASESERVICEFACTORY_H */

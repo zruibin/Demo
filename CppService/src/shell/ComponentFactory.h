@@ -10,10 +10,10 @@
 
 #include <memory>
 #include <unordered_map>
-#include "BaseComponentFactory.h"
+#include "BaseServiceFactory.h"
 #include "BaseServiceBuilder.h"
 
-class ComponentFactory : public BaseComponentFactory
+class ComponentFactory : public BaseServiceFactory
 {
 public:
     explicit ComponentFactory() {
