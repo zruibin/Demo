@@ -349,13 +349,13 @@ def updateComponentFactory():
     builders = []
     for path in existComponents:
         headers.append('#include "' + path.name + '.hpp"')
-        builders.append("    ADD_SERVICE_BUILDER(" + path.name + ")")
+        builders.append("    AddBuilder<" + path.name + ">();")
     headersString = "\n".join(headers)
     buildersString = "\n".join(builders)
     # log(headersString)
     # log(buildersString)
 
-    factoryContent = r"""/*
+    factoryContent = """/*
  * ${factoryName}
  *
  * Created by Ruibin.Chow on 2023/07/12.
@@ -364,11 +364,6 @@ def updateComponentFactory():
 
 #include "ComponentFactory.h"
 ${headersString}
-
-#define ADD_SERVICE_BUILDER(_builder_) { \
-    std::shared_ptr<BaseServiceBuilder> builder = std::make_shared<_builder_>(); \
-    builderMap_->emplace(builder->GetServiceName(), builder); \
-}
 
 void ComponentFactory::ConstructBuilders() {
 ${buildersString}

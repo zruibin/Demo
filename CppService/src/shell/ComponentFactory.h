@@ -47,6 +47,13 @@ public:
     };
     
 private:
+    template <class T, class = std::enable_if_t<std::is_base_of_v<BaseServiceBuilder, T>>>
+    void AddBuilder() {
+        std::shared_ptr<BaseServiceBuilder> builder = std::make_shared<T>();
+        builderMap_->emplace(builder->GetServiceName(), builder);
+    }
+    
+private:
     using BuilderMap = std::shared_ptr<std::unordered_map<std::string, std::shared_ptr<BaseServiceBuilder>>>;
     BuilderMap builderMap_;
 };

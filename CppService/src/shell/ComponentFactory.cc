@@ -10,13 +10,8 @@
 #include "LoggerBuilder.hpp"
 #include "AudioDectBuilder.hpp"
 
-#define ADD_SERVICE_BUILDER(_builder_) { \
-    std::shared_ptr<BaseServiceBuilder> builder = std::make_shared<_builder_>(); \
-    builderMap_->emplace(builder->GetServiceName(), builder); \
-}
-
 void ComponentFactory::ConstructBuilders() {
-    ADD_SERVICE_BUILDER(ServiceBuilder)
-    ADD_SERVICE_BUILDER(LoggerBuilder)
-    ADD_SERVICE_BUILDER(AudioDectBuilder)
+    AddBuilder<ServiceBuilder>();
+    AddBuilder<LoggerBuilder>();
+    AddBuilder<AudioDectBuilder>();
 }
