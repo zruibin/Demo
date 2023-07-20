@@ -43,7 +43,7 @@ target("Service")
     add_headerfiles("shell/**.hpp", {install = false})
     add_headerfiles("shell/**.h", {install = false})
 
-
-    add_headerfiles("Engine.h", {install = true})
-    add_files("Engine.cc")
+    
+    add_headerfiles("ServiceEngine.h", {install = true})
+    add_files("ServiceEngine.cc")
 

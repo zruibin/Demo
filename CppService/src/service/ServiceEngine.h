@@ -1,21 +1,21 @@
 /*
- * Engine.h
+ * ServiceEngine.h
  *
  * Created by Ruibin.Chow on 2023/07/11.
  * Copyright (c) 2023年 Ruibin.Chow All rights reserved.
  */
 
-#ifndef ENGINE_H
-#define ENGINE_H
+#ifndef SERVICEENGINE_H
+#define SERVICEENGINE_H
 
 #include <unordered_map>
 #include "BaseEngine.h"
 
-class Engine : public BaseEngine
+class ServiceEngine : public BaseEngine
 {
 public:
-    Engine();
-    virtual ~Engine();
+    ServiceEngine();
+    virtual ~ServiceEngine();
 
 protected:
     std::shared_ptr<BaseService> GetServiceByName(const std::string&) override;
@@ -32,4 +32,4 @@ private:
 };
 
 
-#endif /* !ENGINE_H */
+#endif /* !SERVICEENGINE_H */

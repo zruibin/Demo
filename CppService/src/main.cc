@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <iostream>
-#include "Engine.h"
+#include "ServiceEngine.h"
 #include "LoggerInterface.h"
 #include "ServiceInterface.h"
 #include "AudioDectInterface.h"
@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
     printf("hello world!\n");
     
-    std::shared_ptr<Engine> engine = std::make_shared<Engine>();
+    std::shared_ptr<BaseEngine> engine = std::make_shared<ServiceEngine>();
     engine->Init();
     
     std::shared_ptr<LoggerInterface> loggerService = engine->GetService<LoggerInterface>(Protocol(LoggerInterface));

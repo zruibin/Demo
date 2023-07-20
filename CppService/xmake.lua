@@ -21,9 +21,10 @@ target("CppService")
     add_cxxflags("-stdlib=libc++", {tools = "clang"})
     set_languages("c99", "cxx17")
 
-    add_includedirs(os.dirs(path.join(os.scriptdir(), "src/components/**")))
-    add_includedirs(os.dirs(path.join(os.scriptdir(), "src/shell/**")))
-    includes("src/components.lua")
+    add_includedirs("src/service")
+    add_includedirs(os.dirs(path.join(os.scriptdir(), "src/service/components/**")))
+    add_includedirs(os.dirs(path.join(os.scriptdir(), "src/service/shell/**")))
+    includes("src/service/components.lua")
     add_files("src/main.cc")
     add_deps("Service")
 

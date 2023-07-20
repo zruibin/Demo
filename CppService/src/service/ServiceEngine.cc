@@ -1,26 +1,26 @@
 /*
  *
- * Engine.cc
+ * ServiceEngine.cc
  *
  * Created by Ruibin.Chow on 2023/07/11.
  * Copyright (c) 2023年 Ruibin.Chow All rights reserved.
  */
 
-#include "Engine.h"
+#include "ServiceEngine.h"
 #include "BaseService.h"
 #include "ComponentFactory.h"
 
-Engine::Engine() {
+ServiceEngine::ServiceEngine() {
     serviceMap_ = std::make_shared<std::unordered_map<std::string, 
                                        std::shared_ptr<BaseService>>>();
     componentFactory_ =  std::make_shared<ComponentFactory>();
 }
 
-Engine::~Engine() {
+ServiceEngine::~ServiceEngine() {
     
 }
 
-std::shared_ptr<BaseService> Engine::GetServiceByName(const std::string& name) {
+std::shared_ptr<BaseService> ServiceEngine::GetServiceByName(const std::string& name) {
     if (name.length() == 0) {
         return nullptr;
     }
@@ -40,7 +40,7 @@ std::shared_ptr<BaseService> Engine::GetServiceByName(const std::string& name) {
     return nullptr;
 }
 
-std::shared_ptr<BaseService> Engine::CreateServiceByName(const std::string& name) {
+std::shared_ptr<BaseService> ServiceEngine::CreateServiceByName(const std::string& name) {
     if (name.length() == 0) {
         return nullptr;
     }
@@ -53,11 +53,11 @@ std::shared_ptr<BaseService> Engine::CreateServiceByName(const std::string& name
     return nullptr;
 }
 
-void Engine::Init(void) {
+void ServiceEngine::Init(void) {
     componentFactory_->ConstructBuilders();
 }
 
-void Engine::Destory(void) {
+void ServiceEngine::Destory(void) {
     if (serviceMap_ != nullptr) {
         for (auto& [key, service] : *serviceMap_) {
             service->Destory();
@@ -67,7 +67,7 @@ void Engine::Destory(void) {
     }
 }
 
-void Engine::UpdateService(std::shared_ptr<BaseServiceBuilder> builder) {
+void ServiceEngine::UpdateService(std::shared_ptr<BaseServiceBuilder> builder) {
     if (builder != nullptr) {
         componentFactory_->UpdateBuilder(builder);
     }

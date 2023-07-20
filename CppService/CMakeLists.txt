@@ -3,7 +3,6 @@ cmake_minimum_required (VERSION 3.0)
 # projectname is the same as the main-executable
 project(CppService)
 set(TARGET "CppService")
-set(LIB_NAME "Service")
 
 
 option(CMAKE_BUILD_TYPE "Build Type." Release)
@@ -72,6 +71,16 @@ function(sourceGroup prefix)
     endforeach()
 endfunction()
 
+macro(SUBDIRLIST result curdir)
+    file(GLOB children RELATIVE ${curdir} "${curdir}/*")
+    set(dirlist "")
+    foreach(child ${children})
+    if(IS_DIRECTORY ${curdir}/${child})
+        list(APPEND dirlist ${child})
+    endif()
+    endforeach()
+    set(${result} ${dirlist})
+endmacro()
 
 #-------------------------------------------------------------------------------
 
@@ -105,7 +114,7 @@ message(WARNING "Operation System: ${CMAKE_SYSTEM}")
 
 #-------------------------------------------------------------------------------
 
-include("${CMAKE_SOURCE_DIR}/src/components.cmake")
+include("${CMAKE_SOURCE_DIR}/src/service/components.cmake")
 
 # 相当于g++命令的-L选项的作用
 link_directories(
@@ -125,20 +134,8 @@ source_group(Resources FILES ${RESOURCES})
 
 #-------------------------------------------------------------------------------
 
-set(OUTPUT_DIR "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}/Lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR}/Lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}/Bin)
-
-
 add_executable(${TARGET} ${EXECUTE_SOURCES} ${RESOURCES})
-
-set(TARGET_LIB "${LIB_NAME}")
-add_library(${TARGET_LIB} STATIC ${HEADERS} ${SOURCES})
-target_link_libraries(${TARGET} PRIVATE ${TARGET_LIB})
-
-
-
+target_link_libraries(${TARGET} PRIVATE ${EXPORT_LIBS})
 
 #-------------------------------------------------------------------------------
 
@@ -152,7 +149,7 @@ endif()
 message(STATUS "Project will be installed to ${CMAKE_INSTALL_PREFIX}")
 
 install(
-    TARGETS ${TARGET} ${TARGET_LIB}
+    TARGETS ${TARGET} ${EXPORT_LIBS}
     RUNTIME DESTINATION bin 
     LIBRARY DESTINATION lib
     BUNDLE DESTINATION bundle
@@ -160,8 +157,15 @@ install(
 
 install(FILES ${EXPORT_HEADS} DESTINATION include)
 
+#-------------------------------------------------------------------------------
 
-
-
-
+if(CMAKE_GENERATOR MATCHES "Unix Makefiles")
+    set(RUN_NAME "run")
+    message(STATUS "CMAKE_GENERATOR: ${CMAKE_GENERATOR}, and generate target(${RUN_NAME})")
+    add_custom_target(${RUN_NAME}
+        COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TARGET}
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        COMMENT "Intermediate Run target: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+    )
+endif()
 
