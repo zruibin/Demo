@@ -58,6 +58,16 @@ int main(int argc, char** argv)
         std::cout << testCase->Description() << std::endl;
     }
     
+    std::cout << "----------------------------------------------------------" << std::endl;
+    {
+        std::shared_ptr<TestCaseInterface> tmpCase = caseEngine->CreateCase<TestCaseInterface>(Protocol(TestCaseInterface));
+        if (tmpCase != nullptr) {
+            tmpCase->Init();
+            tmpCase->Description();
+            tmpCase->Destory();
+        }
+    }
+    std::cout << "----------------------------------------------------------" << std::endl;
     
     caseEngine->Destory();
     engine->Destory();

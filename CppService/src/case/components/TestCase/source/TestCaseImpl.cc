@@ -13,11 +13,11 @@
 #include "ServiceInterface.h"
 
 void TestCaseImpl::Init() {
-    Log(DEBUG) << " TestCaseImpl::Init.";
+    Log(DEBUG) << " TestCaseImpl::Init: " << this;
 }
 
 void TestCaseImpl::Destory() {
-    Log(DEBUG) << " TestCaseImpl::Destory.";
+    Log(DEBUG) << " TestCaseImpl::Destory: " << this;
 }
 
 void TestCaseImpl::SetAdapter(const std::shared_ptr<BaseCaseAdapter> adapter) {
