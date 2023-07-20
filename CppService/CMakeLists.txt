@@ -115,6 +115,7 @@ message(WARNING "Operation System: ${CMAKE_SYSTEM}")
 #-------------------------------------------------------------------------------
 
 include("${CMAKE_SOURCE_DIR}/src/service/components.cmake")
+include("${CMAKE_SOURCE_DIR}/src/case/cases.cmake")
 
 # 相当于g++命令的-L选项的作用
 link_directories(
@@ -163,7 +164,7 @@ if(CMAKE_GENERATOR MATCHES "Unix Makefiles")
     set(RUN_NAME "run")
     message(STATUS "CMAKE_GENERATOR: ${CMAKE_GENERATOR}, and generate target(${RUN_NAME})")
     add_custom_target(${RUN_NAME}
-        COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TARGET}
+        COMMAND ./${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TARGET}
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMMENT "Intermediate Run target: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
     )

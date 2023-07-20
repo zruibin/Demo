@@ -7,7 +7,7 @@
 --
 
 
-target("Service")
+target("Case")
     set_kind("static")
 
     if is_mode("debug") then
@@ -45,6 +45,7 @@ target("Service")
     add_headerfiles("shell/**.h", {install = false})
 
     
-    add_headerfiles("ServiceEngine.h", {install = true})
-    add_files("ServiceEngine.cc")
+    add_headerfiles("CaseEngine.h", {install = true})
+    add_files("CaseEngine.cc")
 
+    add_deps("Service")

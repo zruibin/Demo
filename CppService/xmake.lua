@@ -22,11 +22,13 @@ target("CppService")
     set_languages("c99", "cxx17")
 
     add_includedirs("src/service")
-    add_includedirs(os.dirs(path.join(os.scriptdir(), "src/service/components/**")))
-    add_includedirs(os.dirs(path.join(os.scriptdir(), "src/service/shell/**")))
     includes("src/service/components.lua")
+
+    add_includedirs("src/case")
+    includes("src/case/cases.lua")
+
     add_files("src/main.cc")
-    add_deps("Service")
+    add_deps("Case")
 
 
     -- on_load -> after_load -> on_config -> before_build -> on_build -> after_build

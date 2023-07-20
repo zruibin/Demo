@@ -6,6 +6,8 @@
 #include "LoggerInterface.h"
 #include "ServiceInterface.h"
 #include "AudioDectInterface.h"
+#include "CaseEngine.h"
+#include "TestCaseInterface.h"
 
 int main(int argc, char** argv)
 {
@@ -13,6 +15,10 @@ int main(int argc, char** argv)
     
     std::shared_ptr<BaseServiceEngine> engine = std::make_shared<ServiceEngine>();
     engine->Init();
+    
+    std::shared_ptr<BaseCaseEngine> caseEngine = std::make_shared<CaseEngine>();
+    caseEngine->SetServiceEngine(engine);
+    caseEngine->Init();
     
     std::shared_ptr<LoggerInterface> loggerService = engine->GetService<LoggerInterface>(Protocol(LoggerInterface));
     if (loggerService != nullptr) {
@@ -46,6 +52,14 @@ int main(int argc, char** argv)
     }
     std::cout << "----------------------------------------------------------" << std::endl;
     
+    
+    auto testCase = caseEngine->GetCase<TestCaseInterface>(Protocol(TestCaseInterface));
+    if (testCase != nullptr) {
+        std::cout << testCase->Description() << std::endl;
+    }
+    
+    
+    caseEngine->Destory();
     engine->Destory();
     return 0;
 }
