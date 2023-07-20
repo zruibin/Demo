@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
     printf("hello world!\n");
     
-    std::shared_ptr<BaseEngine> engine = std::make_shared<ServiceEngine>();
+    std::shared_ptr<BaseServiceEngine> engine = std::make_shared<ServiceEngine>();
     engine->Init();
     
     std::shared_ptr<LoggerInterface> loggerService = engine->GetService<LoggerInterface>(Protocol(LoggerInterface));

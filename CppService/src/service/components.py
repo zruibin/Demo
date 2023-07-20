@@ -192,7 +192,7 @@ private:
 
 #include "${name}.h"
 #include <memory>
-#include "BaseEngine.h"
+#include "BaseServiceEngine.h"
 
 void ${name}::Init() {
 
@@ -282,7 +282,7 @@ public:
 #define ${upperName}_H
 
 #include "BaseServiceBuilder.h"
-#include "BaseEngine.h"
+#include "BaseServiceEngine.h"
 #include "BaseService.h"
 #include "${implName}.h"
 #include "${adapterName}.hpp"

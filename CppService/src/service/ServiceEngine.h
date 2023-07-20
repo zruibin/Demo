@@ -9,9 +9,9 @@
 #define SERVICEENGINE_H
 
 #include <unordered_map>
-#include "BaseEngine.h"
+#include "BaseServiceEngine.h"
 
-class ServiceEngine : public BaseEngine
+class ServiceEngine : public BaseServiceEngine
 {
 public:
     ServiceEngine();

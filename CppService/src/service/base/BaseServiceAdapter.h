@@ -10,7 +10,7 @@
 
 #include <memory>
 
-class BaseEngine;
+class BaseServiceEngine;
 
 class BaseServiceAdapter : public std::enable_shared_from_this<BaseServiceAdapter>
 {
@@ -18,14 +18,14 @@ public:
     virtual ~BaseServiceAdapter() = default;
 
 public:
-    virtual std::shared_ptr<BaseEngine> GetEngine() {
+    virtual std::shared_ptr<BaseServiceEngine> GetEngine() {
         if (engine_.expired()) {
             return nullptr;
         }
         return engine_.lock();
     }
     
-    virtual void SetEngine(std::shared_ptr<BaseEngine> engine) {
+    virtual void SetEngine(std::shared_ptr<BaseServiceEngine> engine) {
         engine_ = engine;
     }
     
@@ -35,7 +35,7 @@ public:
     }
 
 protected:
-    std::weak_ptr<BaseEngine> engine_;
+    std::weak_ptr<BaseServiceEngine> engine_;
 };
 
 #endif /* !BASESERVICEADAPTER_H */

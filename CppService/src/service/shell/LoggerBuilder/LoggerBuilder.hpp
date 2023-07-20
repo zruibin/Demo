@@ -9,7 +9,7 @@
 #define LOGGERBUILDER_H
 
 #include "BaseServiceBuilder.h"
-#include "BaseEngine.h"
+#include "BaseServiceEngine.h"
 #include "BaseService.h"
 #include "LoggerImpl.h"
 #include "LoggerAdapterImpl.hpp"

@@ -9,7 +9,7 @@
 #define SERVICEBUILDER_H
 
 #include "BaseServiceBuilder.h"
-#include "BaseEngine.h"
+#include "BaseServiceEngine.h"
 #include "BaseService.h"
 #include "ServiceImpl.h"
 #include "ServiceAdapterImpl.hpp"

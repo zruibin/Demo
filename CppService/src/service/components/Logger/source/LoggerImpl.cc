@@ -8,7 +8,7 @@
 #include "LoggerImpl.h"
 #include <iostream>
 #include <memory>
-#include "BaseEngine.h"
+#include "BaseServiceEngine.h"
 
 void LoggerImpl::Init() {
     Log(DEBUG) << "LoggerImpl::Init.";

@@ -1,12 +1,12 @@
 /*
- * BaseEngine.h
+ * BaseServiceEngine.h
  *
  * Created by Ruibin.Chow on 2023/07/10.
  * Copyright (c) 2023年 Ruibin.Chow All rights reserved.
  */
 
-#ifndef BASEENGINE_H
-#define BASEENGINE_H
+#ifndef BASESERVICEENGINE_H
+#define BASESERVICEENGINE_H
 
 #include <string>
 #include <memory>
@@ -17,10 +17,10 @@ class BaseService;
 class BaseServiceBuilder;
 class BaseServiceFactory;
 
-class BaseEngine : public std::enable_shared_from_this<BaseEngine>
+class BaseServiceEngine : public std::enable_shared_from_this<BaseServiceEngine>
 {
 public:
-    virtual ~BaseEngine() = default;
+    virtual ~BaseServiceEngine() = default;
 
 public:
     /**
@@ -58,4 +58,4 @@ protected:
     std::shared_ptr<BaseServiceFactory> componentFactory_;
 };
 
-#endif /* !BASEENGINE_H */
+#endif /* !BASESERVICEENGINE_H */
