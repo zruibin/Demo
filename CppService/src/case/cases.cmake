@@ -3,7 +3,8 @@ set(CASES_LIB "Case")
 
 # ------------------------------------------------------------------------------
 
-set(CASES_ROOT_PATH "${CMAKE_SOURCE_DIR}/src/case")
+set(CASES_ROOT "src/case")
+set(CASES_ROOT_PATH "${CMAKE_SOURCE_DIR}/${CASES_ROOT}")
 
 set(BASE_PATH "${CASES_ROOT_PATH}/base")
 set(CASES_PATH "${CASES_ROOT_PATH}/components")
@@ -69,7 +70,7 @@ list(APPEND CASES_RESOURCES "${CASES_ROOT_PATH}/cases.cmake")
 list(APPEND CASES_RESOURCES "${CASES_ROOT_PATH}/cases.py")
 list(APPEND CASES_RESOURCES "${CASES_ROOT_PATH}/cases.lua")
 
-sourceGroup("src/" 
+sourceGroup(${CASES_ROOT}
     ${CASES_HEADERS} 
     ${CASES_SOURCES} 
     ${CASES_RESOURCES}

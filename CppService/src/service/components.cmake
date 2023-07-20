@@ -3,7 +3,8 @@ set(COMPONENTS_LIB "Service")
 
 # ------------------------------------------------------------------------------
 
-set(COMPONENTS_ROOT_PATH "${CMAKE_SOURCE_DIR}/src/service")
+set(COMPONENTS_ROOT "src/service")
+set(COMPONENTS_ROOT_PATH "${CMAKE_SOURCE_DIR}/${COMPONENTS_ROOT}")
 
 set(BASE_PATH "${COMPONENTS_ROOT_PATH}/base")
 set(COMPONENTS_PATH "${COMPONENTS_ROOT_PATH}/components")
@@ -70,7 +71,7 @@ list(APPEND COMPONENTS_RESOURCES "${COMPONENTS_ROOT_PATH}/components.cmake")
 list(APPEND COMPONENTS_RESOURCES "${COMPONENTS_ROOT_PATH}/components.py")
 list(APPEND COMPONENTS_RESOURCES "${COMPONENTS_ROOT_PATH}/components.lua")
 
-sourceGroup("src/" 
+sourceGroup(${COMPONENTS_ROOT}
     ${COMPONENTS_HEADERS} 
     ${COMPONENTS_SOURCES} 
     ${COMPONENTS_RESOURCES}
