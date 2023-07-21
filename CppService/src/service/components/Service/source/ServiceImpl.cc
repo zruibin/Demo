@@ -35,7 +35,7 @@ void ServiceImpl::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter) 
     adapter_ = adapter->GetCastAdapter<ServiceAdapterInterface>();
 }
 
-std::string ServiceImpl::Description() {
+const char* ServiceImpl::Description() {
     Log(DEBUG) << "ServiceImpl::Description.";
     adapter_->print();
     return "ServiceImpl";

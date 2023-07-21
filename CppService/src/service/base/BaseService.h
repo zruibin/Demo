@@ -8,7 +8,6 @@
 #ifndef BASESERVICE_H
 #define BASESERVICE_H
 
-#include <string>
 #include "BaseServiceAdapter.h"
 
 class BaseService : public std::enable_shared_from_this<BaseService>
@@ -22,7 +21,7 @@ public:
     virtual void Destory(void) = 0;
     
 public:
-    virtual std::string Description() { return "";};
+    virtual const char* Description() { return "";};
 };
 
 

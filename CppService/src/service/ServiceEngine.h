@@ -18,8 +18,8 @@ public:
     virtual ~ServiceEngine();
 
 protected:
-    std::shared_ptr<BaseService> GetServiceByName(const std::string&) override;
-    std::shared_ptr<BaseService> CreateServiceByName(const std::string&) override;
+    std::shared_ptr<BaseService> GetServiceByName(const char*) override;
+    std::shared_ptr<BaseService> CreateServiceByName(const char*) override;
 
 public:
     void Init(void) override;
@@ -27,7 +27,7 @@ public:
     void UpdateService(std::shared_ptr<BaseServiceBuilder>) override;
 
 private:
-    std::shared_ptr<std::unordered_map<std::string, 
+    std::shared_ptr<std::unordered_map<const char*, 
                                        std::shared_ptr<BaseService>>> serviceMap_;
 };
 

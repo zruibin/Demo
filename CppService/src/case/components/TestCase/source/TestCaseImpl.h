@@ -21,7 +21,7 @@ public:
     void Init() override;
     void Destory() override;
     void SetAdapter(const std::shared_ptr<BaseCaseAdapter>) override;
-    std::string Description() override;
+    const char* Description() override;
     
 private:
     std::shared_ptr<TestCaseAdapterInterface> adapter_;

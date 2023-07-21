@@ -21,7 +21,7 @@ public:
     void Init() override;
     void Destory() override;
     void SetAdapter(const std::shared_ptr<BaseServiceAdapter>) override;
-    std::string Description() override;
+    const char* Description() override;
     void SetMinSeverity(LoggingSeverity) override;
     void InjectLoggerHanlder(LoggerHandler) override;
     

@@ -8,7 +8,6 @@
 #ifndef BASEBUILDER_H
 #define BASEBUILDER_H
 
-#include <string>
 #include <memory>
 
 class BaseService;
@@ -21,8 +20,8 @@ public:
     
 public:
     virtual std::shared_ptr<BaseService> BuildService() = 0;
-    virtual std::string GetServiceName() = 0;
-    virtual std::string GetBuilderName() = 0;
+    virtual const char* GetServiceName() = 0;
+    virtual const char* GetBuilderName() = 0;
     virtual void SetEngine(std::shared_ptr<BaseServiceEngine> engine) {
         engine_ = engine;
     }

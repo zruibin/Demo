@@ -25,7 +25,7 @@ void LoggerImpl::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter) {
     adapter_ = adapter->GetCastAdapter<LoggerAdapterInterface>();
 }
 
-std::string LoggerImpl::Description() {
+const char* LoggerImpl::Description() {
     return "LoggerImpl";
 }
 

@@ -17,7 +17,7 @@ public:
     
 public:
     virtual void ConstructBuilders() = 0;
-    virtual std::shared_ptr<BaseCaseBuilder> GetBuilder(const std::string&) = 0;
+    virtual std::shared_ptr<BaseCaseBuilder> GetBuilder(const char*) = 0;
     virtual void UpdateBuilder(std::shared_ptr<BaseCaseBuilder>) = 0;
 };
 

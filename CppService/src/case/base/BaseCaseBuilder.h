@@ -8,8 +8,6 @@
 #ifndef BASECASEBUILDER_H
 #define BASECASEBUILDER_H
 
-
-#include <string>
 #include <memory>
 
 class BaseCase;
@@ -23,8 +21,8 @@ public:
     
 public:
     virtual std::shared_ptr<BaseCase> BuildCase() = 0;
-    virtual std::string GetCaseName() = 0;
-    virtual std::string GetBuilderName() = 0;
+    virtual const char* GetCaseName() = 0;
+    virtual const char* GetBuilderName() = 0;
     virtual void SetCaseEngine(std::shared_ptr<BaseCaseEngine> caseEngine) {
         caseEngine_ = caseEngine;
     }

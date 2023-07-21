@@ -88,7 +88,8 @@ public:
     virtual ~${name}() = default;
 };
 
-#endif /* !${upperName}_H */"""
+#endif /* !${upperName}_H */
+"""
     interfaceContent = TPL(interfaceContent).substitute({
                                                 "name": interfaceName,
                                                 "upperName": interfaceName.upper(),
@@ -122,7 +123,8 @@ public:
     virtual ~${name}() = default;
 };
 
-#endif /* !${upperName}_H */"""
+#endif /* !${upperName}_H */
+"""
     interfaceAdapterContent = TPL(interfaceAdapterContent).substitute({
                                                         "name": interfaceAdapterName,
                                                         "upperName": interfaceAdapterName.upper(),
@@ -161,13 +163,14 @@ public:
     void Init() override;
     void Destory() override;
     void SetAdapter(const std::shared_ptr<BaseCaseAdapter>) override;
-    std::string Description() override;
+    const char* Description() override;
     
 private:
     std::shared_ptr<${adapterName}> adapter_;
 };
 
-#endif /* !${upperName}_H */"""
+#endif /* !${upperName}_H */
+"""
     headerImplContent = TPL(headerImplContent).substitute({
                                                 "name": implName,
                                                 "upperName": implName.upper(),
@@ -210,7 +213,7 @@ void ${name}::SetAdapter(const std::shared_ptr<BaseCaseAdapter> adapter) {
     adapter_ = adapter->GetCastAdapter<${adapterName}>();
 }
 
-std::string ${name}::Description() {
+const char* ${name}::Description() {
     return "${name}";
 }
 """
@@ -304,11 +307,11 @@ public:
         return impl;
     };
 
-    std::string GetCaseName() override {
+    const char* GetCaseName() override {
         return "${interfaceName}";
     };
     
-    std::string GetBuilderName() override {
+    const char* GetBuilderName() override {
         return "${name}";
     };
 };

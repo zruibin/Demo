@@ -13,11 +13,11 @@
 #include "ServiceInterface.h"
 
 void TestCaseImpl::Init() {
-    Log(DEBUG) << " TestCaseImpl::Init: " << this;
+    Log(DEBUG) << "TestCaseImpl::Init: " << this;
 }
 
 void TestCaseImpl::Destory() {
-    Log(DEBUG) << " TestCaseImpl::Destory: " << this;
+    Log(DEBUG) << "TestCaseImpl::Destory: " << this;
 }
 
 void TestCaseImpl::SetAdapter(const std::shared_ptr<BaseCaseAdapter> adapter) {
@@ -27,7 +27,7 @@ void TestCaseImpl::SetAdapter(const std::shared_ptr<BaseCaseAdapter> adapter) {
     adapter_ = adapter->GetCastAdapter<TestCaseAdapterInterface>();
 }
 
-std::string TestCaseImpl::Description() {
+const char* TestCaseImpl::Description() {
     
     auto service = adapter_->GetServiceEngine()->GetService<ServiceInterface>(Protocol(ServiceInterface));
     if (service) {

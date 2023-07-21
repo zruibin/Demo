@@ -8,8 +8,6 @@
 #ifndef BASECASEENGINE_H
 #define BASECASEENGINE_H
 
-
-#include <string>
 #include <memory>
 
 #define Protocol(name) #name
@@ -29,7 +27,7 @@ public:
      此方法获取到的Case生命周期跟随Engine，Case的Init与Destory由Engine操控！
      */
     template <class T, class = std::enable_if_t<std::is_base_of_v<BaseCase, T>>>
-    std::shared_ptr<T> GetCase(const std::string& name) {
+    std::shared_ptr<T> GetCase(const char* name) {
         std::shared_ptr<BaseCase> baseCase = this->GetCaseByName(name);
         if (baseCase != nullptr) {
             return std::dynamic_pointer_cast<T>(baseCase);
@@ -41,7 +39,7 @@ public:
      此方法获取到的Case生命周期由调用者操控，Case的Init与Destory必须由调用者显式调用！
      */
     template <class T, class = std::enable_if_t<std::is_base_of_v<BaseCase, T>>>
-    std::shared_ptr<T> CreateCase(const std::string& name) {
+    std::shared_ptr<T> CreateCase(const char* name) {
         std::shared_ptr<BaseCase> baseCase = this->CreateCaseByName(name);
         if (baseCase != nullptr) {
             return std::dynamic_pointer_cast<T>(baseCase);
@@ -60,8 +58,8 @@ public:
     };
     
 protected:
-    virtual std::shared_ptr<BaseCase> GetCaseByName(const std::string&) = 0;
-    virtual std::shared_ptr<BaseCase> CreateCaseByName(const std::string&) = 0;
+    virtual std::shared_ptr<BaseCase> GetCaseByName(const char*) = 0;
+    virtual std::shared_ptr<BaseCase> CreateCaseByName(const char*) = 0;
     std::shared_ptr<BaseCaseFactory> caseFactory_;
     std::weak_ptr<BaseServiceEngine> serviceEngine_;
 };

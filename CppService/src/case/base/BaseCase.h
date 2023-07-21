@@ -8,7 +8,6 @@
 #ifndef BASECASE_H
 #define BASECASE_H
 
-#include <string>
 #include "BaseCaseAdapter.h"
 
 class BaseCase : public std::enable_shared_from_this<BaseCase>
@@ -22,7 +21,7 @@ public:
     virtual void Destory(void) = 0;
     
 public:
-    virtual std::string Description() { return "";};
+    virtual const char* Description() { return "";};
 };
 
 

@@ -27,7 +27,7 @@ void AudioDectImpl::SetAdapter(const std::shared_ptr<BaseServiceAdapter> adapter
     adapter_ = adapter->GetCastAdapter<AudioDectAdapterInterface>();
 }
 
-std::string AudioDectImpl::Description() {
+const char* AudioDectImpl::Description() {
     Log(DEBUG) << "AudioDectImpl::Description.";
     
     Log(DEBUG) << "**********************************************************";

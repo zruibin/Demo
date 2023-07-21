@@ -11,7 +11,7 @@
 #include "ComponentFactory.h"
 
 ServiceEngine::ServiceEngine() {
-    serviceMap_ = std::make_shared<std::unordered_map<std::string, 
+    serviceMap_ = std::make_shared<std::unordered_map<const char*,
                                        std::shared_ptr<BaseService>>>();
     componentFactory_ =  std::make_shared<ComponentFactory>();
 }
@@ -20,8 +20,8 @@ ServiceEngine::~ServiceEngine() {
     
 }
 
-std::shared_ptr<BaseService> ServiceEngine::GetServiceByName(const std::string& name) {
-    if (name.length() == 0) {
+std::shared_ptr<BaseService> ServiceEngine::GetServiceByName(const char* name) {
+    if (name == NULL || std::strlen(name) == 0) {
         return nullptr;
     }
     auto serviceIter = serviceMap_->find(name);
@@ -40,8 +40,8 @@ std::shared_ptr<BaseService> ServiceEngine::GetServiceByName(const std::string& 
     return nullptr;
 }
 
-std::shared_ptr<BaseService> ServiceEngine::CreateServiceByName(const std::string& name) {
-    if (name.length() == 0) {
+std::shared_ptr<BaseService> ServiceEngine::CreateServiceByName(const char* name) {
+    if (name == NULL || std::strlen(name) == 0) {
         return nullptr;
     }
     auto builder = componentFactory_->GetBuilder(name);

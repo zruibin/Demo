@@ -29,11 +29,11 @@ public:
         return impl;
     };
 
-    std::string GetServiceName() override {
+    const char* GetServiceName() override {
         return "AudioDectInterface";
     };
     
-    std::string GetBuilderName() override {
+    const char* GetBuilderName() override {
         return "AudioDectBuilder";
     };
 };

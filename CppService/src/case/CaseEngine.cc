@@ -11,7 +11,7 @@
 #include "CaseFactory.h"
 
 CaseEngine::CaseEngine() {
-    caseMap_ = std::make_shared<std::unordered_map<std::string,
+    caseMap_ = std::make_shared<std::unordered_map<const char*,
                                        std::shared_ptr<BaseCase>>>();
     caseFactory_ =  std::make_shared<CaseFactory>();
 }
@@ -20,8 +20,8 @@ CaseEngine::~CaseEngine() {
     
 }
 
-std::shared_ptr<BaseCase> CaseEngine::GetCaseByName(const std::string& name) {
-    if (name.length() == 0) {
+std::shared_ptr<BaseCase> CaseEngine::GetCaseByName(const char* name) {
+    if (name == NULL || std::strlen(name) == 0) {
         return nullptr;
     }
     auto caseIter = caseMap_->find(name);
@@ -41,8 +41,8 @@ std::shared_ptr<BaseCase> CaseEngine::GetCaseByName(const std::string& name) {
     return nullptr;
 }
 
-std::shared_ptr<BaseCase> CaseEngine::CreateCaseByName(const std::string& name) {
-    if (name.length() == 0) {
+std::shared_ptr<BaseCase> CaseEngine::CreateCaseByName(const char* name) {
+    if (name == NULL || std::strlen(name) == 0) {
         return nullptr;
     }
     auto builder = caseFactory_->GetBuilder(name);

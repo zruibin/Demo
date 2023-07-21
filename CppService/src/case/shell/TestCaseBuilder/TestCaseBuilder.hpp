@@ -30,11 +30,11 @@ public:
         return impl;
     };
 
-    std::string GetCaseName() override {
+    const char* GetCaseName() override {
         return "TestCaseInterface";
     };
     
-    std::string GetBuilderName() override {
+    const char* GetBuilderName() override {
         return "TestCaseBuilder";
     };
 };

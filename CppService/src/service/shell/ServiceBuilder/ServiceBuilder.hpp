@@ -29,11 +29,11 @@ public:
         return serviceImpl;
     };
 
-    std::string GetServiceName() override {
+    const char* GetServiceName() override {
         return "ServiceInterface";
     };
     
-    std::string GetBuilderName() override {
+    const char* GetBuilderName() override {
         return "ServiceBuilder";
     };
 };

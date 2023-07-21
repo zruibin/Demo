@@ -18,8 +18,8 @@ public:
     virtual ~CaseEngine();
 
 protected:
-    std::shared_ptr<BaseCase> GetCaseByName(const std::string&) override;
-    std::shared_ptr<BaseCase> CreateCaseByName(const std::string&) override;
+    std::shared_ptr<BaseCase> GetCaseByName(const char*) override;
+    std::shared_ptr<BaseCase> CreateCaseByName(const char*) override;
 
 public:
     void Init(void) override;
@@ -27,7 +27,7 @@ public:
     void UpdateCase(std::shared_ptr<BaseCaseBuilder>) override;
 
 private:
-    std::shared_ptr<std::unordered_map<std::string,
+    std::shared_ptr<std::unordered_map<const char*,
                                        std::shared_ptr<BaseCase>>> caseMap_;
 };
 
