@@ -114,7 +114,7 @@ if (testCase != nullptr) {
 
 > 注意：**组件外部与内部都必须通过`GetCase`模板方式获取**
 
-#### 创建组件Service
+#### 创建组件Case
 
 ```cpp
 std::shared_ptr<TestCaseInterface> tmpCase = caseEngine->CreateCase<TestCaseInterface>(Protocol(TestCaseInterface));
