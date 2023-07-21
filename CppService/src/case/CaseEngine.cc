@@ -47,6 +47,7 @@ std::shared_ptr<BaseCase> CaseEngine::CreateCaseByName(const std::string& name) 
     }
     auto builder = caseFactory_->GetBuilder(name);
     if (builder != nullptr) {
+        builder->SetServiceEngine(serviceEngine_.lock());
         builder->SetCaseEngine(this->shared_from_this());
         auto caseObj = builder->BuildCase();
         return caseObj;
