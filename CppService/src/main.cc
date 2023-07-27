@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <stdlib.h>
 #include <memory>
 #include <iostream>
 #include "ServiceEngine.h"
@@ -9,10 +9,110 @@
 #include "CaseEngine.h"
 #include "TestCaseInterface.h"
 
+#define MEMORY_COUNT 1
+
+#if MEMORY_COUNT
+int handler = [] () {
+    std::cout << "Lambda handler..." << std::endl;
+    return 0;
+}();
+
+static int memoryCount = 0;
+
+void* operator new(std::size_t size) noexcept(false) {
+//    std::cout << "new: " << size << std::endl;
+    if (size == 0) {
+        size = 1;
+    }
+    void* p;
+    while ((p = ::malloc(size)) == 0) { //采用 malloc 分配空间
+        std::new_handler nh = std::get_new_handler();
+        if (nh)
+            nh();
+        else
+            throw std::bad_alloc();
+    }
+    ++memoryCount;
+    return p;
+}
+
+void operator delete(void* const block) noexcept {
+//    std::cout << "delete." << std::endl;
+    // 单例对象、静态new对象除外
+    free(block);
+    --memoryCount;
+}
+
+/*
+void* operator new[](std::size_t size) noexcept(false) {
+    std::cout << "new: " << size << std::endl;
+    if (size == 0) {
+        size = 1;
+    }
+    void* p;
+    while ((p = ::malloc(size)) == 0) { //采用 malloc 分配空间
+        std::new_handler nh = std::get_new_handler();
+        if (nh)
+            nh();
+        else
+            throw std::bad_alloc();
+    }
+    ++memoryCount;
+    return p;
+}
+
+void operator delete[](void* const block) noexcept {
+    std::cout << "delete[]." << std::endl;
+    // 单例对象、静态new对象除外
+    free(block);
+    --memoryCount;
+}
+ //*/
+
+void exitFun(void) {
+    std::cout << "exitFun." << std::endl;
+}
+
+__attribute__((constructor)) void load_file() {
+    std::cout << "Constructor is called." << std::endl;
+    std::cout << "memoryCount: " << memoryCount << std::endl;
+}
+
+__attribute__((destructor)) void unload_file() {
+    std::cout << "Destructor is called." << std::endl;
+    std::cout << "memoryCount: " << memoryCount << std::endl;
+}
+
+void test() {
+    std::cout << "----------------------------------------------------------" << std::endl;
+    int* a = new int;
+    *a = 10;
+    std::cout << *a << std::endl;
+    std::cout << "memoryCount1: " << memoryCount << std::endl;
+    delete a;
+    std::cout << "memoryCount1: " << memoryCount << std::endl;
+    
+    int* b = new int[10];
+    b[1] = 2;
+    std::cout << b[1] << std::endl;
+    std::cout << "memoryCount3: " << memoryCount << std::endl;
+    delete[] b;
+    std::cout << "memoryCount4: " << memoryCount << std::endl;
+    std::cout << "----------------------------------------------------------" << std::endl;
+}
+
+#endif
+
 int main(int argc, char** argv)
 {
     printf("hello world!\n");
     
+#if MEMORY_COUNT
+    test();
+    atexit(exitFun);
+#endif
+    
+    //*
     std::shared_ptr<BaseServiceEngine> engine = std::make_shared<ServiceEngine>();
     engine->Init();
     
@@ -71,5 +171,7 @@ int main(int argc, char** argv)
     
     caseEngine->Destory();
     engine->Destory();
+    //*/
+    
     return 0;
 }
