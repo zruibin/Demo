@@ -27,7 +27,7 @@ public:
     void UpdateCase(std::shared_ptr<BaseCaseBuilder>) override;
 
 private:
-    std::shared_ptr<std::unordered_map<const char*,
+    std::unique_ptr<std::unordered_map<const char*,
                                        std::shared_ptr<BaseCase>>> caseMap_;
 };
 

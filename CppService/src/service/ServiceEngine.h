@@ -27,7 +27,7 @@ public:
     void UpdateService(std::shared_ptr<BaseServiceBuilder>) override;
 
 private:
-    std::shared_ptr<std::unordered_map<const char*, 
+    std::unique_ptr<std::unordered_map<const char*, 
                                        std::shared_ptr<BaseService>>> serviceMap_;
 };
 

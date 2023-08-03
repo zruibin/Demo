@@ -60,7 +60,7 @@ public:
 protected:
     virtual std::shared_ptr<BaseCase> GetCaseByName(const char*) = 0;
     virtual std::shared_ptr<BaseCase> CreateCaseByName(const char*) = 0;
-    std::shared_ptr<BaseCaseFactory> caseFactory_;
+    std::unique_ptr<BaseCaseFactory> caseFactory_;
     std::weak_ptr<BaseServiceEngine> serviceEngine_;
 };
 

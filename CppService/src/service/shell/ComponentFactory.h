@@ -17,7 +17,7 @@ class ComponentFactory : public BaseServiceFactory
 {
 public:
     explicit ComponentFactory() {
-        builderMap_ = std::make_shared<std::unordered_map<const char*, std::shared_ptr<BaseServiceBuilder>>>();
+        builderMap_ = std::make_unique<std::unordered_map<const char*, std::shared_ptr<BaseServiceBuilder>>>();
     };
     
 public:
@@ -54,7 +54,7 @@ private:
     }
     
 private:
-    using BuilderMap = std::shared_ptr<std::unordered_map<const char*, std::shared_ptr<BaseServiceBuilder>>>;
+    using BuilderMap = std::unique_ptr<std::unordered_map<const char*, std::shared_ptr<BaseServiceBuilder>>>;
     BuilderMap builderMap_;
 };
 

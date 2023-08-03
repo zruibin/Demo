@@ -17,7 +17,7 @@ class CaseFactory : public BaseCaseFactory
 {
 public:
     explicit CaseFactory() {
-        builderMap_ = std::make_shared<std::unordered_map<const char*, std::shared_ptr<BaseCaseBuilder>>>();
+        builderMap_ = std::make_unique<std::unordered_map<const char*, std::shared_ptr<BaseCaseBuilder>>>();
     };
     
 public:
@@ -54,7 +54,7 @@ private:
     }
     
 private:
-    using BuilderMap = std::shared_ptr<std::unordered_map<const char*, std::shared_ptr<BaseCaseBuilder>>>;
+    using BuilderMap = std::unique_ptr<std::unordered_map<const char*, std::shared_ptr<BaseCaseBuilder>>>;
     BuilderMap builderMap_;
 };
 

@@ -11,9 +11,9 @@
 #include "CaseFactory.h"
 
 CaseEngine::CaseEngine() {
-    caseMap_ = std::make_shared<std::unordered_map<const char*,
+    caseMap_ = std::make_unique<std::unordered_map<const char*,
                                        std::shared_ptr<BaseCase>>>();
-    caseFactory_ =  std::make_shared<CaseFactory>();
+    caseFactory_ =  std::make_unique<CaseFactory>();
 }
 
 CaseEngine::~CaseEngine() {

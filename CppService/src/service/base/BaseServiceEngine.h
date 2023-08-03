@@ -54,7 +54,7 @@ public:
 protected:
     virtual std::shared_ptr<BaseService> GetServiceByName(const char*) = 0;
     virtual std::shared_ptr<BaseService> CreateServiceByName(const char*) = 0;
-    std::shared_ptr<BaseServiceFactory> componentFactory_;
+    std::unique_ptr<BaseServiceFactory> componentFactory_;
 };
 
 #endif /* !BASESERVICEENGINE_H */

@@ -11,9 +11,9 @@
 #include "ComponentFactory.h"
 
 ServiceEngine::ServiceEngine() {
-    serviceMap_ = std::make_shared<std::unordered_map<const char*,
+    serviceMap_ = std::make_unique<std::unordered_map<const char*,
                                        std::shared_ptr<BaseService>>>();
-    componentFactory_ =  std::make_shared<ComponentFactory>();
+    componentFactory_ =  std::make_unique<ComponentFactory>();
 }
 
 ServiceEngine::~ServiceEngine() {
