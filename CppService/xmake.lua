@@ -28,6 +28,7 @@ target("CppService")
     includes("src/case/cases.lua")
 
     add_files("src/main.cc")
+    add_headerfiles("src/thief.hpp", {install = false})
     add_deps("Case")
 
 

@@ -8,6 +8,7 @@
 #include "AudioDectInterface.h"
 #include "CaseEngine.h"
 #include "TestCaseInterface.h"
+#include "thief.hpp"
 
 #define MEMORY_COUNT 1
 
@@ -106,6 +107,7 @@ void test() {
 int main(int argc, char** argv)
 {
     printf("hello world!\n");
+    thief_main();
     
 #if MEMORY_COUNT
     test();

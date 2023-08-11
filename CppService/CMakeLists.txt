@@ -124,6 +124,7 @@ link_directories(
 
 set(EXECUTE_SOURCES
     src/main.cc
+    src/thief.hpp
 )
 
 list(APPEND RESOURCES "${CMAKE_SOURCE_DIR}/xmake.lua")
