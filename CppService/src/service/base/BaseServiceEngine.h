@@ -29,7 +29,7 @@ public:
     std::shared_ptr<T> GetService(const char* name) {
         std::shared_ptr<BaseService> baseService = this->GetServiceByName(name);
         if (baseService != nullptr) {
-            return std::dynamic_pointer_cast<T>(baseService);
+            return std::static_pointer_cast<T>(baseService);
         }
         return nullptr;
     }
@@ -41,7 +41,7 @@ public:
     std::shared_ptr<T> CreateService(const char* name) {
         std::shared_ptr<BaseService> baseService = this->CreateServiceByName(name);
         if (baseService != nullptr) {
-            return std::dynamic_pointer_cast<T>(baseService);
+            return std::static_pointer_cast<T>(baseService);
         }
         return nullptr;
     }

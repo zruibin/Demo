@@ -31,7 +31,7 @@ public:
     
     template <class T, class = std::enable_if_t<std::is_base_of_v<BaseServiceAdapter, T>>>
     std::shared_ptr<T> GetCastAdapter() {
-        return std::dynamic_pointer_cast<T>(this->shared_from_this());
+        return std::static_pointer_cast<T>(this->shared_from_this());
     }
 
 protected:

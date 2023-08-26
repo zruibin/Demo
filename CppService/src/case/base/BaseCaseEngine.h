@@ -30,7 +30,7 @@ public:
     std::shared_ptr<T> GetCase(const char* name) {
         std::shared_ptr<BaseCase> baseCase = this->GetCaseByName(name);
         if (baseCase != nullptr) {
-            return std::dynamic_pointer_cast<T>(baseCase);
+            return std::static_pointer_cast<T>(baseCase);
         }
         return nullptr;
     }
@@ -42,7 +42,7 @@ public:
     std::shared_ptr<T> CreateCase(const char* name) {
         std::shared_ptr<BaseCase> baseCase = this->CreateCaseByName(name);
         if (baseCase != nullptr) {
-            return std::dynamic_pointer_cast<T>(baseCase);
+            return std::static_pointer_cast<T>(baseCase);
         }
         return nullptr;
     }
