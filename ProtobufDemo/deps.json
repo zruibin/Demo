@@ -1,0 +1,28 @@
+[
+    {
+        "action": "git",
+        "fileName": "ninja",
+        "url": "git clone -b v1.11.1 --depth=1 https://github.com/ninja-build/ninja.git",
+        "build": "cmake",
+        "args": ""
+    },
+
+    {
+        "action": "git",
+        "fileName": "abseil-cpp",
+        "url": "git clone -b 20230802.1 --depth=1 https://github.com/abseil/abseil-cpp.git",
+        "build": "cmake",
+        "args": "-DABSL_BUILD_TESTING=OFF -DABSL_USE_GOOGLETEST_HEAD=OFF -DCMAKE_CXX_STANDARD=17"
+    },
+
+    {
+        "action": "git",
+        "fileName": "protobuf",
+        "url": "git clone --recurse-submodules -b v25.0 --depth=1 https://github.com/protocolbuffers/protobuf.git",
+        "build": "cmake",
+        "args": "-DCMAKE_CXX_STANDARD=17 -DABSL_PROPAGATE_CXX_STD=ON -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_DISABLE_RTTI=ON -Dprotobuf_ABSL_PROVIDER=package -Dabsl_DIR=//deps/lib/cmake/absl/"
+    }
+
+]
+
+
