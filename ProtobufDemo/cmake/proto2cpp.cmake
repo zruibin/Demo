@@ -21,23 +21,25 @@ function(PROTOBUF_GENERATE_CPP SRCS HDRS ROOT_DIR)
         list(APPEND ${SRCS} "${PB_OUTPUT_DIR}/${FIL_WE}.pb.cc")
         list(APPEND ${HDRS} "${PB_OUTPUT_DIR}/${FIL_WE}.pb.h")
 
-        message(STATUS "---------------------------------------------------------------------")
+        message("---------------------------------------------------------------------")
         
-        message(STATUS "ABS_FIL: ${ABS_FIL}")
-        message(STATUS "PB_OUTPUT_DIR: ${PB_OUTPUT_DIR}")
-        message(STATUS "ROOT_DIR: ${ROOT_DIR}")
-        message(STATUS "PROTOBUF_INCLUDE_DIR: ${PROTOBUF_INCLUDE_DIR}")
+        message("ABS_FIL: ${ABS_FIL}")
+        message("PB_OUTPUT_DIR: ${PB_OUTPUT_DIR}")
+        message("ROOT_DIR: ${ROOT_DIR}")
+        message("PROTOBUF_INCLUDE_DIR: ${PROTOBUF_INCLUDE_DIR}")
 
-        set(PROCESS_SHELL ${PROTOBUF_PROTOC_EXECUTABLE} --cpp_out=${PB_OUTPUT_DIR} ${ABS_FIL} -I ${ROOT_DIR} -I ${PROTOBUF_INCLUDE_DIR})
-        message(STATUS "execute_process: ${PROCESS_SHELL}")
-        execute_process(COMMAND ${PROCESS_SHELL}
+        set(PROCESS_SHELL "${PROTOBUF_PROTOC_EXECUTABLE} --cpp_out=${PB_OUTPUT_DIR} ${ABS_FIL} -I ${ROOT_DIR} -I ${PROTOBUF_INCLUDE_DIR}")
+        message("execute_process: ${PROCESS_SHELL}")
+        string(REPLACE " " ";" PROCESS_SHELL_CMD ${PROCESS_SHELL})
+        execute_process(COMMAND ${PROCESS_SHELL_CMD}
             OUTPUT_VARIABLE shell_stdout
             ERROR_VARIABLE shell_stderr
             RESULT_VARIABLE shell_result
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         )
-        message(STATUS "execute_process result -> shell_stdout:${shell_stdout}, shell_stderr:${shell_stderr}, shell_result:${shell_result}")
+        message("execute_process result -> shell_stdout:${shell_stdout}, shell_stderr:${shell_stderr}, shell_result:${shell_result}")
 
-        message(STATUS "---------------------------------------------------------------------")
+        message("---------------------------------------------------------------------")
     endforeach()
 
     set_source_files_properties(${${SRCS}} ${${HDRS}} PROPERTIES GENERATED TRUE)
