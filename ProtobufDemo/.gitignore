@@ -30,6 +30,7 @@ builddeps.log
 .xmake/
 .cache/
 libs/proto/
+libs/pb/
 
 node_modules
 package-lock.json

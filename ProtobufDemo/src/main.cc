@@ -6,8 +6,8 @@
 //
 
 #include <iostream>
-#include "proto/ModelConfig.pb.h"
-#include "proto/Address.pb.h"
+#include "pb/ModelConfig.pb.h"
+#include "pb/Address.pb.h"
 
 int main(int argc, char * argv[]) {
     Address address;

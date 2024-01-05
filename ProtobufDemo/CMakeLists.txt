@@ -132,16 +132,19 @@ set(cmake_dir ${PROJECT_SOURCE_DIR}/cmake)
 list(APPEND CMAKE_MODULE_PATH ${cmake_dir})
 include(proto2cpp)
 
-file(GLOB PROTO_FILES ${PROJECT_SOURCE_DIR}/proto/*.proto)
+set(PROTO_DIR "${PROJECT_SOURCE_DIR}/proto")
+file(GLOB_RECURSE PROTO_FILES "${PROTO_DIR}/**.proto")
 foreach(proto_name ${PROTO_FILES})
-    file(RELATIVE_PATH proto_rel_name ${PROJECT_SOURCE_DIR} ${proto_name})
+    file(RELATIVE_PATH proto_rel_name ${PROTO_DIR} ${proto_name})
     list(APPEND REL_PROTO_FILES ${proto_rel_name})
 endforeach()
-set(PB_OUTPUT_DIR "${PROJECT_SOURCE_DIR}/libs")
+
+set(PB_OUTPUT_DIR "${PROJECT_SOURCE_DIR}/libs/pb")
 if(NOT EXISTS "${PB_OUTPUT_DIR}")
     file(MAKE_DIRECTORY ${PB_OUTPUT_DIR})
 endif()
-PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${PROJECT_SOURCE_DIR} ${REL_PROTO_FILES})
+
+PROTOBUF_GENERATE(${PROJECT_SOURCE_DIR} ${PROTO_DIR} ${PB_OUTPUT_DIR} ${REL_PROTO_FILES})
 # add_library(proto_lib STATIC ${PROTO_SRCS} ${PROTO_HDRS})
 
 #-------------------------------------------------------------------------------
@@ -152,6 +155,7 @@ set(libs_dir "${PROJECT_SOURCE_DIR}/libs")
 include_directories(
     "${src_dir}"
     "${libs_dir}"
+    "${PB_OUTPUT_DIR}"
 )
 
 # 相当于g++命令的-L选项的作用
@@ -164,7 +168,7 @@ link_directories(
 # modules
 
 # libs
-include("${libs_dir}/proto/CMakeLists.txt")
+include("${PB_OUTPUT_DIR}/CMakeLists.txt")
 
 set(MODULES
 
