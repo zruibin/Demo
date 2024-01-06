@@ -1,0 +1,6 @@
+syntax = "proto3";
+package cs;
+
+message Test {
+    optional string name = 1;
+}

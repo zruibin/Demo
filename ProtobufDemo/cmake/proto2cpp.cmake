@@ -26,7 +26,11 @@ function(PROTOBUF_GENERATE ROOT_DIR PROTO_DIR OUTPUT_DIR)
             RESULT_VARIABLE shell_result
             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         )
-        message("execute_process result -> shell_stdout:${shell_stdout}, shell_stderr:${shell_stderr}, shell_result:${shell_result}")
+        if(shell_result EQUAL 0)
+            message( "${FIL} result -> shell_stdout:${shell_stdout}, shell_stderr:${shell_stderr}, shell_result:${shell_result}")
+        else()
+            message(SEND_ERROR "${FIL} result -> shell_stdout:${shell_stdout}, shell_stderr:${shell_stderr}, shell_result:${shell_result}")   
+        endif()
 
     endforeach()
 

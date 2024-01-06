@@ -8,6 +8,7 @@
 #include <iostream>
 #include "pb/ModelConfig.pb.h"
 #include "pb/Address.pb.h"
+#include "ss/ss.pb.h"
 
 int main(int argc, char * argv[]) {
     Address address;

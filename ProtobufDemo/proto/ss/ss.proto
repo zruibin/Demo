@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package ss;
+
+import "cs/cs.proto";
+
+message Test{
+    optional cs.Test cstest = 1;
+}
