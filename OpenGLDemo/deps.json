@@ -1,0 +1,20 @@
+[
+    {
+        "action": "git",
+        "fileName": "ninja",
+        "url": "git clone -b v1.11.1 --depth=1 https://github.com/ninja-build/ninja.git",
+        "build": "cmake",
+        "args": ""
+    },
+
+    {
+        "action": "git",
+        "fileName": "glfw",
+        "url": "git clone -b 3.3.9 --depth=1 https://github.com/glfw/glfw.git",
+        "build": "cmake",
+        "args": "-DCMAKE_CXX_STANDARD=17"
+    }
+
+]
+
+
