@@ -36,6 +36,7 @@ depsName = "deps.json"
 depsCamke = "deps.cmake"
 sourceLock = sourceDirName + ".lock"
 buildDir = "buildGen" # cmake构建目录
+installDir = "install" # cmake工程最终install目录
 cmakeOther = ""
 libSufixs = [".a", ".lib", ".so", ".dylib", ".dll"]
 depsSourceFlag = False #True if IS_DEBUG else False
@@ -877,10 +878,26 @@ def debugDepsCmake():
         removeDebugDepsCmake(destDir, name)
     pass
 
+def clean():
+    if os.path.exists(outputDirName):
+        shutil.rmtree(outputDirName)
+    if os.path.exists(sourceDirName):
+        shutil.rmtree(sourceDirName)
+    if os.path.exists(installDir):
+        shutil.rmtree(installDir)
+    if os.path.exists(sourceLock):
+        os.remove(sourceLock)
+    log("删除目录:" + outputDir)
+    log("删除目录:" + sourceDir)
+    log("删除目录:" + installDir)
+    log("删除文件:" + sourceLock)
+    pass
+
 def help():
     helpStr = """
 Command:
     deps           根据deps.json安装依赖
+    clean          清除所有依赖
     add dep_dir    根据库dep_dir添加依赖调试
     remove dep_dir 根据库dep_dir删除依赖调试
     help           说明
@@ -890,11 +907,12 @@ Default:
     pass
 
 def init():
-    global homeDir, sourceDir, thirdPartyDir, outputDir
+    global homeDir, sourceDir, thirdPartyDir, outputDir, installDir
     homeDir = sys.path[0]
     sourceDir = os.path.join(homeDir, sourceDirName)
     thirdPartyDir = os.path.join(homeDir, thirdPartyDirName)
     outputDir = os.path.join(homeDir, outputDirName)
+    installDir = os.path.join(homeDir, installDir)
 
     global depsSourceCamke
     depsSourceCamke = os.path.join(homeDir, depsSourceCamke)
@@ -918,6 +936,8 @@ if __name__ == '__main__':
             help()
         elif sys.argv[1] == "deps":
             deps()
+        elif sys.argv[1] == "clean":
+            clean()
     elif len(sys.argv) > 2:
         debugDepsCmake()
 

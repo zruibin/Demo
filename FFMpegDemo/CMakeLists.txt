@@ -216,20 +216,23 @@ include_directories(
 #-------------------------------------------------------------------------------
 
 set(RESOURCES
+    
+)
+set(RESOURCES_CHECK_ITEMS
     builddeps.py
     deps.json
+    deps.cmake
+    depsSource.cmake
+    depsSource.lock
     README.md
     LICENSE
 )
-if(EXISTS "${PROJECT_SOURCE_DIR}/deps.cmake")
-    list(APPEND RESOURCES deps.cmake)
-endif()
-if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource.lock")
-    list(APPEND RESOURCES depsSource.lock)
-endif()
-if(EXISTS "${PROJECT_SOURCE_DIR}/depsSource.cmake")
-    list(APPEND RESOURCES depsSource.cmake)
-endif()
+foreach(item ${RESOURCES_CHECK_ITEMS})
+    if(EXISTS "${PROJECT_SOURCE_DIR}/${item}")
+        list(APPEND RESOURCES ${item})
+        message(${item})
+    endif()
+endforeach()
 source_group(Resources FILES ${RESOURCES})
 
 #-------------------------------------------------------------------------------
