@@ -35,7 +35,9 @@ outputDirName = "deps"
 depsName = "deps.json"
 depsCamke = "deps.cmake"
 sourceLock = sourceDirName + ".lock"
-buildDir = "buildGen" # cmake构建目录
+buildGen = "buildGen" # cmake构建目录
+buildDir = "build"
+buildGenDir = buildGen
 installDir = "install" # cmake工程最终install目录
 cmakeOther = ""
 libSufixs = [".a", ".lib", ".so", ".dylib", ".dll"]
@@ -75,9 +77,11 @@ def log(string="", newline=True, color=None, write=True):
     if len(string) == 0:
         return
 
+    timeStr = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     function = inspect.stack()[1][3]
     line = inspect.stack()[1][2]
-    string = "[" + str(function) + ":" + str(line) + "] " + string
+    string = "[" + timeStr + "][" + str(function) + ":" + str(line) + "] " + string
 
     if color != None:
         # 见: https://www.cnblogs.com/ping-y/p/5897018.html
@@ -301,10 +305,10 @@ def configBuild(fileName, configArgs, debugArgs, targetDir=None, genBuilding=Tru
         os.chdir(targetDir)
 
     if genBuilding:
-        if os.path.exists(buildDir):
-            shutil.rmtree(buildDir)
-        os.makedirs(buildDir)
-        os.chdir(buildDir)
+        if os.path.exists(buildGen):
+            shutil.rmtree(buildGen)
+        os.makedirs(buildGen)
+        os.chdir(buildGen)
         inode = ".."
 
     log("-"*80)
@@ -341,10 +345,10 @@ def cmakeBuild(fileName, cmakeArgs, debugArgs, targetDir, genBuilding=True, preC
         os.chdir(targetDir)
 
     if genBuilding:
-        if os.path.exists(buildDir):
-            shutil.rmtree(buildDir)
-        os.makedirs(buildDir)
-        os.chdir(buildDir)
+        if os.path.exists(buildGen):
+            shutil.rmtree(buildGen)
+        os.makedirs(buildGen)
+        os.chdir(buildGen)
         inode = ".."
 
     log("-"*80)
@@ -410,7 +414,7 @@ def getDepsJson():
     return depsJson
 
 def isDesps(fileName):
-    lockFile = os.path.join(homeDir, sourceLock)
+    lockFile = sourceLock
     if not os.path.exists(lockFile):
         return False
     with open(lockFile, "r") as f:
@@ -423,7 +427,7 @@ def isDesps(fileName):
     return False
 
 def updateDesps(fileName):
-    lockFile = os.path.join(homeDir, sourceLock)
+    lockFile = sourceLock
     with open(lockFile, "a") as f:
         f.writelines(fileName + os.linesep)
     pass
@@ -434,9 +438,9 @@ def getDictValues(depsDict):
     url = depsDict["url"]
 
     # 默认跟随debug，debug需要在源目录生成才有库符号链接
-    buildDir = False if IS_DEBUG else True
+    build_dir = buildGen
     if "build_dir" in depsDict:
-        buildDir = depsDict["build_dir"]
+        build_dir = depsDict["build_dir"]
 
     buildAction = "cmake"
     if "build" in depsDict:
@@ -462,7 +466,7 @@ def getDictValues(depsDict):
         "args": args,
         "debugArgs": debugArgs,
         "targetDir": targetDir,
-        "buildDir": buildDir
+        "buildDir": build_dir
     }
 
 def downloadAndBuild(depsDict):
@@ -651,7 +655,7 @@ def addDebugDepsCmake(destDir, name):
     if os.path.exists(depCmakeList):
         cmakeBuild = True
         if not os.path.exists(depNinjaBuild):
-            if not os.path.exists(os.path.join(destDir, buildDir)):
+            if not os.path.exists(os.path.join(destDir, buildGen)):
                 log(os.path.basename(depCmakeList) + " was exist! remove it and try again!", color=Color.Red)
                 return
             else:
@@ -746,7 +750,7 @@ add_custom_target(${TARGET_BUILD}
     if platform.machine() == "arm64" and platform.system() == "Darwin":
         arch = "arch -arm64"
 
-    directory = buildDir if hasBuildDir else "."
+    directory = buildGen if hasBuildDir else "."
     hint = "no work to do" if cmakeBuild else "Nothing to be done"
     make = "cmake --build " + directory if cmakeBuild else "make"
     install = "cmake --install " + directory if cmakeBuild else "make install"
@@ -879,18 +883,23 @@ def debugDepsCmake():
     pass
 
 def clean():
-    if os.path.exists(outputDirName):
-        shutil.rmtree(outputDirName)
-    if os.path.exists(sourceDirName):
-        shutil.rmtree(sourceDirName)
-    if os.path.exists(installDir):
-        shutil.rmtree(installDir)
-    if os.path.exists(sourceLock):
-        os.remove(sourceLock)
-    log("删除目录:" + outputDir)
-    log("删除目录:" + sourceDir)
-    log("删除目录:" + installDir)
-    log("删除文件:" + sourceLock)
+    rmList = [
+        buildDir,
+        buildGenDir,
+        outputDir,
+        sourceDir,
+        installDir,
+        sourceLock,
+        depsCamke,
+        depsSourceCamke,
+    ]
+    for item in rmList:
+        if os.path.exists(item):
+            if os.path.isfile(item):
+                os.remove(item)
+            elif os.path.isdir(item):
+                shutil.rmtree(item)
+            log("删除:" + item)
     pass
 
 def help():
@@ -908,14 +917,27 @@ Default:
 
 def init():
     global homeDir, sourceDir, thirdPartyDir, outputDir, installDir
-    homeDir = sys.path[0]
+    global depsName, buildDir, buildGenDir
+
+    absPath = str(Path.cwd())
+    depsFile = str(Path.cwd() / depsName)
+    # log("depsFile:" + str(depsFile))
+    if not os.path.exists(depsFile):
+        raise Exception("desp.json not exist!")
+
+    homeDir = absPath
+
     sourceDir = os.path.join(homeDir, sourceDirName)
     thirdPartyDir = os.path.join(homeDir, thirdPartyDirName)
     outputDir = os.path.join(homeDir, outputDirName)
     installDir = os.path.join(homeDir, installDir)
+    buildDir = os.path.join(homeDir, buildDir)
+    buildGenDir = os.path.join(homeDir, buildGenDir)
 
-    global depsSourceCamke
+    global depsCamke, depsSourceCamke, sourceLock
+    depsCamke = os.path.join(homeDir, depsCamke)
     depsSourceCamke = os.path.join(homeDir, depsSourceCamke)
+    sourceLock = os.path.join(homeDir, sourceLock)
     pass
 
 
@@ -927,18 +949,20 @@ if __name__ == '__main__':
     begin = datetime.datetime.now()
     log("开始时间：" + str(begin))
 
-    init()
-
     if len(sys.argv) == 1:
+        init()
         deps()
     if len(sys.argv) == 2:
         if sys.argv[1] == "help" or sys.argv[1] == "-h":
             help()
         elif sys.argv[1] == "deps":
+            init()
             deps()
         elif sys.argv[1] == "clean":
+            init()
             clean()
     elif len(sys.argv) > 2:
+        init()
         debugDepsCmake()
 
     end = datetime.datetime.now()
