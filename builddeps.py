@@ -912,7 +912,7 @@ Command:
     help           说明
 Default:
     deps"""
-    log(helpStr)
+    log(helpStr, write=False)
     pass
 
 def init():
@@ -945,15 +945,20 @@ def init():
 
 
 if __name__ == '__main__':
-    log("-"*80)
+    isHelp = False
+    if len(sys.argv) == 2 and (sys.argv[1] == "help" or sys.argv[1] == "-h"):
+        isHelp = True
+
+
+    log("-"*80, write=not isHelp)
     begin = datetime.datetime.now()
-    log("开始时间：" + str(begin))
+    log("开始时间：" + str(begin), write=not isHelp)
 
     if len(sys.argv) == 1:
         init()
         deps()
     if len(sys.argv) == 2:
-        if sys.argv[1] == "help" or sys.argv[1] == "-h":
+        if isHelp:
             help()
         elif sys.argv[1] == "deps":
             init()
@@ -966,8 +971,8 @@ if __name__ == '__main__':
         debugDepsCmake()
 
     end = datetime.datetime.now()
-    log(('花费时间: %.3f 秒' % (end - begin).seconds))
-    log("-"*80)
+    log(('花费时间: %.3f 秒' % (end - begin).seconds), write=not isHelp)
+    log("-"*80, write=not isHelp)
     logRecord()
     pass
 
