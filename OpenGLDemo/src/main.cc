@@ -11,9 +11,9 @@
 #include <math.h>
 #include <time.h>
 
-//#include <glad/glad.h>
+#include <glad/glad.h>
 #define GL_SILENCE_DEPRECATION
-#define GLFW_INCLUDE_GLCOREARB
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #if __APPLE__
@@ -22,32 +22,35 @@
 
 void display(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    glViewport(0, 0, 800, 800);
+    glViewport(0, 0, 800, 800);
+    
+    glColorMask(1.0, 1.0, 0.0, 0.0f); //设置前景色
 
-    glBegin(GL_LINES);
-    glVertex2f(-1.0, 0);
-    glVertex2f(1.0, 0);
-    glVertex2f(0.0, -1.0);
-    glVertex2f(0.0, 1.0);
-    glEnd();
+    /*已经在OpenGL的核心规范中被弃用*/
+//    glBegin(GL_LINES);
+//    glVertex2f(-1.0, 0);
+//    glVertex2f(1.0, 0);
+//    glVertex2f(0.0, -1.0);
+//    glVertex2f(0.0, 1.0);
+//    glEnd();
 
     //左下角
-    glColor3f(0.0, 1.0, 0.0);
+    glColorMask(0.0f, 1.0f, 0.0f, 0.0f);
     glViewport(0, 0, 400, 400);
     glutSolidTeapot(0.5); //茶壶
     
     //左上
-    glColor3f(1.0, 0.0, 0.0);
+    glColorMask(1.0f, 0.0f, 0.0f, 0.0f);
     glViewport(0, 400, 400, 400);
     glutSolidTorus(0.2, 0.4, 20, 30); //圆环
 
     //右下
-    glColor3f(1.0, 1.0, 1.0);
+    glColorMask(1.0f, 1.0f, 1.0f, 0.0);
     glViewport(400, 0, 400, 400);
     glutWireSphere(1.0, 40, 50); //经纬线
     
     //右上
-    glColor3f(0.0, 0.0, 1.0);
+    glColorMask(0.0f, 0.0f, 1.0f, 0.0f);
     glViewport(400, 400, 400, 400);
     glutSolidSphere(1.0, 40, 50); //球
 
@@ -55,9 +58,8 @@ void display(void) {
 }
 
 void init () {
-    glClearColor(0.0,0.0,0.0,0.0);//设置背景色
-    glColor3f(1.0,1.0,0.0);//设置前景色
-    glViewport(0, 0, 800, 800);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //设置背景色
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 
@@ -104,10 +106,10 @@ int main(int argc, char* argv[]) {
     std::cout << "fbSizeX:" << fbSizeX << " fbSizeY:" << fbSizeY << std::endl;
     
     // glad: load all OpenGL function pointers
-//    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-//        std::cout << "Failed to initialize GLAD" << std::endl;
-//        return -1;
-//    }
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
     
     //注册窗口监听
     glfwSetFramebufferSizeCallback(window, windowResize);
