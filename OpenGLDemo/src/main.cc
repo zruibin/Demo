@@ -11,6 +11,7 @@
 #include <math.h>
 #include <time.h>
 
+//#include <glad/glad.h>
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
@@ -101,6 +102,12 @@ int main(int argc, char* argv[]) {
     int fbSizeX, fbSizeY;
     glfwGetFramebufferSize(window, &fbSizeX, &fbSizeY);
     std::cout << "fbSizeX:" << fbSizeX << " fbSizeY:" << fbSizeY << std::endl;
+    
+    // glad: load all OpenGL function pointers
+//    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+//        std::cout << "Failed to initialize GLAD" << std::endl;
+//        return -1;
+//    }
     
     //注册窗口监听
     glfwSetFramebufferSizeCallback(window, windowResize);

@@ -153,13 +153,14 @@ link_directories(
 # modules
 
 # libs
+include("${libs_dir}/glad/CMakeLists.txt")
 
 set(MODULES
 
 )
 
 set(DEPENDS_LIBS
-
+    ${glad_all_file}
 )
 
 list(APPEND ALL_SOURCES ${MODULES} ${DEPENDS_LIBS})

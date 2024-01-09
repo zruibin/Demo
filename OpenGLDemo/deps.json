@@ -13,6 +13,22 @@
         "url": "git clone -b 3.3.9 --depth=1 https://github.com/glfw/glfw.git",
         "build": "cmake",
         "args": "-DCMAKE_CXX_STANDARD=17"
+    },
+
+    {
+        "action": "git",
+        "fileName": "glm",
+        "url": "git clone --depth=1 https://github.com/icaven/glm.git",
+        "build": "cmake",
+        "args": "-DCMAKE_CXX_STANDARD=17 -DGLM_BUILD_TESTS=OFF -DBUILD_SHARED_LIBS=OFF"
+    },
+
+    {
+        "action": "git",
+        "fileName": "assimp",
+        "url": "git clone -b v5.3.1 --depth=1 https://github.com/assimp/assimp.git",
+        "build": "cmake",
+        "args": "-DCMAKE_CXX_STANDARD=17"
     }
 
 ]
