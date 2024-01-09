@@ -1,0 +1,2 @@
+set(OUTPUT_DIR "${CMAKE_BINARY_DIR}")
+install(DIRECTORY "../objects/rock" DESTINATION "${OUTPUT_DIR}")
