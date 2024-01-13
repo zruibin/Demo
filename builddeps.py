@@ -506,7 +506,7 @@ def downloadAndBuild(depsDict):
         cmakeBuild(fileName, args, debugArgs, targetDir, buildDir)
     pass
 
-def buildDeps(depsDict):
+def cloneDeps(depsDict):
     depsDict = getDictValues(depsDict)
     fileName = depsDict["fileName"]
     action = depsDict["action"]
@@ -525,7 +525,18 @@ def buildDeps(depsDict):
     log("-"*80)
     log("Start Building Deps: " + fileName)
     os.chdir(sourceDir) #进入到源代码存放的目录
-    operator(url)
+    
+    try:
+        runCMD = url
+        gitHttps = "https://github.com/"
+        ssh = "git@github.com:"
+        if gitHttps in url:
+            runCMD = url.replace(gitHttps, ssh)
+        operator(runCMD)
+    except Exception as e:
+        log(str(e), color=Color.Red)
+        logRecord()
+        operator(url)
 
     if buildAction == "config":
         configBuild(fileName, args, debugArgs, targetDir, buildDir)
@@ -568,7 +579,7 @@ def buildFromDepsFile():
         if isDesps(fileName): # 已经下载安装好则跳过
             continue
 
-        if action == "git": buildDeps(depsDict)
+        if action == "git": cloneDeps(depsDict)
         if action == "gz": downloadAndBuild(depsDict)
         if action == "zip": downloadAndBuild(depsDict)
         if action == "bz2": downloadAndBuild(depsDict)
