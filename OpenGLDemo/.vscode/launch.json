@@ -19,7 +19,7 @@
             "environment": [],
             "externalConsole": false, // 调试时是否显示控制台窗口，一般为true显示控制台
             "MIMode": "lldb", // 指定连接的调试器
-            "preLaunchTask": "run_cmake", // 依赖之前的run_cmake, 每次debug时会
+            "preLaunchTask": "cmake", // 依赖之前的run_cmake, 每次debug时会
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for lldb",
