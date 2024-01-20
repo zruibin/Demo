@@ -39,6 +39,7 @@ buildGen = "buildGen" # cmake构建目录
 buildDir = "build"
 buildGenDir = buildGen
 installDir = "install" # cmake工程最终install目录
+vscodeName = ".vscode"
 cmakeOther = ""
 libSufixs = [".a", ".lib", ".so", ".dylib", ".dll"]
 depsSourceFlag = False #True if IS_DEBUG else False
@@ -906,6 +907,7 @@ def clean():
         sourceLock,
         depsCamke,
         depsSourceCamke,
+        vscodeName,
     ]
     for item in rmList:
         if os.path.exists(item):
@@ -917,9 +919,8 @@ def clean():
     pass
 
 def genRunConfig():
-    dirName = ".vscode"
-    if not os.path.exists(dirName):
-        os.makedirs(dirName)
+    if not os.path.exists(vscodeName):
+        os.makedirs(vscodeName)
 
     ninjaArg = generateCmakeNinjaArg()
     if len(ninjaArg) > 0: ninjaArg = ninjaArg.replace(homeDir, "${workspaceFolder}")
@@ -965,7 +966,7 @@ def genRunConfig():
     ]
 }
     """ % (cmakeCmd, buildCmd, runCmd, cleanCmd)
-    tasksFilePath = os.path.join(dirName, "tasks.json")
+    tasksFilePath = os.path.join(vscodeName, "tasks.json")
     log(tasksFilePath)
     log(tasksFile)
     with open(tasksFilePath, "w") as fileHandle:
@@ -1009,7 +1010,7 @@ def genRunConfig():
     ]
 }
     """ % program
-    launchFilePath = os.path.join(dirName, "launch.json")
+    launchFilePath = os.path.join(vscodeName, "launch.json")
     log(launchFilePath)
     log(launchFile)
     with open(launchFilePath, "w") as fileHandle:
