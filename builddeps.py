@@ -336,6 +336,18 @@ def configBuild(fileName, configArgs, debugArgs, targetDir=None, genBuilding=Tru
     operator(makeInstall, False)
     pass
 
+def generateCmakeNinjaArg():
+    ninjaArg = ""
+    outputBinDir = os.path.join(outputDir, "bin")
+    if os.path.exists(outputBinDir):
+        exeFiles = os.listdir(outputBinDir)
+        for exeFile in exeFiles:
+            if fnmatch.fnmatch(exeFile, "ninja*"):
+                ninjaArg = ninjaArg + "-GNinja -DCMAKE_MAKE_PROGRAM="
+                ninjaArg = ninjaArg + os.path.join(outputBinDir, exeFile) + " "
+                break
+    return ninjaArg
+
 def cmakeBuild(fileName, cmakeArgs, debugArgs, targetDir, genBuilding=True, preCmdList=[], install=True):
     os.chdir(fileName)
     inode = "."
@@ -367,16 +379,7 @@ def cmakeBuild(fileName, cmakeArgs, debugArgs, targetDir, genBuilding=True, preC
         cmakeArgs = cmakeArgs + " -DCMAKE_BUILD_TYPE=RELEASE "
 
     cmakeArgs = swapDepsArgs(cmakeArgs)
-
-    otherCmakeArgs = ""
-    outputBinDir = os.path.join(outputDir, "bin")
-    if os.path.exists(outputBinDir):
-        exeFiles = os.listdir(outputBinDir)
-        for exeFile in exeFiles:
-            if fnmatch.fnmatch(exeFile, "ninja*"):
-                otherCmakeArgs = otherCmakeArgs + "-GNinja -DCMAKE_MAKE_PROGRAM="
-                otherCmakeArgs = otherCmakeArgs + os.path.join(outputBinDir, exeFile) + " "
-                break
+    otherCmakeArgs = generateCmakeNinjaArg()
 
     operatePrefix = ""
     osName = platform.system()
@@ -913,11 +916,113 @@ def clean():
             log("删除:" + item)
     pass
 
+def genRunConfig():
+    dirName = ".vscode"
+    if not os.path.exists(dirName):
+        os.makedirs(dirName)
+
+    ninjaArg = generateCmakeNinjaArg()
+    if len(ninjaArg) > 0: ninjaArg = ninjaArg.replace(homeDir, "${workspaceFolder}")
+
+    cmakeCmd = "cmake -DCMAKE_BUILD_TYPE=Debug -B build . " + ninjaArg
+    buildCmd = "cmake --build build"
+    runCmd = "cmake --build build --target run"
+    cleanCmd = "cmake --build build --target clean"
+    
+    # See https://go.microsoft.com/fwlink/?LinkId=733558
+    tasksFile = """
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cmake",
+            "type": "shell",
+            "command": "%s",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }, 
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "%s",
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "%s",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "%s",
+        }
+    ]
+}
+    """ % (cmakeCmd, buildCmd, runCmd, cleanCmd)
+    tasksFilePath = os.path.join(dirName, "tasks.json")
+    log(tasksFilePath, write=False)
+    log(tasksFile, write=False)
+    with open(tasksFilePath, "w") as fileHandle:
+        fileHandle.write(str(tasksFile))
+
+    program = "build/Debug/Bin/"
+    with open(cmakeList, "r", encoding='utf-8') as fileHandle:
+        content = fileHandle.read()
+        result = re.findall("project\((.*?)\)", content)
+        if len(result) > 0: program = program + result[0]
+    log("program: "+program, write=False)
+
+    # https://go.microsoft.com/fwlink/?linkid=830387
+    # https://rivergold.github.io/2022/03eca434c1.html#%E5%88%9B%E5%BB%BAlaunch-json
+    # https://www.jianshu.com/p/ad29eee7b736
+    # https://zhuanlan.zhihu.com/p/584485195
+    launchFile = """
+{
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "name": "(lldb) Launch", // 配置名称
+            "type": "cppdbg", // 配置类型
+            "request": "launch", // 请求配置类型,launch或者attach
+            "program": "${workspaceFolder}/%s", // 进行调试程序的路径，程序生成文件.out
+            "args": [], // 传递给程序的命令行参数，一般为空
+            "stopAtEntry": false, // 调试器是否在目标的入口点停止
+            "cwd": "${workspaceFolder}", // 运行debug的路径
+            "environment": [],
+            "externalConsole": false, // 调试时是否显示控制台窗口，一般为true显示控制台
+            "MIMode": "lldb", // 指定连接的调试器
+            "preLaunchTask": "build", // 依赖之前的build, 每次debug时会
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for lldb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}
+    """ % program
+    launchFilePath = os.path.join(dirName, "launch.json")
+    log(launchFilePath, write=False)
+    log(launchFile, write=False)
+    with open(launchFilePath, "w") as fileHandle:
+        fileHandle.write(str(launchFile))
+    pass
+
+
 def help():
     helpStr = """
 Command:
     deps           根据deps.json安装依赖
     clean          清除所有依赖
+    gen            生成运行配置文件
     add dep_dir    根据库dep_dir添加依赖调试
     remove dep_dir 根据库dep_dir删除依赖调试
     help           说明
@@ -977,6 +1082,9 @@ if __name__ == '__main__':
         elif sys.argv[1] == "clean":
             init()
             clean()
+        elif sys.argv[1] == "gen":
+            init()
+            genRunConfig()
     elif len(sys.argv) > 2:
         init()
         debugDepsCmake()
