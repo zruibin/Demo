@@ -378,7 +378,7 @@ install(
 
 #-------------------------------------------------------------------------------
 
-if(CMAKE_GENERATOR MATCHES "Unix Makefiles")
+if(CMAKE_GENERATOR MATCHES "Unix Makefiles" OR CMAKE_GENERATOR MATCHES "Ninja")
     set(RUN_NAME "run")
     message(STATUS "CMAKE_GENERATOR: ${CMAKE_GENERATOR}, and generate target(${RUN_NAME})")
     add_custom_target(${RUN_NAME}
