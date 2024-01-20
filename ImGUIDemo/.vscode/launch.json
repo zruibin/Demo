@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+
+    // https://rivergold.github.io/2022/03eca434c1.html#%E5%88%9B%E5%BB%BAlaunch-json
+    // https://www.jianshu.com/p/ad29eee7b736
+
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "name": "(lldb) Launch", // 配置名称
+            "type": "cppdbg", // 配置类型
+            "request": "launch", // 请求配置类型,launch或者attach
+            "program": "${workspaceFolder}/build/Debug/Bin/ImGUIDemo", // 进行调试程序的路径，程序生成文件.out
+            "args": [], // 传递给程序的命令行参数，一般为空
+            "stopAtEntry": false, // 调试器是否在目标的入口点停止
+            "cwd": "${workspaceFolder}", // 运行debug的路径
+            "environment": [],
+            "externalConsole": false, // 调试时是否显示控制台窗口，一般为true显示控制台
+            "MIMode": "lldb", // 指定连接的调试器
+            "preLaunchTask": "cmake", // 依赖之前的run_cmake, 每次debug时会
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for lldb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}

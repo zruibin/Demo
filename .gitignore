@@ -16,7 +16,7 @@ xcshareddata
 DerivedData
 .idea/
 *.hmap
-.vscode/
+#.vscode/
 build/
 buildGen/
 install/
@@ -28,6 +28,7 @@ depsSource.cmake
 depsSource.lock
 builddeps.log
 .xmake/
+.cache/
 
 node_modules
 package-lock.json
