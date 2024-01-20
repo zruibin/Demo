@@ -966,8 +966,8 @@ def genRunConfig():
 }
     """ % (cmakeCmd, buildCmd, runCmd, cleanCmd)
     tasksFilePath = os.path.join(dirName, "tasks.json")
-    log(tasksFilePath, write=False)
-    log(tasksFile, write=False)
+    log(tasksFilePath)
+    log(tasksFile)
     with open(tasksFilePath, "w") as fileHandle:
         fileHandle.write(str(tasksFile))
 
@@ -976,7 +976,7 @@ def genRunConfig():
         content = fileHandle.read()
         result = re.findall("project\((.*?)\)", content)
         if len(result) > 0: program = program + result[0]
-    log("program: "+program, write=False)
+    log("program: "+program)
 
     # https://go.microsoft.com/fwlink/?linkid=830387
     # https://rivergold.github.io/2022/03eca434c1.html#%E5%88%9B%E5%BB%BAlaunch-json
@@ -1010,8 +1010,8 @@ def genRunConfig():
 }
     """ % program
     launchFilePath = os.path.join(dirName, "launch.json")
-    log(launchFilePath, write=False)
-    log(launchFile, write=False)
+    log(launchFilePath)
+    log(launchFile)
     with open(launchFilePath, "w") as fileHandle:
         fileHandle.write(str(launchFile))
     pass
