@@ -27,15 +27,15 @@
         "args": ""
     }
  
-     ,
-     {
-         "action": "gz",
-         "fileName": "Qt5compat",
-         "url": "https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qt5compat-everywhere-src-6.6.0.tar.xz",
-         "build": "cmake",
-         "build_dir": 1,
-         "args": ""
-     }
+    ,
+    {
+        "action": "gz",
+        "fileName": "Qt5compat",
+        "url": "https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qt5compat-everywhere-src-6.6.0.tar.xz",
+        "build": "cmake",
+        "build_dir": 1,
+        "args": ""
+    }
     
     ,
     {
@@ -44,6 +44,15 @@
         "url": "https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qtmultimedia-everywhere-src-6.6.0.tar.xz",
         "build": "cmake",
         "build_dir": 1,
+        "args": ""
+    }
+
+    ,
+    {
+        "action": "gz",
+        "fileName": "QtDeclarative",
+        "url": "https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qtdeclarative-everywhere-src-6.6.0.tar.xz",
+        "build": "cmake",
         "args": ""
     }
 
