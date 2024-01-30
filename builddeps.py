@@ -138,7 +138,7 @@ def operatorCMD(parameterList, newline=True):
 def getAllFileInDirectory(DIR, beyoundDir=''):
     """返回指定目录下所有文件的集合，beyoundDir的目录不包含"""
     array = []
-    print(DIR+beyoundDir)
+    # print(DIR+beyoundDir)
     for root, dirs, files in os.walk(DIR):
         if len(beyoundDir) != 0 and os.path.exists(DIR+beyoundDir):
             if beyoundDir not in dirs:
@@ -593,28 +593,49 @@ def buildFromDepsFile():
 
 #------------------------------------------------------------------------------------
 
-def genDepsCmakeList():
-    log("-"*80)
-    log("Generate Deps CmakeList in Path: " + homeDir)
-    os.chdir(homeDir)
-
-    libDir = os.path.join(outputDir, "lib")
-    libs = getAllFileInDirectory(libDir)
-    for lib in libs:
+def getAllLibs(libDir):
+    libs = []
+    allFiles = os.listdir(libDir)
+    for lib in allFiles:
         if os.path.isdir(lib):
             continue
         sufix = os.path.splitext(lib)[-1]
         if sufix not in libSufixs:
             continue
-        # log("lib: "+ lib)
-        libPath = os.path.join(libDir, lib)
-        global cmakeOther
-        # cmakeOther = cmakeOther + "\n" + "link_libraries(\"" + libPath + "\")"
-        cmakeOther = cmakeOther + "\n" + "list(APPEND DEPS_LIBS \"" + libPath + "\")"
+        log("lib: "+ lib)
+        libs.append(lib)
+    return libs
 
-    depsInclude = """
-list(APPEND HEADERS ${Deps_Include})
-"""
+def getAllFrameworks(libDir):
+    frameworks = []
+    allFiles = os.listdir(libDir)
+    for file in allFiles:
+        if ".framework" not in file:
+            continue
+        frameworks.append(file.split(".")[0])
+    return frameworks
+
+def genDepsCmakeList():
+    log("-"*80)
+    log("Generate Deps CmakeList in Path: " + homeDir)
+    os.chdir(homeDir)
+    libDir = os.path.join(outputDir, "lib")
+    cmakeOthers = []
+
+    libs = getAllLibs(libDir)
+    for lib in libs:
+        cmakeOthers.append('list(APPEND DEPS_LIBS "${DEPS_LIB_DIR}/' + lib + '")')
+    
+    frameworks = getAllFrameworks(libDir)
+    for framework in frameworks:
+        frameworkPath = os.path.join(libDir, framework)
+        cmakeOthers.append('include_directories("${DEPS_LIB_DIR}/' + framework + '.framework/Headers")')
+        cmakeOthers.append('list(APPEND DEPS_LIBS "-framework ' + framework + '")')
+    
+    global cmakeOther
+    cmakeOther = "\n".join(cmakeOthers)
+
+    depsInclude = """list(APPEND HEADERS ${Deps_Include})\n\n"""
 
     depsSource = """
 file(GLOB_RECURSE Deps_Source
@@ -640,8 +661,8 @@ message("This is deps.cmake")
 
 set(deps_list pthread dl)
 
-set(DEPS_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/"""+outputDirName+"""/include/")
-set(DEPS_LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/"""+outputDirName+"""/lib/")
+set(DEPS_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/"""+outputDirName+"""/include")
+set(DEPS_LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/"""+outputDirName+"""/lib")
 
 message("Deps Include Directory: ${DEPS_INCLUDE_DIR}")
 message("Deps Lib Directory: ${DEPS_LIB_DIR}")
