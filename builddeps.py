@@ -153,7 +153,7 @@ def json_minify(string, strip_space=True):
     A port of the `JSON-minify` utility to the Python language.
     Based on JSON.minify.js: https://github.com/getify/JSON.minify
     """
-    tokenizer = re.compile('"|(/\*)|(\*/)|(//)|\n|\r')
+    tokenizer = re.compile(r'"|(/\*)|(\*/)|(//)|\n|\r')
     end_slashes_re = re.compile(r'(\\)*$')
 
     in_string = False
@@ -996,7 +996,7 @@ def genRunConfig():
     program = "build/Debug/Bin/"
     with open(cmakeList, "r", encoding='utf-8') as fileHandle:
         content = fileHandle.read()
-        result = re.findall("project\((.*?)\)", content)
+        result = re.findall(r"project\((.*?)\)", content)
         if len(result) > 0: program = program + result[0]
     log("program: "+program)
 
