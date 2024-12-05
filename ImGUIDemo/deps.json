@@ -18,7 +18,7 @@
     {
         "action": "git",
         "fileName": "glm",
-        "url": "git clone --depth=1 -b glm-v1 https://github.com/g-truc/glm.git",
+        "url": "git clone --depth=1 -b 1.0.1 https://github.com/g-truc/glm.git",
         "build": "cmake",
         "args": "-DCMAKE_CXX_STANDARD=17 -DGLM_BUILD_TESTS=OFF -DBUILD_SHARED_LIBS=OFF"
     }
