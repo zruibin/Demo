@@ -11,7 +11,7 @@
     {
         "action": "gz",
         "fileName": "QtBase", 
-        "url": "https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qtbase-everywhere-src-6.6.0.tar.xz",
+        "url": "https://download.qt.io/official_releases/qt/6.8/6.8.2/submodules/qtbase-everywhere-src-6.8.2.tar.xz",
         "build": "cmake",
         "build_dir": 1,
         "args": ""
@@ -21,7 +21,7 @@
     {
         "action": "gz",
         "fileName": "QtShadertools", 
-        "url": "https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qtshadertools-everywhere-src-6.6.0.tar.xz",
+        "url": "https://download.qt.io/official_releases/qt/6.8/6.8.2/submodules/qtshadertools-everywhere-src-6.8.2.tar.xz",
         "build": "cmake",
         "build_dir": 1,
         "args": ""
@@ -31,7 +31,7 @@
     {
         "action": "gz",
         "fileName": "Qt5compat",
-        "url": "https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qt5compat-everywhere-src-6.6.0.tar.xz",
+        "url": "https://download.qt.io/official_releases/qt/6.8/6.8.2/submodules/qt5compat-everywhere-src-6.8.2.tar.xz",
         "build": "cmake",
         "build_dir": 1,
         "args": ""
@@ -41,7 +41,7 @@
     {
         "action": "gz",
         "fileName": "QtMultimedia", 
-        "url": "https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qtmultimedia-everywhere-src-6.6.0.tar.xz",
+        "url": "https://download.qt.io/official_releases/qt/6.8/6.8.2/submodules/qtmultimedia-everywhere-src-6.8.2.tar.xz",
         "build": "cmake",
         "build_dir": 1,
         "args": ""
@@ -51,7 +51,7 @@
     {
         "action": "gz",
         "fileName": "QtDeclarative",
-        "url": "https://download.qt.io/official_releases/qt/6.6/6.6.0/submodules/qtdeclarative-everywhere-src-6.6.0.tar.xz",
+        "url": "https://download.qt.io/official_releases/qt/6.8/6.8.2/submodules/qtdeclarative-everywhere-src-6.8.2.tar.xz",
         "build": "cmake",
         "args": ""
     }
@@ -60,7 +60,7 @@
     {
         "action": "gz",
         "fileName": "lame-3.100",
-        "url": "https://udomain.dl.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz",
+        "url": "https://onboardcloud.dl.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz",
         "build": "config",
         "args": "--disable-shared --disable-frontend --enable-static"
     }

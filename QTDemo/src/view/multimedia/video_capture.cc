@@ -7,6 +7,7 @@
  */
 
 #include "video_capture.h"
+#include <QDebug>
 
 VideoCaputer::~VideoCaputer() {
     if (running_) {
