@@ -57,7 +57,7 @@
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
     "node-addon-api": "^6.1.0",
-    "node-gyp": "^9.3.1",
+    "node-gyp": "^11.0.0",
     "postcss": "^8.4.8",
     "postcss-import": "^14.1.0",
     "postcss-loader": "^7.0.0",
